@@ -8,6 +8,7 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include "LoadHmap.h"
+#include "HitBox.h"
 
 using std::cout;
 using std::endl;
@@ -214,13 +215,13 @@ void SceneSP3::Init()
     glUniform1f(m_parameters[U_FOG_TYPE], 1);
     glUniform1f(m_parameters[U_FOG_ENABLE], 0);
 
-    camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
+    camera.Init(Vector3(0, 400, 80), Vector3(0, 400, 0), Vector3(0, 1, 0));
 
     for (int i = 0; i < NUM_GEOMETRY; ++i)
     {
         meshList[i] = NULL;
     }
-
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1,0,0),1.f );
     meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference");//, 1000, 1000, 1000);
     meshList[GEO_CROSSHAIR] = MeshBuilder::GenerateCrossHair("crosshair");
     meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
@@ -252,6 +253,8 @@ void SceneSP3::Init()
 
     //SPRITENAME = dynamic_cast<SpriteAnimation*>(meshList[SPRITE_NAME]);
 
+	playerpos = Vector3(0, 300, 0);
+	player_box = hitbox::generatehitbox(playerpos, 20, 30, 20, NULL);
     //if (SPRITENAME)
     //{
     //    SPRITENAME->m_anim = new Animation();
@@ -300,11 +303,38 @@ void SceneSP3::Update(double dt)
     if (Application::IsKeyPressed('P'))
         lights[0].position.y += (float)(100.f * dt);
 
+
+	if (Application::IsKeyPressed('A'))
+		playerpos.x -= 10 * dt;
+	if (Application::IsKeyPressed('D'))
+		playerpos.x += 10 * dt;
+	if (Application::IsKeyPressed('W'))
+		playerpos.z -= 10 * dt;
+	if (Application::IsKeyPressed('S'))
+	playerpos.z += 10 * dt;
+	if (Application::IsKeyPressed('Q'))
+		playerpos.y += 10 * dt;
+	if (Application::IsKeyPressed('E'))
+		playerpos.y -= 10 * dt;
+	
+
+	hitbox::updatehitbox(player_box, playerpos);
+	camera.target = playerpos;
+	//camera.position + playerpos-Vector3(0,300,0);
     camera.Update(dt);
 
     fps = (float)(1.f / dt);
 
-    camera.TerrainHeight = (350.f * ReadHeightMap(m_heightMap, camera.position.x / 3000.f, camera.position.z / 3000.f)) + 20.f;
+    float terrainheight = (350.f * ReadHeightMap(m_heightMap, playerpos.x / 3000.f, playerpos.z / 3000.f));
+
+	if (terraincollision(player_box, terrainheight))
+	{
+		cout << "collided" << endl;
+
+	}
+	else
+		cout << "" << endl;
+	
 
     rotateSky += .05f;
 
@@ -640,11 +670,11 @@ void SceneSP3::RenderParticles()
 void SceneSP3::RenderWorld()
 {
     //glUniform1i(m_parameters[U_FOG_ENABLE], 1);
-    glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 1);
-    RenderSkyPlane();
-    glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 0);
+   // glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 1);
+   // RenderSkyPlane();
+    //glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 0);
     RenderTerrain();
-    RenderSprite();
+    //RenderSprite();
     RenderOBJ();
     RenderParticles();
     //glUniform1i(m_parameters[U_FOG_ENABLE], 0);
@@ -745,11 +775,20 @@ void SceneSP3::RenderPassMain()
 
     // Render the crosshair
     RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
-
+	RenderMesh(meshList[GEO_AXES], false);
     std::ostringstream ss;
     ss.precision(3);
     ss << "FPS: " << fps;
     RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
+	
+	modelStack.PushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	modelStack.Translate(player_box.m_position.x, player_box.m_position.y, player_box.m_position.z);
+	modelStack.Scale(player_box.m_width, player_box.m_height, player_box.m_length);
+	RenderMesh(meshList[GEO_CUBE], false);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	modelStack.PopMatrix();
+	
 }
 
 void SceneSP3::Render()

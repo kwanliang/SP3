@@ -10,6 +10,7 @@
 #include "Light.h"
 #include "Particle.h"
 #include "DepthFBO.h"
+#include "HitBox.h"
 
 class SceneSP3 : public Scene
 {
@@ -94,6 +95,7 @@ class SceneSP3 : public Scene
     enum GEOMETRY_TYPE
     {
         GEO_AXES,
+		GEO_CUBE,
         GEO_CROSSHAIR,
         GEO_TEXT,
         GEO_SKYPLANE,
@@ -172,6 +174,13 @@ private:
     std::vector<ParticleObject*> particleList; // Used to store
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
+
+
+	//player test stuff
+	Vector3 playerpos;
+	hitbox player_box;
+
+
 };
 
 #endif

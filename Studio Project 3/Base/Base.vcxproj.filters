@@ -125,6 +125,9 @@
     <ClInclude Include="Source\SceneSP3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\HitBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Blending.fragmentshader">
