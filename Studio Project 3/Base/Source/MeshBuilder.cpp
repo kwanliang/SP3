@@ -700,7 +700,7 @@ Mesh* MeshBuilder::GenerateTerrain(const std::string &meshName, const std::strin
     std::vector<GLuint> index_buffer_data;
 
     // Scaling Factor
-    const float SCALE_FACTOR = 256.0f;
+    const float SCALE_FACTOR = 100.0f;
     
     if (!LoadHeightMap(file_path.c_str(), heightMap))
         return NULL;
@@ -736,8 +736,8 @@ Mesh* MeshBuilder::GenerateTerrain(const std::string &meshName, const std::strin
             v.color.Set(scaledHeight, scaledHeight, scaledHeight);
 
             // Rendering heightmap without texture
-            v.texCoord.Set((float)x / terrainSize * 8, 
-                1.f - (float)z / terrainSize * 8); // value 8, repeat texture 8 times across the plane
+            v.texCoord.Set((float)x / terrainSize * 16, 
+                1.f - (float)z / terrainSize * 16); // value 8, repeat texture 8 times across the plane
 
             vertex_buffer_data.push_back(v);
         }

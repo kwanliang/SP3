@@ -231,9 +231,9 @@ void SceneSP3::Init()
     meshList[GEO_SKYPLANE]->textureArray[0] = LoadTGA("Image//sky.tga");
     meshList[GEO_SKYPLANE]->textureArray[1] = LoadTGA("Image//night.tga");
 
-    meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("terrain", "Image//heightmap.raw", m_heightMap);
-    meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//ForestGrass.tga");
-    meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
+    meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("terrain", "Image//heightmap2.raw", m_heightMap);
+    meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
+    //meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
 
     // Object
     //meshList[OBJ_NAME] = MeshBuilder::GenerateOBJ("", "OBJ//.obj");
@@ -531,7 +531,7 @@ void SceneSP3::RenderTerrain()
 
     modelStack.PushMatrix();
     modelStack.Scale(3000.f, 350.0f, 3000.f);
-    RenderMesh(meshList[GEO_TERRAIN], true);
+    RenderMesh(meshList[GEO_TERRAIN], false);
     modelStack.PopMatrix();
 }
 
