@@ -587,7 +587,6 @@ void SceneSP3::Update(double dt)
     //UpdateParticles(dt);
 
     UpdateMinnow(dt);
-=======
 	if (Application::IsKeyPressed('M'))
 	{
 		fishy.SetPos(Capture::Vacuum(fishy, walkCam, dt));
