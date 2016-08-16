@@ -291,6 +291,9 @@ void SceneSP3::Init()
     m_particleCount = 0;
     m_gravity.Set(0, -9.8f, 0);
 
+	fishy.SetPos(Vector3(0, 300, 0));
+	fishy.SetType(Capture::FISH);
+	
 	walkCam.yOffset = 100;
 
     for (int i = 0; i < 30; i++)
@@ -505,7 +508,6 @@ void SceneSP3::Update(double dt)
         lights[0].position.y += (float)(100.f * dt);
 
     //camera.Update(dt);
-
     fps = (float)(1. / dt);
 
 	if (Application::IsKeyPressed('W'))
@@ -585,6 +587,12 @@ void SceneSP3::Update(double dt)
     //UpdateParticles(dt);
 
     UpdateMinnow(dt);
+=======
+	if (Application::IsKeyPressed('M'))
+	{
+		fishy.SetPos(Capture::Vacuum(fishy, walkCam, dt));
+		
+	}
 }
 
 static const float SKYBOXSIZE = 1000.f;
@@ -1074,7 +1082,12 @@ void SceneSP3::RenderPassMain()
 	RenderMesh(meshList[GEO_CUBE], false);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
 	modelStack.PopMatrix();
-	
+
+	modelStack.PushMatrix();
+	modelStack.Translate(fishy.GetPos().x, fishy.GetPos().y, fishy.GetPos().z);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_CUBE], false);
+	modelStack.PopMatrix();
 }
 
 void SceneSP3::Render()

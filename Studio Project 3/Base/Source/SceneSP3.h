@@ -15,6 +15,9 @@
 #include "HitBox.h"
 #include "Minnow.h"
 #include "Projectile.h"
+#include "Capture.h"
+
+
 
 class SceneSP3 : public Scene
 {
@@ -200,6 +203,9 @@ private:
 	hitbox player_box;
 
 	Vector3 fishRot;
+
+	//Fish test
+	Capture fishy;
 };
 
 #endif
