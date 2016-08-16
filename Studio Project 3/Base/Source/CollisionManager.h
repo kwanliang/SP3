@@ -68,7 +68,31 @@ struct hitbox{
 			);
 	}
 };
+static bool collision(const hitbox& lhsBox, const hitbox& rhsBox){		//for AABB to AABB collision
+	//Check if lhsBox's max is greater than rhsBox's min and lhsBox's min is less than rhsBox's max
+	if (lhsBox.m_vecMax.x > rhsBox.m_vecMin.x &&
+		lhsBox.m_vecMin.x < rhsBox.m_vecMax.x &&
+		lhsBox.m_vecMax.y > rhsBox.m_vecMin.y &&
+		lhsBox.m_vecMin.y < rhsBox.m_vecMax.y &&
+		lhsBox.m_vecMax.z > rhsBox.m_vecMin.z &&
+		lhsBox.m_vecMin.z < rhsBox.m_vecMax.z){
+		return true;
+	}
+	else
+		return false;
+}
+static bool collision(const hitbox& hitbox, const Vector3& vecPoint){
 
+	//Check if the point is less than max and greater than min
+	if (vecPoint.x > hitbox.m_vecMin.x && vecPoint.x < hitbox.m_vecMax.x &&
+		vecPoint.y > hitbox.m_vecMin.y && vecPoint.y < hitbox.m_vecMax.y &&
+		vecPoint.z > hitbox.m_vecMin.z && vecPoint.z < hitbox.m_vecMax.z){
+		return true;
+	}
+	else
+		return false;
+
+}
 
 struct hitbox2{
 	Vector3 m_position;
@@ -123,31 +147,7 @@ struct hitbox2{
 };
 
 
-static bool collision(const hitbox& lhsBox, const hitbox& rhsBox){		//for AABB to AABB collision
-	//Check if lhsBox's max is greater than rhsBox's min and lhsBox's min is less than rhsBox's max
-	if (lhsBox.m_vecMax.x > rhsBox.m_vecMin.x &&
-		lhsBox.m_vecMin.x < rhsBox.m_vecMax.x &&
-		lhsBox.m_vecMax.y > rhsBox.m_vecMin.y &&
-		lhsBox.m_vecMin.y < rhsBox.m_vecMax.y &&
-		lhsBox.m_vecMax.z > rhsBox.m_vecMin.z &&
-		lhsBox.m_vecMin.z < rhsBox.m_vecMax.z){
-		return true;
-	}
-	else
-	return false;
-}
-static bool collision(const hitbox& hitbox, const Vector3& vecPoint){	
 
-	//Check if the point is less than max and greater than min
-	if (vecPoint.x > hitbox.m_vecMin.x && vecPoint.x < hitbox.m_vecMax.x &&
-		vecPoint.y > hitbox.m_vecMin.y && vecPoint.y < hitbox.m_vecMax.y &&
-		vecPoint.z > hitbox.m_vecMin.z && vecPoint.z < hitbox.m_vecMax.z){
-		return true;
-	} 
-	else
-	return false;
-	
-}
 static bool terraincollision(const hitbox2& hitbox, std::vector<unsigned char> heightmap){
 
 

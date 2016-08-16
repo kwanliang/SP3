@@ -15,6 +15,7 @@ public:
 	Vector3 GetPos();
 	Vector3 GetDir();
 	Vector3 GetUp();
+	void SetPos(Vector3);
 
 protected:
 	Vector3 pos;

@@ -48,6 +48,12 @@ Vector3 ThirdPersonCamera::GetPos()
 	return pos;
 }
 
+void ThirdPersonCamera::SetPos(Vector3 newpos)
+{
+	pos = newpos;
+}
+
+
 Vector3 ThirdPersonCamera::GetDir()
 {
 	return dir;

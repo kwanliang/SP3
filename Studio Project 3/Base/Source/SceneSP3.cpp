@@ -8,7 +8,8 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include "LoadHmap.h"
-#include "HitBox.h"
+#include "CollisionManager.h"
+
 
 using std::cout;
 using std::endl;
@@ -218,10 +219,10 @@ void SceneSP3::Init()
 
     //camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
 	walkCam.Init(
-		Vector3(0, 70, 10),
+		Vector3(0, 400, 10),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
-		500
+		60
 	);
 	currentCam = &walkCam;
 
@@ -266,8 +267,8 @@ void SceneSP3::Init()
 
     //SPRITENAME = dynamic_cast<SpriteAnimation*>(meshList[SPRITE_NAME]);
 
-	playerpos = Vector3(0, 300, 0);
-	player_box = hitbox::generatehitbox(playerpos, 20, 30, 20, NULL);
+	playerpos = Vector3(0, 0, 0);
+	player_box = hitbox2::generatehitbox(playerpos, 10, 10, 10);
     //if (SPRITENAME)
     //{
     //    SPRITENAME->m_anim = new Animation();
@@ -291,7 +292,7 @@ void SceneSP3::Init()
     m_particleCount = 0;
     m_gravity.Set(0, -9.8f, 0);
 
-	fishy.SetPos(Vector3(0, 300, 0));
+	fishy.SetPos(Vector3(0, 0, 0));
 	fishy.SetType(Capture::FISH);
 	
 	walkCam.yOffset = 100;
@@ -511,6 +512,7 @@ void SceneSP3::Update(double dt)
     fps = (float)(1. / dt);
 
 	{
+		Vector3 temp = walkCam.GetPos();
 		Vector3 right = walkCam.GetDir().Cross(walkCam.GetUp());
 		right.Normalize();
 
@@ -531,6 +533,15 @@ void SceneSP3::Update(double dt)
 		{
 			walkCam.Move(100.f * (float)dt * right);
 		}
+		playerpos = walkCam.GetPos() + Vector3(0,80,0);
+		hitbox2::updatehitbox(player_box,playerpos);
+		if (terraincollision(player_box, m_heightMap))
+		{
+			walkCam.SetPos(temp);
+		}
+
+
+
 	}
 
 	if (Application::camera_yaw != 0)
@@ -552,6 +563,7 @@ void SceneSP3::Update(double dt)
 
 	//orientate fish
 	{
+		
 		Vector3 camDir = walkCam.GetDir();
 		if (camDir.x != 0 || camDir.z != 0)
 			fishRot.y = Math::RadianToDegree(atan2(-camDir.z, camDir.x));
@@ -913,7 +925,7 @@ void SceneSP3::RenderWorld()
 	modelStack.PushMatrix();
 	{
 		Vector3 p = walkCam.GetPos();
-		modelStack.Translate(p.x, p.y, p.z);
+		modelStack.Translate(playerpos.x, playerpos.y, playerpos.z);
 		modelStack.Rotate(90 + fishRot.y, 0, 1, 0);
 		modelStack.Rotate(0 + fishRot.x, 1, 0, 0);
 		modelStack.Scale(3, 3, 3);
@@ -1082,6 +1094,18 @@ void SceneSP3::RenderPassMain()
 	RenderMesh(meshList[GEO_CUBE], false);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
 	modelStack.PopMatrix();
+
+
+
+	for (unsigned i = 0; i < 8; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(player_box.m_point[i].x, player_box.m_point[i].y, player_box.m_point[i].z);
+		modelStack.Scale(1, 1, 1);
+		RenderMesh(meshList[GEO_CUBE], false);
+		modelStack.PopMatrix();
+	}
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(fishy.GetPos().x, fishy.GetPos().y, fishy.GetPos().z);

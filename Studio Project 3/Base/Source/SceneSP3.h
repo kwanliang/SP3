@@ -12,7 +12,7 @@
 #include "Light.h"
 #include "Particle.h"
 #include "DepthFBO.h"
-#include "HitBox.h"
+#include "CollisionManager.h"
 #include "Minnow.h"
 #include "Projectile.h"
 #include "Capture.h"
@@ -204,7 +204,7 @@ private:
 
 	//player test stuff
 	Vector3 playerpos;
-	hitbox player_box;
+	hitbox2 player_box;
 
 	Vector3 fishRot;
 
