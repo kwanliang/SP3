@@ -13,6 +13,8 @@
 #include "Particle.h"
 #include "DepthFBO.h"
 #include "HitBox.h"
+#include "Minnow.h"
+#include "Projectile.h"
 
 class SceneSP3 : public Scene
 {
@@ -100,6 +102,8 @@ class SceneSP3 : public Scene
 		GEO_CUBE,
 		GEO_CROSSHAIR,
 		GEO_TEXT,
+        GEO_BALL,
+        GEO_BALL2,
 		GEO_SKYPLANE,
 		GEO_TERRAIN,
 		GEO_FISHMODEL,
@@ -126,6 +130,8 @@ public:
     void RenderPassMain();
     void RenderWorld();
 
+    void UpdateMinnow(double dt);
+
     void RenderText(Mesh* mesh, std::string text, Color color);
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f);
@@ -139,6 +145,11 @@ public:
     void UpdateParticles(double dt);
     ParticleObject* GetParticle_NAME();
     void RenderParticles();
+
+    Minnow* FetchFO();
+    Projectile* FetchPO();
+    void RenderFO(Minnow *fo);
+    void RenderPO(Projectile *po);
 
     float rotateSky;
 
@@ -181,6 +192,8 @@ private:
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
 
+    // Game Object
+    std::vector<GameObject*> m_goList;
 
 	//player test stuff
 	Vector3 playerpos;

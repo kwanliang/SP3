@@ -246,6 +246,9 @@ void SceneSP3::Init()
 
 	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//FishModel.obj");
 
+    meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 16, 16, 1.f);
+    meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
+
     // Object
     //meshList[OBJ_NAME] = MeshBuilder::GenerateOBJ("", "OBJ//.obj");
     //meshList[OBJ_NAME]->textureArray[0] = LoadTGA("Image//.tga");
@@ -289,6 +292,192 @@ void SceneSP3::Init()
     m_gravity.Set(0, -9.8f, 0);
 
 	walkCam.yOffset = 100;
+
+    for (int i = 0; i < 30; i++)
+    {
+        Minnow *fo = FetchFO();
+        fo->active = true;
+        fo->objectType = GameObject::SEACREATURE;
+        fo->seaType = SeaCreature::MINNOW;
+        fo->state = Minnow::FLOCK;
+        fo->scale.Set(1, 1, 5);
+        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100));
+        fo->vel.Set(Math::RandFloatMinMax(-10, 10), -5, Math::RandFloatMinMax(-10, 10));
+    }
+}
+
+Minnow* SceneSP3::FetchFO()
+{
+    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+    {
+        Minnow *go = (Minnow *)*it;
+        if (!go->active)
+        {
+            go->active = true;
+            //++m_objectCount;
+            return go;
+        }
+    }
+    for (unsigned i = 0; i < 10; ++i)
+    {
+        Minnow *go = new Minnow();
+        go->objectType = GameObject::SEACREATURE;
+        m_goList.push_back(go);
+    }
+    Minnow *go = (Minnow *)m_goList.back();
+    go->active = true;
+    //++m_objectCount;
+    return go;
+}
+
+Projectile* SceneSP3::FetchPO()
+{
+    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+    {
+        Projectile *go = (Projectile *)*it;
+        if (!go->active)
+        {
+            go->active = true;
+            //++m_objectCount;
+            return go;
+        }
+    }
+    for (unsigned i = 0; i < 10; ++i)
+    {
+        Projectile *go = new Projectile();
+        go->objectType = GameObject::PROJECTILE;
+        m_goList.push_back(go);
+    }
+    Projectile *go = (Projectile *)m_goList.back();
+    go->active = true;
+    //++m_objectCount;
+    return go;
+}
+
+void SceneSP3::UpdateMinnow(double dt)
+{
+    // Minnow loop
+    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+    {
+        GameObject *go = (GameObject *)*it;
+        if (go->active)
+        {
+            if (go->objectType == GameObject::SEACREATURE)
+            {
+                Minnow *fo = (Minnow *)*it;
+                if (fo->seaType == SeaCreature::MINNOW)
+                {
+                    if (fo->state == Minnow::FLOCK)
+                        fo->pos += fo->vel * dt;
+                    else
+                        fo->pos += fo->vel * dt * 10;
+
+                    Vector3 tempCentreOfMass(0, 0, 0);
+                    Vector3 tempRepelVector(0, 0, 0);
+                    Vector3 tempForceVector(0, 0, 0);
+
+                    int neightbourCount = 0;
+
+                    for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+                    {
+                        Minnow *other = (Minnow *)*it2;
+
+                        if (other->active && fo != other && fo->seaType == SeaCreature::MINNOW)
+                        {
+                            neightbourCount++;
+
+                            if ((other->pos - fo->pos).LengthSquared() < distFromSeperation)
+                            {
+                                tempRepelVector = fo->pos - other->pos;
+                                fo->vel += fo->seperation(tempRepelVector);
+                            }
+
+                            tempCentreOfMass += other->pos;
+
+                            if ((other->pos - fo->pos).LengthSquared() < distFromAlignment)
+                                tempForceVector += other->vel;
+                        }
+                    }
+
+                    if (fo->state == Minnow::FLOCK)
+                        fo->vel += fo->alignment(tempCentreOfMass, neightbourCount) + fo->cohesion(tempCentreOfMass, neightbourCount) * 1.5;
+                    else
+                        fo->vel += fo->seperation(tempCentreOfMass) * 2;
+                    //cout << tempCentreOfMass << endl;
+
+                    // Cap velocity
+                    if (go->vel.x > 20)
+                        go->vel.x = 20;
+                    if (go->vel.y > 20)
+                        go->vel.y = 20;
+                    if (go->vel.z > 20)
+                        go->vel.z = 20;
+                    if (go->vel.x < -20)
+                        go->vel.x = -20;
+                    if (go->vel.y < -20)
+                        go->vel.y = -20;
+                    if (go->vel.z < -20)
+                        go->vel.z = -20;
+
+                    if (fo->state == Minnow::FLEE && fo->getpanicTime() < 3.f)
+                    {
+                        fo->setpanicTime(fo->getpanicTime() + dt);
+                    }
+
+                    if (fo->state == Minnow::FLEE && fo->getpanicTime() >= 3.f)
+                    {
+                        fo->state = Minnow::FLOCK;
+                        fo->setpanicTime(0.f);
+                    }
+                }
+            }
+            else if (go->objectType == GameObject::PROJECTILE)
+            {
+                Projectile *po = (Projectile *)*it;
+                po->pos += po->vel * dt * 500;
+
+                if (go->pos.y < -1000)
+                    po->active = false;
+                else if (go->pos.y > 1000)
+                    po->active = false;
+
+                if (go->pos.x < -1000)
+                    po->active = false;
+                else if (go->pos.x > 1000)
+                    po->active = false;
+
+                if (go->pos.z < -1000)
+                    po->active = false;
+                else if (go->pos.z > 1000)
+                    po->active = false;
+
+                for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+                {
+                    Minnow *other = (Minnow *)*it2;
+                    if (other->active && go != other && other->state == Minnow::FLOCK && other->seaType == SeaCreature::MINNOW)
+                    {
+                        if ((other->pos - po->pos).LengthSquared() < po->scale.z + other->scale.z + 50)
+                        {
+                            for (std::vector<GameObject *>::iterator it3 = m_goList.begin(); it3 != m_goList.end(); ++it3)
+                            {
+                                Minnow *other2 = (Minnow *)*it3;
+                                if (other2->active && go != other2 && other2->state == Minnow::FLOCK && other2->seaType == SeaCreature::MINNOW)
+                                {
+                                    other2->state = Minnow::FLEE;
+                                }
+                            }
+                        }
+                        if ((other->pos - po->pos).LengthSquared() < po->scale.z + other->scale.z)
+                        {
+                            po->active = false;
+                            other->active = false;
+                            cout << "dead" << endl;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void SceneSP3::Update(double dt)
@@ -379,7 +568,7 @@ void SceneSP3::Update(double dt)
 	//else
  //       blendFactor = 0;
 
-    glUniform1f(m_parameters[U_TEXTURE_BLEND_FACTOR], blendFactor);
+    //glUniform1f(m_parameters[U_TEXTURE_BLEND_FACTOR], blendFactor);
 
     //    fogThickness += (1.f / 100.f);
 
@@ -394,6 +583,8 @@ void SceneSP3::Update(double dt)
 
     // Particles
     //UpdateParticles(dt);
+
+    UpdateMinnow(dt);
 }
 
 static const float SKYBOXSIZE = 1000.f;
@@ -724,6 +915,34 @@ void SceneSP3::RenderWorld()
     //glUniform1i(m_parameters[U_FOG_ENABLE], 0);
 }
 
+void SceneSP3::RenderFO(Minnow *fo)
+{
+    switch (fo->seaType)
+    {
+    case SeaCreature::MINNOW:
+    {
+        float rotate = 0;
+        rotate = Math::RadianToDegree(atan2(fo->vel.z, fo->vel.x));
+        modelStack.PushMatrix();
+        modelStack.Translate(fo->pos.x, fo->pos.y, fo->pos.z);
+        modelStack.Rotate(rotate, 0, 1, 0);
+        modelStack.Scale(fo->scale.x, fo->scale.y, fo->scale.z);
+        RenderMesh(meshList[GEO_BALL], false);
+        modelStack.PopMatrix();
+        break;
+    }
+    }
+}
+
+void SceneSP3::RenderPO(Projectile *po)
+{
+    modelStack.PushMatrix();
+    modelStack.Translate(po->pos.x, po->pos.y, po->pos.z);
+    modelStack.Scale(po->scale.x, po->scale.y, po->scale.z);
+    RenderMesh(meshList[GEO_BALL], false);
+    modelStack.PopMatrix();
+}
+
 void SceneSP3::RenderPassGPass()
 {
     m_renderPass = RENDER_PASS_PRE;
@@ -818,6 +1037,27 @@ void SceneSP3::RenderPassMain()
 
     glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
     RenderWorld();
+
+    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+    {
+        GameObject *go = (GameObject*)*it;
+        if (go->objectType == GameObject::SEACREATURE)
+        {
+            Minnow *fo = (Minnow*)*it;
+            if (fo->active)
+            {
+                RenderFO(fo);
+            }
+        }
+        else if (go->objectType == GameObject::PROJECTILE)
+        {
+            Projectile *po = (Projectile*)*it;
+            if (po->active)
+            {
+                RenderPO(po);
+            }
+        }
+    }
 
     // Render the crosshair
     RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
