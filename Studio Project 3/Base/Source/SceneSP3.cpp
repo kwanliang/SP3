@@ -221,7 +221,7 @@ void SceneSP3::Init()
 		Vector3(0, 70, 10),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
-		500
+		250
 	);
 	currentCam = &walkCam;
 
@@ -510,22 +510,27 @@ void SceneSP3::Update(double dt)
     //camera.Update(dt);
     fps = (float)(1. / dt);
 
-	if (Application::IsKeyPressed('W'))
 	{
-		walkCam.Move(100 * (float)dt);
-	}
-	if (Application::IsKeyPressed('S'))
-	{
-		walkCam.Move(-100 * (float)dt);
-	}
+		Vector3 right = walkCam.GetDir().Cross(walkCam.GetUp());
+		right.Normalize();
 
-	if (Application::IsKeyPressed('A'))
-	{
-		walkCam.Move(0, -100 * (float)dt);
-	}
-	if (Application::IsKeyPressed('D'))
-	{
-		walkCam.Move(0, 100 * (float)dt);
+		if (Application::IsKeyPressed('W'))
+		{
+			walkCam.Move(100 * (float)dt * walkCam.GetDir());
+		}
+		if (Application::IsKeyPressed('S'))
+		{
+			walkCam.Move(-100 * (float)dt * walkCam.GetDir());
+		}
+
+		if (Application::IsKeyPressed('A'))
+		{
+			walkCam.Move(-100.f * (float)dt * right);
+		}
+		if (Application::IsKeyPressed('D'))
+		{
+			walkCam.Move(100.f * (float)dt * right);
+		}
 	}
 
 	if (Application::camera_yaw != 0)
@@ -540,15 +545,10 @@ void SceneSP3::Update(double dt)
 
 	float tH = (350.f * ReadHeightMap(m_heightMap, walkCam.GetPos().x / 3000.f, walkCam.GetPos().z / 3000.f)) + 20.f;
 	float diff = tH - walkCam.GetPos().y;
+	if (diff < 0) diff = 0;
 
 	if (diff != 0)
 		walkCam.Move(0, 0, diff);
-
-	{
-		Vector3 camDir = walkCam.GetDir();
-		if (camDir.x != 0 || camDir.z != 0)
-			fishRot.y = Math::RadianToDegree(atan2(-camDir.z, camDir.x));
-	}
 
 	{
 		Vector3 camDir = walkCam.GetDir();

@@ -52,3 +52,8 @@ Vector3 ThirdPersonCamera::GetDir()
 {
 	return dir;
 }
+
+Vector3 ThirdPersonCamera::GetUp()
+{
+	return up;
+}

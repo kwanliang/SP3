@@ -14,6 +14,7 @@ public:
 	virtual Mtx44 GetView();
 	Vector3 GetPos();
 	Vector3 GetDir();
+	Vector3 GetUp();
 
 protected:
 	Vector3 pos;

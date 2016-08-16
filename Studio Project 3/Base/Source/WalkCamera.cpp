@@ -26,6 +26,11 @@ void WalkCamera::Init(
 	this->vertical.Normalize();
 }
 
+void WalkCamera::Move(const Vector3 &v)
+{
+	pos += v;
+}
+
 void WalkCamera::Move(const float &frontDist, const float &sideDist, const float &upDist, const bool &followUp)
 {
 	Vector3 right = dir.Cross(up);
