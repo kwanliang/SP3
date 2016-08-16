@@ -18,6 +18,10 @@ public:
 	void Turn(const float &degrees);
 	void Pitch(float degrees);
 
+	Mtx44 GetView();
+
+	float yOffset;
+
 protected:
 	Vector3 vertical;
 };

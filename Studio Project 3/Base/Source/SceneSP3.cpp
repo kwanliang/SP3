@@ -244,6 +244,8 @@ void SceneSP3::Init()
     meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
     //meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
 
+	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//FishModel.obj");
+
     // Object
     //meshList[OBJ_NAME] = MeshBuilder::GenerateOBJ("", "OBJ//.obj");
     //meshList[OBJ_NAME]->textureArray[0] = LoadTGA("Image//.tga");
@@ -285,6 +287,8 @@ void SceneSP3::Init()
 
     m_particleCount = 0;
     m_gravity.Set(0, -9.8f, 0);
+
+	walkCam.yOffset = 100;
 }
 
 void SceneSP3::Update(double dt)
@@ -324,31 +328,13 @@ void SceneSP3::Update(double dt)
 		walkCam.Move(-100 * (float)dt);
 	}
 
-	if (Application::IsKeyPressed('Q'))
+	if (Application::IsKeyPressed('A'))
 	{
 		walkCam.Move(0, -100 * (float)dt);
 	}
-	if (Application::IsKeyPressed('E'))
+	if (Application::IsKeyPressed('D'))
 	{
 		walkCam.Move(0, 100 * (float)dt);
-	}
-
-	if (Application::IsKeyPressed('A') || Application::IsKeyPressed(VK_LEFT))
-	{
-		walkCam.Turn(90 * (float)dt);
-	}
-	if (Application::IsKeyPressed('D') || Application::IsKeyPressed(VK_RIGHT))
-	{
-		walkCam.Turn(-90 * (float)dt);
-	}
-
-	if (Application::IsKeyPressed(VK_UP))
-	{
-		walkCam.Pitch(90 * (float)dt);
-	}
-	if (Application::IsKeyPressed(VK_DOWN))
-	{
-		walkCam.Pitch(-90 * (float)dt);
 	}
 
 	if (Application::camera_yaw != 0)
@@ -366,6 +352,20 @@ void SceneSP3::Update(double dt)
 
 	if (diff != 0)
 		walkCam.Move(0, 0, diff);
+
+	{
+		Vector3 camDir = walkCam.GetDir();
+		if (camDir.x != 0 || camDir.z != 0)
+			fishRot.y = Math::RadianToDegree(atan2(-camDir.z, camDir.x));
+	}
+
+	{
+		Vector3 camDir = walkCam.GetDir();
+		if (camDir.x != 0 || camDir.z != 0)
+			fishRot.y = Math::RadianToDegree(atan2(-camDir.z, camDir.x));
+
+		fishRot.x = 90 - Math::RadianToDegree(acos(-camDir.y));
+	}
 
 
 
@@ -711,6 +711,16 @@ void SceneSP3::RenderWorld()
     //RenderSprite();
     RenderOBJ();
     RenderParticles();
+	modelStack.PushMatrix();
+	{
+		Vector3 p = walkCam.GetPos();
+		modelStack.Translate(p.x, p.y, p.z);
+		modelStack.Rotate(90 + fishRot.y, 0, 1, 0);
+		modelStack.Rotate(0 + fishRot.x, 1, 0, 0);
+		modelStack.Scale(20, 20, 20);
+		RenderMesh(meshList[GEO_FISHMODEL], true);
+	}
+	modelStack.PopMatrix();
     //glUniform1i(m_parameters[U_FOG_ENABLE], 0);
 }
 

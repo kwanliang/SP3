@@ -47,3 +47,8 @@ Vector3 ThirdPersonCamera::GetPos()
 {
 	return pos;
 }
+
+Vector3 ThirdPersonCamera::GetDir()
+{
+	return dir;
+}

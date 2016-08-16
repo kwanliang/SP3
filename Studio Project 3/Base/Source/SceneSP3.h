@@ -94,19 +94,20 @@ class SceneSP3 : public Scene
 
         U_TOTAL,
     };
-    enum GEOMETRY_TYPE
-    {
-        GEO_AXES,
+	enum GEOMETRY_TYPE
+	{
+		GEO_AXES,
 		GEO_CUBE,
-        GEO_CROSSHAIR,
-        GEO_TEXT,
-        GEO_SKYPLANE,
-        GEO_TERRAIN,      
-        SPRITE_NAME,
-        PARTICLE_NAME,
-        GEO_LIGHT_DEPTH_QUAD,
-        NUM_GEOMETRY,
-    };
+		GEO_CROSSHAIR,
+		GEO_TEXT,
+		GEO_SKYPLANE,
+		GEO_TERRAIN,
+		GEO_FISHMODEL,
+		SPRITE_NAME,
+		PARTICLE_NAME,
+		GEO_LIGHT_DEPTH_QUAD,
+		NUM_GEOMETRY,
+	};
     enum RENDER_PASS
     {
         RENDER_PASS_PRE,
@@ -185,7 +186,7 @@ private:
 	Vector3 playerpos;
 	hitbox player_box;
 
-
+	Vector3 fishRot;
 };
 
 #endif

@@ -4,6 +4,7 @@ const float maxPitch = 80;
 const float minPitch = -80;
 
 WalkCamera::WalkCamera()
+	: yOffset(0)
 {
 
 }
@@ -70,4 +71,19 @@ void WalkCamera::Pitch(float degrees)
 
 	dir = rot * dir;
 	up = rot * up;
+}
+
+Mtx44 WalkCamera::GetView()
+{
+	Vector3 eye = pos - dir * distance + Vector3(0, yOffset, 0);
+	Vector3 center = pos + Vector3(0, yOffset, 0);
+
+	Mtx44 view;
+	view.SetToLookAt(
+		(double)eye.x, (double)eye.y, (double)eye.z,
+		(double)center.x, (double)center.y, (double)center.z,
+		(double)up.x, (double)up.y, (double)up.z
+	);
+
+	return view;
 }

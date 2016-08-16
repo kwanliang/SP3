@@ -11,8 +11,9 @@ public:
 	virtual void Init(const Vector3 &pos = { 0,0,0 }, const Vector3 &dir = { 0, 0, -1 }, const Vector3 &up = { 0, 1, 0 }, const float &distance = 1);
 
 	Mtx44 GetProjection();
-	Mtx44 GetView();
+	virtual Mtx44 GetView();
 	Vector3 GetPos();
+	Vector3 GetDir();
 
 protected:
 	Vector3 pos;
