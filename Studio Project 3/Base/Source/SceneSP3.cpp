@@ -145,7 +145,7 @@ void SceneSP3::Init()
     lights[0].power = 3.0f;
     lights[0].kC = 1.f;
     lights[0].kL = 0.01f;
-    lights[0].kQ = 0.001;
+    lights[0].kQ = 0.001f;
     lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
     lights[0].cosInner = cos(Math::DegreeToRadian(30));
     lights[0].exponent = 3.f;
@@ -215,7 +215,15 @@ void SceneSP3::Init()
     glUniform1f(m_parameters[U_FOG_TYPE], 1);
     glUniform1f(m_parameters[U_FOG_ENABLE], 0);
 
-    camera.Init(Vector3(0, 400, 80), Vector3(0, 400, 0), Vector3(0, 1, 0));
+
+    //camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
+	walkCam.Init(
+		Vector3(0, 70, 10),
+		Vector3(0, 0, -10),
+		Vector3(0, 1, 0),
+		500
+	);
+	currentCam = &walkCam;
 
     for (int i = 0; i < NUM_GEOMETRY; ++i)
     {
@@ -264,10 +272,10 @@ void SceneSP3::Init()
     //}
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 1000 units
-    Mtx44 perspective;
-    perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
+    //Mtx44 perspective;
+    //perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
     //perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
-    projectionStack.LoadMatrix(perspective);
+   // projectionStack.LoadMatrix(perspective);
 
     rotateSky = 0.f;
     fogThickness = 0.f;
@@ -303,53 +311,79 @@ void SceneSP3::Update(double dt)
     if (Application::IsKeyPressed('P'))
         lights[0].position.y += (float)(100.f * dt);
 
+    //camera.Update(dt);
 
-	if (Application::IsKeyPressed('A'))
-		playerpos.x -= 10 * dt;
-	if (Application::IsKeyPressed('D'))
-		playerpos.x += 10 * dt;
+    fps = (float)(1. / dt);
+
 	if (Application::IsKeyPressed('W'))
-		playerpos.z -= 10 * dt;
-	if (Application::IsKeyPressed('S'))
-	playerpos.z += 10 * dt;
-	if (Application::IsKeyPressed('Q'))
-		playerpos.y += 10 * dt;
-	if (Application::IsKeyPressed('E'))
-		playerpos.y -= 10 * dt;
-	
-
-	hitbox::updatehitbox(player_box, playerpos);
-	camera.target = playerpos;
-	//camera.position + playerpos-Vector3(0,300,0);
-    camera.Update(dt);
-
-    fps = (float)(1.f / dt);
-
-    float terrainheight = (350.f * ReadHeightMap(m_heightMap, playerpos.x / 3000.f, playerpos.z / 3000.f));
-
-	if (terraincollision(player_box, terrainheight))
 	{
-		cout << "collided" << endl;
-
+		walkCam.Move(100 * (float)dt);
 	}
-	else
-		cout << "" << endl;
-	
+	if (Application::IsKeyPressed('S'))
+	{
+		walkCam.Move(-100 * (float)dt);
+	}
+
+	if (Application::IsKeyPressed('Q'))
+	{
+		walkCam.Move(0, -100 * (float)dt);
+	}
+	if (Application::IsKeyPressed('E'))
+	{
+		walkCam.Move(0, 100 * (float)dt);
+	}
+
+	if (Application::IsKeyPressed('A') || Application::IsKeyPressed(VK_LEFT))
+	{
+		walkCam.Turn(90 * (float)dt);
+	}
+	if (Application::IsKeyPressed('D') || Application::IsKeyPressed(VK_RIGHT))
+	{
+		walkCam.Turn(-90 * (float)dt);
+	}
+
+	if (Application::IsKeyPressed(VK_UP))
+	{
+		walkCam.Pitch(90 * (float)dt);
+	}
+	if (Application::IsKeyPressed(VK_DOWN))
+	{
+		walkCam.Pitch(-90 * (float)dt);
+	}
+
+	if (Application::camera_yaw != 0)
+	{
+		walkCam.Turn(Math::RadianToDegree(-(float)Application::camera_yaw * 0.5f));
+	}
+
+	if (Application::camera_pitch != 0)
+	{
+		walkCam.Pitch(Math::RadianToDegree(-(float)Application::camera_pitch * 0.5f));
+	}
+
+	float tH = (350.f * ReadHeightMap(m_heightMap, walkCam.GetPos().x / 3000.f, walkCam.GetPos().z / 3000.f)) + 20.f;
+	float diff = tH - walkCam.GetPos().y;
+
+	if (diff != 0)
+		walkCam.Move(0, 0, diff);
+
+
+
+    //camera.TerrainHeight = (350.f * ReadHeightMap(m_heightMap, camera.position.x / 3000.f, camera.position.z / 3000.f)) + 20.f;
 
     rotateSky += .05f;
 
-    // Fog & Blending
-    if (blendFactor < 1.0f)
-        blendFactor += (1.f / 180.f);
+ //   // Fog & Blending
+	//if (blendFactor < 1.0f)
+	//	blendFactor = 1.f;
+	//else
+ //       blendFactor = 0;
 
     glUniform1f(m_parameters[U_TEXTURE_BLEND_FACTOR], blendFactor);
 
     //    fogThickness += (1.f / 100.f);
 
     //glUniform1f(m_parameters[U_FOG_THICKNESS], fogThickness);
-
-    if (blendFactor >= 1.0f)
-        blendFactor = 0;
     //fogThickness = 0;
 
     // Sprite
@@ -720,18 +754,20 @@ void SceneSP3::RenderPassMain()
 
     glUniform1i(m_parameters[U_SHADOW_MAP], 8);
 
-    Mtx44 perspective;
-    perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
-    //perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
-    projectionStack.LoadMatrix(perspective);
+    //Mtx44 perspective;
+    //perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
+    ////perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
+    //projectionStack.LoadMatrix(perspective);
 
     // Camera matrix
-    viewStack.LoadIdentity();
+    /*viewStack.LoadIdentity();
     viewStack.LookAt(
         camera.position.x, camera.position.y, camera.position.z,
         camera.target.x, camera.target.y, camera.target.z,
         camera.up.x, camera.up.y, camera.up.z
-        );
+        );*/
+	projectionStack.LoadMatrix(currentCam->GetProjection());
+	viewStack.LoadMatrix(currentCam->GetView());
     // Model matrix : an identity matrix (model will be at the origin)
     modelStack.LoadIdentity();
 

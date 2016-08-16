@@ -68,8 +68,8 @@ bool Application::GetMouseUpdate()
 	mouse_diff_y = mouse_current_y - mouse_last_y;
 
 	//Calculate the yaw and pitch
-	camera_yaw = (float) mouse_diff_x * 0.0174555555555556f;// * 3.142f / 180.0f;
-	camera_pitch = mouse_diff_y * 0.0174555555555556f;// 3.142f / 180.0f );
+	camera_yaw = mouse_diff_x * 0.0174555555555556;// * 3.142f / 180.0f;
+	camera_pitch = mouse_diff_y * 0.0174555555555556;// 3.142f / 180.0f );
 
 	// Do a wraparound if the mouse cursor has gone out of the deadzone
 	if ((mouse_current_x < m_window_deadzone) || (mouse_current_x > m_window_width-m_window_deadzone))

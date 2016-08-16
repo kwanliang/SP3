@@ -17,7 +17,7 @@ out vec4 shadowCoord;
 uniform mat4 MVP;
 uniform mat4 MV;
 uniform mat4 MV_inverse_transpose;
-uniform bool lightEnabled;
+uniform int lightEnabled;
 uniform mat4 lightDepthMVP;
 
 void main(){
@@ -27,7 +27,7 @@ void main(){
 	// Vector position, in camera space
 	vertexPosition_cameraspace = ( MV * vec4(vertexPosition_modelspace, 1) ).xyz;
 
-	if(lightEnabled == true)
+	if(lightEnabled> 0)
 	{
 		// Vertex normal, in camera space
 		// Use MV if ModelMatrix does not scale the model ! Use its inverse transpose otherwise.

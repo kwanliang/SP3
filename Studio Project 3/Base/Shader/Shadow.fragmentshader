@@ -58,18 +58,18 @@ struct FogParam
 	float thickness;	// For fog thickness
 	float density;		// For exponential fog
 	int type;			// 0 = linear, 1 = exp, 2 = exp2
-	bool enabled;		// Toggle fog
+	int enabled;		// Toggle fog
 };
 
 struct BlendParam
 {
 	float blendFactor;	// Factor for blending
-	bool blendEnabled;	// Toggle blending
+	int blendEnabled;	// Toggle blending
 };
 
 float getFogFactor(FogParam fog, float fogDistance)
 {
-	if(fog.enabled == false)
+	if(fog.enabled == 0)
 		return 0.0;
 
 	float factor = 0.0;
@@ -90,13 +90,13 @@ const int MAX_LIGHTS = 8;
 const int MAX_TEXTURES = 8;
 
 // Values that stay constant for the whole mesh.
-uniform bool lightEnabled;
+uniform int lightEnabled;
 uniform Light lights[MAX_LIGHTS];
 uniform Material material;
 uniform int numLights;
-uniform bool colorTextureEnabled[MAX_TEXTURES];
+uniform int colorTextureEnabled[MAX_TEXTURES];
 uniform sampler2D colorTexture[MAX_TEXTURES];
-uniform bool textEnabled;
+uniform int textEnabled;
 uniform vec3 textColor;
 uniform FogParam fogParam;
 uniform sampler2D shadowMap;
@@ -137,14 +137,14 @@ float getShadowEffect(float cosTheta)
 }
 
 void main(){
-	if(lightEnabled == true)
+	if(lightEnabled > 0)
 	{
 		// Material properties
 		vec4 materialColor = vec4(0, 0, 0, 1);
 		
 		int texCount = 0;
 		
-		if (blendParam.blendEnabled == true)
+		if (blendParam.blendEnabled > 0)
 		{
 			materialColor = mix(texture2D( colorTexture[0], texCoord ), texture2D( colorTexture[1], texCoord ), clamp(blendParam.blendFactor, 0.1, 1.0));
 		}
@@ -152,7 +152,7 @@ void main(){
 		{
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 			{
-				if(colorTextureEnabled[i] == true)
+				if(colorTextureEnabled[i] > 0)
 				{
 					materialColor += texture2D( colorTexture[i], texCoord );
 					++texCount;
@@ -215,7 +215,7 @@ void main(){
 	}
 	else
 	{
-		if(colorTextureEnabled[0] == true && textEnabled == true)
+		if(colorTextureEnabled[0]> 0 && textEnabled > 0)
 		{
 			color = texture2D( colorTexture[0], texCoord ) * vec4( textColor, 1 );
 		}
@@ -226,7 +226,7 @@ void main(){
 			color = vec4(0, 0, 0, 0);
 			for (int i = 0; i < MAX_TEXTURES; ++i)
 			{
-				if(colorTextureEnabled[i] == true)
+				if(colorTextureEnabled[i] > 0)
 				{
 					color += texture2D( colorTexture[i], texCoord );
 					++texCount;
@@ -245,7 +245,7 @@ void main(){
 	if (color.a < 0.1)
 		discard;
 
-	if(fogParam.enabled)
+	if(fogParam.enabled > 0)
 	{
 		float fogDistance = abs(vertexPosition_cameraspace.z);
 		float fogFactor = getFogFactor(fogParam, fogDistance);

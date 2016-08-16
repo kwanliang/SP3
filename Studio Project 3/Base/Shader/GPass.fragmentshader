@@ -5,12 +5,12 @@ layout(location = 0) out float fragmentdepth;
  
 in vec2 texCoord;
 
-uniform bool colorTextureEnabled[3];
+uniform int colorTextureEnabled[3];
 uniform sampler2D colorTexture[3];
 
 void main(){
 	float alpha = 1.0;
-	if (colorTextureEnabled[0] == true)
+	if (colorTextureEnabled[0] > 0)
 	{
 		alpha = texture2D( colorTexture[0], texCoord ).a;
 	}

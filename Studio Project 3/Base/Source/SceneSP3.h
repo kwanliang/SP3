@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Mtx44.h"
 #include "Camera3.h"
+#include "CameraV2.h"
+#include "WalkCamera.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -155,7 +157,10 @@ private:
     Mtx44 m_lightDepthView;
     RENDER_PASS m_renderPass;
 
-    Camera3 camera;
+    //Camera3 camera;
+	CameraV2 *currentCam;
+
+	WalkCamera walkCam;
 
     MS modelStack;
     MS viewStack;
