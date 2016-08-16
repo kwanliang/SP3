@@ -7,9 +7,13 @@ class Pufferfish : public SeaCreature
 {
 public:
     Pufferfish();
+	Pufferfish(Vector3 pos);
     ~Pufferfish();
 
     void expand();
+
+private:
+	
 };
 
 #endif

@@ -35,13 +35,14 @@ void WalkCamera::Move(const float &frontDist, const float &sideDist, const float
 {
 	Vector3 right = dir.Cross(up);
 	Vector3 front = vertical.Cross(right);
-
+	Vector3 view = pos - dir;
+	view.Normalize();
 	right.Normalize();
 	front.Normalize();
 
 	pos +=
 		front * frontDist +
-		right * sideDist;
+		right * sideDist ;
 
 	if (followUp) pos += up * upDist;
 	else pos += vertical * upDist;

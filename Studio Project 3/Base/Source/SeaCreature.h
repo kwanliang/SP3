@@ -2,15 +2,18 @@
 #define SEACREATURE_H
 
 #include "GameObject.h"
+#include "Vector3.h"
 
 class SeaCreature : public GameObject
 {
 private:
     int m_health;
+	Vector3 m_position;
 public:
     enum SEACREATURE_TYPE
     {
         MINNOW = 0,
+		PUFFER,
 
         TYPE_TOTAL,
     };

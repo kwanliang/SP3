@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "CollisionManager.h"
 
 GameObject::GameObject()
     : objectType(SEACREATURE)

@@ -1,9 +1,62 @@
-﻿Build started 8/16/2016 2:28:58 PM.
+﻿Build started 8/16/2016 3:59:31 PM.
      1>Project "C:\Users\509n1\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" on node 2 (Build target(s)).
-     1>Link:
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\509n1\Desktop\SP3\Studio Project 3\/Common/Source" /I"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glew/include" /I"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\WalkCamera.cpp
+         WalkCamera.cpp
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug" /LIBPATH:"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glfw/lib-msvc100" /LIBPATH:"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glew/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
+         Debug\Camera.obj
+         Debug\Camera2.obj
+         Debug\Camera3.obj
+         Debug\DepthFBO.obj
+         Debug\GameObject.obj
+         Debug\LoadHmap.obj
+         Debug\LoadOBJ.obj
+         Debug\LoadTGA.obj
+         Debug\main.obj
+         Debug\Mesh.obj
+         Debug\MeshBuilder.obj
+         Debug\Minnow.obj
+         Debug\OBJMesh.obj
+         Debug\Particle.obj
+         Debug\Projectile.obj
+         Debug\Pufferfish.obj
+         Debug\SeaCreature.obj
+         Debug\shader.obj
+         Debug\Skipper.obj
+         Debug\SpriteAnimation.obj
+         Debug\SceneSP3.obj
+         Debug\ThirdPersonCamera.obj
+         Debug\Utility.obj
+         Debug\WalkCamera.obj
+     1>Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
+     1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+     1>Utility.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Utility.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>ThirdPersonCamera.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'ThirdPersonCamera.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>SpriteAnimation.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'SpriteAnimation.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Skipper.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Skipper.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>shader.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'shader.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>SeaCreature.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'SeaCreature.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Pufferfish.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Pufferfish.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Projectile.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Projectile.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Particle.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Particle.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>OBJMesh.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'OBJMesh.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Minnow.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Minnow.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>MeshBuilder.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'MeshBuilder.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Mesh.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Mesh.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>main.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'main.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>LoadTGA.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'LoadTGA.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>LoadOBJ.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'LoadOBJ.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>LoadHmap.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'LoadHmap.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>GameObject.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'GameObject.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>DepthFBO.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'DepthFBO.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Camera3.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Camera3.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Camera2.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Camera2.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Camera.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Camera.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
+     1>Application.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Application.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
          Base.vcxproj -> C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.exe
      1>Done Building Project "C:\Users\509n1\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.06
+Time Elapsed 00:00:00.90

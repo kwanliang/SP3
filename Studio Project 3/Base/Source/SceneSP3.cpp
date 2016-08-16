@@ -221,7 +221,7 @@ void SceneSP3::Init()
 		Vector3(0, 70, 10),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
-		250
+		500
 	);
 	currentCam = &walkCam;
 
@@ -304,8 +304,8 @@ void SceneSP3::Init()
         fo->seaType = SeaCreature::MINNOW;
         fo->state = Minnow::FLOCK;
         fo->scale.Set(1, 1, 5);
-        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100));
-        fo->vel.Set(Math::RandFloatMinMax(-10, 10), -5, Math::RandFloatMinMax(-10, 10));
+        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-400,600 ), Math::RandFloatMinMax(-100, 100));
+        fo->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
     }
 }
 
@@ -543,13 +543,14 @@ void SceneSP3::Update(double dt)
 		walkCam.Pitch(Math::RadianToDegree(-(float)Application::camera_pitch * 0.5f));
 	}
 
-	float tH = (350.f * ReadHeightMap(m_heightMap, walkCam.GetPos().x / 3000.f, walkCam.GetPos().z / 3000.f)) + 20.f;
-	float diff = tH - walkCam.GetPos().y;
-	if (diff < 0) diff = 0;
+	//float tH = (350.f * ReadHeightMap(m_heightMap, walkCam.GetPos().x / 3000.f, walkCam.GetPos().z / 3000.f)) + 20.f;
+	//float diff = tH - walkCam.GetPos().y;
 
-	if (diff != 0)
-		walkCam.Move(0, 0, diff);
+	//if (diff != 0)
+		//walkCam.Move(0, 0, diff);
 
+
+	//orientate fish
 	{
 		Vector3 camDir = walkCam.GetDir();
 		if (camDir.x != 0 || camDir.z != 0)
@@ -915,7 +916,7 @@ void SceneSP3::RenderWorld()
 		modelStack.Translate(p.x, p.y, p.z);
 		modelStack.Rotate(90 + fishRot.y, 0, 1, 0);
 		modelStack.Rotate(0 + fishRot.x, 1, 0, 0);
-		modelStack.Scale(20, 20, 20);
+		modelStack.Scale(3, 3, 3);
 		RenderMesh(meshList[GEO_FISHMODEL], true);
 	}
 	modelStack.PopMatrix();

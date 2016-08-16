@@ -134,11 +134,15 @@ public:
     void RenderWorld();
 
     void UpdateMinnow(double dt);
+	void UpdatePuffer(double dt);
 
     void RenderText(Mesh* mesh, std::string text, Color color);
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f);
     void RenderMesh(Mesh *mesh, bool enableLight);
+
+
+
 
     void RenderSkyPlane();
     void RenderTerrain();
