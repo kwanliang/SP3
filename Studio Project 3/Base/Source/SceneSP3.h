@@ -213,7 +213,7 @@ private:
 	//player test stuff
 	Vector3 playerpos;
 	hitbox2 player_box;
-
+	float val = 0;
 	Vector3 fishRot;
 	Vector3 fishVel;
 };

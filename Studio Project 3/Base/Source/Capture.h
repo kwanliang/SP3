@@ -13,8 +13,8 @@ public:
 	Capture();
 	~Capture();
 
-	static Vector3 Vacuum(SeaCreature creature, WalkCamera camera, double dt);//gameobject);
-	static void AddSquad(WalkCamera camera, SeaCreature creature);//gameobject);
+	static Vector3 Vacuum(SeaCreature creature, Vector3 playerpos, double dt);//gameobject);
+	static void AddSquad(Vector3 playerpos, SeaCreature creature);//gameobject);
 	
 	/*void SetType(SeaCreature creature);
 	void SetPos(Vector3 pos);

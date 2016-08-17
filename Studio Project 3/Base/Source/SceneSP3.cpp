@@ -241,11 +241,20 @@ void SceneSP3::Init()
     meshList[GEO_SKYPLANE]->textureArray[0] = LoadTGA("Image//sky.tga");
     meshList[GEO_SKYPLANE]->textureArray[1] = LoadTGA("Image//night.tga");
 
-    meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("terrain", "Image//heightmap2.raw", m_heightMap);
-    //meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
+    meshList[GEO_TERRAIN0] = MeshBuilder::GenerateTerrain("terrain", "Image//heightmap_big.raw", m_heightMap[0]);
+    meshList[GEO_TERRAIN0]->textureArray[0] = LoadTGA("Image//rock.tga");
+	meshList[GEO_TERRAIN1] = MeshBuilder::GenerateTerrain("terrain", "Image//Area01.raw", m_heightMap[1]);
+	meshList[GEO_TERRAIN1]->textureArray[0] = LoadTGA("Image//rock.tga");
+	meshList[GEO_TERRAIN2] = MeshBuilder::GenerateTerrain("terrain", "Image//Area02.raw", m_heightMap[2]);
+	meshList[GEO_TERRAIN2]->textureArray[0] = LoadTGA("Image//rock.tga");
+	meshList[GEO_TERRAIN3] = MeshBuilder::GenerateTerrain("terrain", "Image//Area03.raw", m_heightMap[3]);
+	meshList[GEO_TERRAIN3]->textureArray[0] = LoadTGA("Image//rock.tga");
+	meshList[GEO_TERRAIN4] = MeshBuilder::GenerateTerrain("terrain", "Image//Area04.raw", m_heightMap[4]);
+	meshList[GEO_TERRAIN4]->textureArray[0] = LoadTGA("Image//rock.tga");
+
     //meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
 
-	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//FishModel.obj");
+	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rcfish.obj");
 
     meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 16, 16, 1.f);
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
@@ -299,7 +308,7 @@ void SceneSP3::Init()
 	fo->seaType = SeaCreature::MINNOW;
 	fo->state = Minnow::FLOCK;
 	fo->scale.Set(1, 1, 5);
-	fo->pos.Set(0,300,0);
+	fo->pos.Set(0,600,0);
 	fo->vel.Set(0,0,0);
 	fo->setHealth(50);
 	
@@ -520,30 +529,42 @@ void SceneSP3::Update(double dt)
     fps = (float)(1. / dt);
 
 	{
-		/*Vector3 temp = walkCam.GetPos();
+		Vector3 temp = walkCam.GetPos();
 		Vector3 right = walkCam.GetDir().Cross(walkCam.GetUp());
 		right.Normalize();
+		float movespeed = 1000;
+		if (Application::IsKeyPressed('Z'))
+		{
+			val += 10*dt;
+			cout << val << endl;
+		}
+		if (Application::IsKeyPressed('X'))
+		{
+			val -=10* dt;
+			cout << val << endl;
+		}
+
 
 		if (Application::IsKeyPressed('W'))
 		{
-			walkCam.Move(100 * (float)dt * walkCam.GetDir());
+			walkCam.Move(movespeed * (float)dt * walkCam.GetDir());
 		}
 		if (Application::IsKeyPressed('S'))
 		{
-			walkCam.Move(-100 * (float)dt * walkCam.GetDir());
+			walkCam.Move(-movespeed * (float)dt * walkCam.GetDir());
 		}
 
 		if (Application::IsKeyPressed('A'))
 		{
-			walkCam.Move(-100.f * (float)dt * right);
+			walkCam.Move(-movespeed * (float)dt * right);
 		}
 		if (Application::IsKeyPressed('D'))
 		{
-			walkCam.Move(100.f * (float)dt * right);
+			walkCam.Move(movespeed * (float)dt * right);
 		}
 		playerpos = walkCam.GetPos() + Vector3(0,80,0);
 		hitbox2::updatehitbox(player_box,playerpos);
-		if (terraincollision(player_box, m_heightMap))
+		//if (terraincollision(player_box, m_heightMap[0]))
 		{
 			walkCam.SetPos(temp);
 		}*/
@@ -644,7 +665,7 @@ void SceneSP3::Update(double dt)
     //camera.TerrainHeight = (350.f * ReadHeightMap(m_heightMap, camera.position.x / 3000.f, camera.position.z / 3000.f)) + 20.f;
 
     rotateSky += .05f;
-	cout << "fuck" << endl;
+
  //   // Fog & Blending
 	//if (blendFactor < 1.0f)
 	//	blendFactor = 1.f;
@@ -677,7 +698,8 @@ void SceneSP3::Update(double dt)
 			{
 				if (go->objectType == GameObject::SEACREATURE)
 				{
-					go->setPos(Capture::Vacuum(*go, walkCam, dt));
+					go->setPos(Capture::Vacuum(*go, playerpos, dt));
+					cout << playerpos.y << endl;
 				}
 			}
 		}
