@@ -512,7 +512,7 @@ void SceneSP3::Update(double dt)
     fps = (float)(1. / dt);
 
 	{
-		Vector3 temp = walkCam.GetPos();
+		/*Vector3 temp = walkCam.GetPos();
 		Vector3 right = walkCam.GetDir().Cross(walkCam.GetUp());
 		right.Normalize();
 
@@ -538,10 +538,70 @@ void SceneSP3::Update(double dt)
 		if (terraincollision(player_box, m_heightMap))
 		{
 			walkCam.SetPos(temp);
+		}*/
+
+		{
+			const float acceleration = 50.f;
+			const float speedLimit = 50.f;
+
+			Vector3 forceApplied;
+			forceApplied.SetZero();
+			Vector3 right = walkCam.GetDir().Cross(walkCam.GetUp());
+			right.Normalize();
+
+			if (Application::IsKeyPressed('W'))
+			{
+				forceApplied += walkCam.GetDir() * acceleration;
+			}
+			if (Application::IsKeyPressed('S'))
+			{
+				forceApplied -= walkCam.GetDir() * acceleration;
+			}
+
+			if (Application::IsKeyPressed('A'))
+			{
+				forceApplied -= right * acceleration;
+			}
+			if (Application::IsKeyPressed('D'))
+			{
+				forceApplied += right * acceleration;
+			}
+
+			fishVel += forceApplied * (float)dt;
+			if (fishVel.LengthSquared() > speedLimit * speedLimit)
+			{
+				fishVel.Normalize();
+				fishVel *= speedLimit;
+			}
+
+			std::cout << fishVel.Length() << std::endl;
+			
+			walkCam.Move(fishVel * (float)dt);
+
+			playerpos = walkCam.GetPos() + Vector3(0, 80, 0);
+			hitbox2::updatehitbox(player_box, playerpos);
+
+			if (terraincollision(player_box, m_heightMap))
+			{
+				fishVel *= -1.f;
+				walkCam.Move(fishVel * (float)dt);
+			}
+
+			if (!fishVel.IsZero())
+			{
+				const float frictionValue = 10.f;
+				float f = frictionValue * (float)dt;
+
+				if (fishVel.LengthSquared() < f * f)
+				{
+					fishVel.SetZero();
+				}
+				else
+				{
+					fishVel -= fishVel.Normalized() * f;
+				}
+			}
 		}
-
-
-
 	}
 
 	if (Application::camera_yaw != 0)

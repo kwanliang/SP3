@@ -207,6 +207,7 @@ private:
 	hitbox2 player_box;
 
 	Vector3 fishRot;
+	Vector3 fishVel;
 
 	//Fish test
 	Capture fishy;
