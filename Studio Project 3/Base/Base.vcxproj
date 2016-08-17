@@ -29,6 +29,7 @@
     <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\Projectile.cpp" />
     <ClCompile Include="Source\Pufferfish.cpp" />
+    <ClCompile Include="Source\SceneTutorial.cpp" />
     <ClCompile Include="Source\SeaCreature.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Skipper.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\SceneSP3.h" />
     <ClInclude Include="Source\ThirdPersonCamera.h" />
+    <ClInclude Include="Source\SceneTutorial.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\WalkCamera.h" />

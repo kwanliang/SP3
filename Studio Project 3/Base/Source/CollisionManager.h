@@ -145,9 +145,6 @@ struct hitbox2{
 	}
 
 };
-
-
-
 static bool terraincollision(const hitbox2& hitbox, std::vector<unsigned char> heightmap){
 
 

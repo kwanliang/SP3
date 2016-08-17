@@ -93,6 +93,9 @@
     <ClCompile Include="Source\Capture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneTutorial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -192,6 +195,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Capture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneTutorial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

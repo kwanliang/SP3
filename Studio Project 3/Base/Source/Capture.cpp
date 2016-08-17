@@ -4,9 +4,9 @@
 
 Capture::Capture()
 {
-	hitpoints = 50;
+	/*hitpoints = 50;
 	Type = FISHTYPE;
-	position= (Vector3(0,0,0));
+	position= (Vector3(0,0,0));*/
 }
 
 
@@ -16,36 +16,39 @@ Capture::~Capture()
 
 
 
-Vector3 Capture::Vacuum(Capture fish, WalkCamera camera, double dt)//, gameobject)
+Vector3 Capture::Vacuum(SeaCreature creature, WalkCamera camera, double dt)//, gameobject)
 {
-	if (true)//if (	(camera.GetEye() - camera.GetPos()) == ((camera.GetPos() - objectposition)*-1)//camera.target * range && gameobject == fish
+	if (true)//if (	(camera.GetEye() - camera.GetPos()) == ((camera.GetPos() - objectposition)*-1)//camera.target * range && gameobject == creature
 	{
-		//translate fish pos towards player position 
+		//translate creature pos towards player position
 		
-			Vector3 view = (fish.GetPos() - camera.GetPos()).Normalized();
-			if (fish.GetPos().x - camera.GetPos().x >= 1)
+			Vector3 view = (creature.pos - camera.GetPos()).Normalized();
+			if (creature.pos.x - camera.GetPos().x >= 1)
 			{
-				fish.SetPos(Vector3((fish.GetPos().x - (view.x / fabs(fish.GetPos().x - camera.GetPos().x)*500/fish.GetHP())), (fish.GetPos().y), (fish.GetPos().z)));
+				creature.setPos(Vector3((creature.pos.x - (view.x / fabs(creature.pos.x - camera.GetPos().x)*500/creature.getHealth())), (creature.pos.y), (creature.pos.z)));
 			}
-			if (fish.GetPos().y - camera.GetPos().y >= 1)
+			if (creature.pos.y - camera.GetPos().y >= 1)
 			{
-				fish.SetPos(Vector3(fish.GetPos().x, (fish.GetPos().y - (view.y / fabs(fish.GetPos().y - camera.GetPos().y) * 500 / fish.GetHP())), (fish.GetPos().z)));
+				creature.setPos(Vector3(creature.pos.x, (creature.pos.y - (view.y / fabs(creature.pos.y - camera.GetPos().y) * 500 / creature.getHealth())), (creature.pos.z)));
 			}
-			if (fish.GetPos().z - camera.GetPos().z >= 1)
+			if (creature.pos.z - camera.GetPos().z >= 1)
 			{
-				fish.SetPos(Vector3(fish.GetPos().x, (fish.GetPos().y), (fish.GetPos().z - (view.z / fabs(fish.GetPos().z - camera.GetPos().z) * 500 / fish.GetHP()))));
+				creature.setPos(Vector3(creature.pos.x, (creature.pos.y), (creature.pos.z - (view.z / fabs(creature.pos.z - camera.GetPos().z) * 500 / creature.getHealth()))));
 			}
 		
-		//AddSquad(camera);
+		AddSquad(camera,creature);
 	}	
-	return fish.GetPos();
+	return creature.pos;
 }
 
-void Capture::AddSquad(WalkCamera camera, Capture fish)//, gameobject)
+void Capture::AddSquad(WalkCamera camera, SeaCreature creature)//, gameobject)
 {
-	if (camera.GetPos() == fish.GetPos())
+	if (camera.GetPos() == creature.pos)
 	{
-		std::cout << "true" << std::endl;
+		if (creature.pos.x - camera.GetPos().x <= 1 && creature.pos.y - camera.GetPos().y <= 1 && creature.pos.z - camera.GetPos().z <= 1)
+		{
+			std::cout << "true" << std::endl;
+		}
 		//SquadSize.push_back(temp);
 		//std::cout << GetSquadSize() << std::endl;
 	}
@@ -58,38 +61,38 @@ void Capture::AddSquad(WalkCamera camera, Capture fish)//, gameobject)
 //	return SquadSize.size();
 //}
 
-void Capture::SetType(Capture::fish type)
-{
-	this->Type = type;
-}
-
-Capture::fish Capture::Gettype()
-{
-	return this->Type;
-}
-
-void Capture::SetPos(Vector3 pos)
-{
-	this->position = pos;
-}
-
-Vector3 Capture::GetPos()
-{
-	return this->position;
-}
-
-float Capture::GetHP()
-{
-	return this->hitpoints;
-}
-
-void Capture::SetPercent(float percentage)
-{
-	this->CapturePercent = percentage;
-}
-
-
-float Capture::GetPercent()
-{
-	return this->CapturePercent;
-}
+//void Capture::SetType(Capture::fish type)
+//{
+//	this->Type = type;
+//}
+//
+//Capture::fish Capture::Gettype()
+//{
+//	return this->Type;
+//}
+//
+//void Capture::SetPos(Vector3 pos)
+//{
+//	this->position = pos;
+//}
+//
+//Vector3 Capture::GetPos()
+//{
+//	return this->position;
+//}
+//
+//float Capture::GetHP()
+//{
+//	return this->hitpoints;
+//}
+//
+//void Capture::SetPercent(float percentage)
+//{
+//	this->CapturePercent = percentage;
+//}
+//
+//
+//float Capture::GetPercent()
+//{
+//	return this->CapturePercent;
+//}

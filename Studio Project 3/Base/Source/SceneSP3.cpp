@@ -140,16 +140,16 @@ void SceneSP3::Init()
     // Use our shader
     glUseProgram(m_programID);
 
-    lights[0].type = Light::LIGHT_DIRECTIONAL;
-    lights[0].position.Set(0, 100, 50);
-    lights[0].color.Set(1, 1, 1);
-    lights[0].power = 3.0f;
-    lights[0].kC = 1.f;
-    lights[0].kL = 0.01f;
-    lights[0].kQ = 0.001f;
-    lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
-    lights[0].cosInner = cos(Math::DegreeToRadian(30));
-    lights[0].exponent = 3.f;
+    //lights[0].type = Light::LIGHT_DIRECTIONAL;
+    //lights[0].position.Set(0, 100, 50);
+    //lights[0].color.Set(1, 1, 1);
+    //lights[0].power = 3.0f;
+    //lights[0].kC = 1.f;
+    //lights[0].kL = 0.01f;
+    //lights[0].kQ = 0.001f;
+    //lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+    //lights[0].cosInner = cos(Math::DegreeToRadian(30));
+    //lights[0].exponent = 3.f;
 
     //lights[1].type = Light::LIGHT_DIRECTIONAL;
     //lights[1].position.Set(0, 100, 50);
@@ -217,7 +217,7 @@ void SceneSP3::Init()
     glUniform1f(m_parameters[U_FOG_ENABLE], 0);
 
 
-    //camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
+   // camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
 	walkCam.Init(
 		Vector3(0, 400, 10),
 		Vector3(0, 0, -10),
@@ -242,7 +242,7 @@ void SceneSP3::Init()
     meshList[GEO_SKYPLANE]->textureArray[1] = LoadTGA("Image//night.tga");
 
     meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("terrain", "Image//heightmap2.raw", m_heightMap);
-    meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
+    //meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
     //meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
 
 	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//FishModel.obj");
@@ -292,8 +292,16 @@ void SceneSP3::Init()
     m_particleCount = 0;
     m_gravity.Set(0, -9.8f, 0);
 
-	fishy.SetPos(Vector3(0, 0, 0));
-	fishy.SetType(Capture::FISH);
+	//init Minnow for test
+	Minnow *fo = FetchFO();
+	fo->active = true;
+	fo->objectType = GameObject::SEACREATURE;
+	fo->seaType = SeaCreature::MINNOW;
+	fo->state = Minnow::FLOCK;
+	fo->scale.Set(1, 1, 5);
+	fo->pos.Set(0,300,0);
+	fo->vel.Set(0,0,0);
+	fo->setHealth(50);
 	
 	walkCam.yOffset = 100;
 
@@ -305,8 +313,8 @@ void SceneSP3::Init()
         fo->seaType = SeaCreature::MINNOW;
         fo->state = Minnow::FLOCK;
         fo->scale.Set(1, 1, 5);
-        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-400,600 ), Math::RandFloatMinMax(-100, 100));
-        fo->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
+        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100));
+        fo->vel.Set(Math::RandFloatMinMax(-10, 10), -5, Math::RandFloatMinMax(-10, 10));
     }
 }
 
@@ -636,7 +644,7 @@ void SceneSP3::Update(double dt)
     //camera.TerrainHeight = (350.f * ReadHeightMap(m_heightMap, camera.position.x / 3000.f, camera.position.z / 3000.f)) + 20.f;
 
     rotateSky += .05f;
-
+	cout << "fuck" << endl;
  //   // Fog & Blending
 	//if (blendFactor < 1.0f)
 	//	blendFactor = 1.f;
@@ -662,12 +670,20 @@ void SceneSP3::Update(double dt)
     UpdateMinnow(dt);
 	if (Application::IsKeyPressed('M'))
 	{
-		fishy.SetPos(Capture::Vacuum(fishy, walkCam, dt));
+		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+		{
+			SeaCreature *go = (SeaCreature *)*it;
+			if (go->active)
+			{
+				if (go->objectType == GameObject::SEACREATURE)
+				{
+					go->setPos(Capture::Vacuum(*go, walkCam, dt));
+				}
+			}
+		}
 		
 	}
 }
-
-static const float SKYBOXSIZE = 1000.f;
 
 void SceneSP3::RenderText(Mesh* mesh, std::string text, Color color)
 {
@@ -850,40 +866,6 @@ void SceneSP3::RenderMesh(Mesh *mesh, bool enableLight)
     mesh->Render();
 }
 
-void SceneSP3::RenderSkyPlane()
-{
-    modelStack.PushMatrix();
-    modelStack.Translate(0, 2000, 0);
-    modelStack.Rotate(rotateSky, 0, 1, 0);
-    RenderMesh(meshList[GEO_SKYPLANE], true);
-    modelStack.PopMatrix();
-}
-
-void SceneSP3::RenderTerrain()
-{
-    glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 1);
-    glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 0);
-
-    modelStack.PushMatrix();
-    modelStack.Scale(3000.f, 350.0f, 3000.f);
-    RenderMesh(meshList[GEO_TERRAIN], false);
-    modelStack.PopMatrix();
-}
-
-void SceneSP3::RenderSprite()
-{
-    //modelStack.PushMatrix();
-    //modelStack.Translate(SPRITENAME->SpritePos.x, SPRITENAME->SpritePos.y, SPRITENAME->SpritePos.z);
-    //modelStack.Rotate(SPRITENAME->SpriteAngle, 0, 1, 0);
-    //modelStack.Scale(30, 30, 30);
-    //RenderMesh(meshList[SPRITE_NAME], false);
-    //modelStack.PopMatrix();
-}
-
-void SceneSP3::RenderOBJ()
-{
-
-}
 
 ParticleObject* SceneSP3::GetParticle_NAME()
 {
@@ -952,48 +934,10 @@ void SceneSP3::UpdateParticles(double dt)
     //}
 }
 
-void SceneSP3::RenderParticles()
-{
-    //for (auto it : particleList)
-    //{
-    //    ParticleObject* particle = (ParticleObject*)it;
-    //    if (particle->active)
-    //    {
-    //        if (particle->type == PARTICLEOBJECT_TYPE::P_NAME)
-    //        {
-    //            modelStack.PushMatrix();
-    //            modelStack.Translate(particle->pos.x, particle->pos.y, particle->pos.z);
-    //            modelStack.Rotate(particle->rotation, 0, 1, 0);
-    //            modelStack.Scale(particle->scale.x, particle->scale.y, particle->scale.z);
-    //            RenderMesh(meshList[PARTICLE_NAME], false);
-    //            modelStack.PopMatrix();
-    //        }
-    //    }
-    //}
-}
 
-void SceneSP3::RenderWorld()
-{
-    //glUniform1i(m_parameters[U_FOG_ENABLE], 1);
-   // glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 1);
-   // RenderSkyPlane();
-    //glUniform1i(m_parameters[U_TEXTURE_BLEND_ENABLE], 0);
-    RenderTerrain();
-    //RenderSprite();
-    RenderOBJ();
-    RenderParticles();
-	modelStack.PushMatrix();
-	{
-		Vector3 p = walkCam.GetPos();
-		modelStack.Translate(playerpos.x, playerpos.y, playerpos.z);
-		modelStack.Rotate(90 + fishRot.y, 0, 1, 0);
-		modelStack.Rotate(0 + fishRot.x, 1, 0, 0);
-		modelStack.Scale(3, 3, 3);
-		RenderMesh(meshList[GEO_FISHMODEL], true);
-	}
-	modelStack.PopMatrix();
-    //glUniform1i(m_parameters[U_FOG_ENABLE], 0);
-}
+
+
+
 
 void SceneSP3::RenderFO(Minnow *fo)
 {
@@ -1023,164 +967,149 @@ void SceneSP3::RenderPO(Projectile *po)
     modelStack.PopMatrix();
 }
 
-void SceneSP3::RenderPassGPass()
-{
-    m_renderPass = RENDER_PASS_PRE;
-    m_lightDepthFBO.BindForWriting();
+//void SceneSP3::RenderPassGPass()
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    //m_renderPass = RENDER_PASS_PRE;
+    //m_lightDepthFBO.BindForWriting();
 
-    glUseProgram(m_gPassShaderID);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    //glClear(GL_DEPTH_BUFFER_BIT);
 
-    //these matrices define shadows from light position/direction
-    if (lights[0].type == Light::LIGHT_DIRECTIONAL)
-        m_lightDepthProj.SetToOrtho(-1000, 1000, -1000, 1000, -8000, 8000);
-    else
-        m_lightDepthProj.SetToPerspective(90, 1.f, 0.1, 20);
+    //glUseProgram(m_gPassShaderID);
 
-    m_lightDepthView.SetToLookAt(lights[0].position.x, lights[0].position.y, lights[0].position.z, 0, 0, 0, 0, 1, 0);
+    ////these matrices define shadows from light position/direction
+    //if (lights[0].type == Light::LIGHT_DIRECTIONAL)
+    //    m_lightDepthProj.SetToOrtho(-1000, 1000, -1000, 1000, -8000, 8000);
+    //else
+    //    m_lightDepthProj.SetToPerspective(90, 1.f, 0.1, 20);
 
-    RenderWorld();
-}
+    //m_lightDepthView.SetToLookAt(lights[0].position.x, lights[0].position.y, lights[0].position.z, 0, 0, 0, 0, 1, 0);
 
-void SceneSP3::RenderPassMain()
-{
-    m_renderPass = RENDER_PASS_MAIN;
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, Application::GetWindowWidth(), Application::GetWindowHeight());
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glUseProgram(m_programID);
-
-    // Shadow - pass light depth texture
-    m_lightDepthFBO.BindForReading(GL_TEXTURE8);
-
-    glUniform1i(m_parameters[U_SHADOW_MAP], 8);
-
-    //Mtx44 perspective;
-    //perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
-    ////perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
-    //projectionStack.LoadMatrix(perspective);
-
-    // Camera matrix
-    /*viewStack.LoadIdentity();
-    viewStack.LookAt(
-        camera.position.x, camera.position.y, camera.position.z,
-        camera.target.x, camera.target.y, camera.target.z,
-        camera.up.x, camera.up.y, camera.up.z
-        );*/
-	projectionStack.LoadMatrix(currentCam->GetProjection());
-	viewStack.LoadMatrix(currentCam->GetView());
-    // Model matrix : an identity matrix (model will be at the origin)
-    modelStack.LoadIdentity();
-
-    if (lights[0].type == Light::LIGHT_DIRECTIONAL)
-    {
-        Vector3 lightDir(lights[0].position.x, lights[0].position.y, lights[0].position.z);
-        Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-        glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
-    }
-    else if (lights[0].type == Light::LIGHT_SPOT)
-    {
-        Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
-        glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-        Vector3 spotDirection_cameraspace = viewStack.Top() * lights[0].spotDirection;
-        glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-    }
-    else
-    {
-        Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
-        glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-    }
-
-    if (lights[1].type == Light::LIGHT_DIRECTIONAL)
-    {
-        Vector3 lightDir(lights[1].position.x, lights[1].position.y, lights[1].position.z);
-        Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-        glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-    }
+    //RenderWorld();
 
 
-    if (lights[2].type == Light::LIGHT_SPOT)
-    {
-        Position lightPosition_cameraspace = viewStack.Top() * lights[2].position;
-        glUniform3fv(m_parameters[U_LIGHT2_POSITION], 1, &lightPosition_cameraspace.x);
-        Vector3 spotDirection_cameraspace = viewStack.Top() * lights[2].spotDirection;
-        glUniform3fv(m_parameters[U_LIGHT2_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-    }
+//void SceneSP3::RenderPassMain()
 
-    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-    RenderWorld();
+ //   m_renderPass = RENDER_PASS_MAIN;
 
-    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-    {
-        GameObject *go = (GameObject*)*it;
-        if (go->objectType == GameObject::SEACREATURE)
-        {
-            Minnow *fo = (Minnow*)*it;
-            if (fo->active)
-            {
-                RenderFO(fo);
-            }
-        }
-        else if (go->objectType == GameObject::PROJECTILE)
-        {
-            Projectile *po = (Projectile*)*it;
-            if (po->active)
-            {
-                RenderPO(po);
-            }
-        }
-    }
+ //   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+ //   glViewport(0, 0, Application::GetWindowWidth(), Application::GetWindowHeight());
 
-    // Render the crosshair
-    RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
-	RenderMesh(meshList[GEO_AXES], false);
-    std::ostringstream ss;
-    ss.precision(3);
-    ss << "FPS: " << fps;
-    RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
-	
-	modelStack.PushMatrix();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-	modelStack.Translate(player_box.m_position.x, player_box.m_position.y, player_box.m_position.z);
-	modelStack.Scale(player_box.m_width, player_box.m_height, player_box.m_length);
-	RenderMesh(meshList[GEO_CUBE], false);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-	modelStack.PopMatrix();
+ //   glEnable(GL_CULL_FACE);
+ //   glCullFace(GL_BACK);
+ //   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+ //   glUseProgram(m_programID);
+
+ //   // Shadow - pass light depth texture
+ //   m_lightDepthFBO.BindForReading(GL_TEXTURE8);
+
+ //   glUniform1i(m_parameters[U_SHADOW_MAP], 8);
+
+ //   //Mtx44 perspective;
+ //   //perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
+ //   ////perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
+ //   //projectionStack.LoadMatrix(perspective);
+
+ //   // Camera matrix
+ //   /*viewStack.LoadIdentity();
+ //   viewStack.LookAt(
+ //       camera.position.x, camera.position.y, camera.position.z,
+ //       camera.target.x, camera.target.y, camera.target.z,
+ //       camera.up.x, camera.up.y, camera.up.z
+ //       );*/
+	//projectionStack.LoadMatrix(currentCam->GetProjection());
+	//viewStack.LoadMatrix(currentCam->GetView());
+ //   // Model matrix : an identity matrix (model will be at the origin)
+ //   modelStack.LoadIdentity();
+
+ //   if (lights[0].type == Light::LIGHT_DIRECTIONAL)
+ //   {
+ //       Vector3 lightDir(lights[0].position.x, lights[0].position.y, lights[0].position.z);
+ //       Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+ //       glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
+ //   }
+ //   else if (lights[0].type == Light::LIGHT_SPOT)
+ //   {
+ //       Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
+ //       glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+ //       Vector3 spotDirection_cameraspace = viewStack.Top() * lights[0].spotDirection;
+ //       glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+ //   }
+ //   else
+ //   {
+ //       Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
+ //       glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
+ //   }
+
+ //   if (lights[1].type == Light::LIGHT_DIRECTIONAL)
+ //   {
+ //       Vector3 lightDir(lights[1].position.x, lights[1].position.y, lights[1].position.z);
+ //       Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
+ //       glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
+ //   }
 
 
+ //   if (lights[2].type == Light::LIGHT_SPOT)
+ //   {
+ //       Position lightPosition_cameraspace = viewStack.Top() * lights[2].position;
+ //       glUniform3fv(m_parameters[U_LIGHT2_POSITION], 1, &lightPosition_cameraspace.x);
+ //       Vector3 spotDirection_cameraspace = viewStack.Top() * lights[2].spotDirection;
+ //       glUniform3fv(m_parameters[U_LIGHT2_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+ //   }
 
-	for (unsigned i = 0; i < 8; i++)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(player_box.m_point[i].x, player_box.m_point[i].y, player_box.m_point[i].z);
-		modelStack.Scale(1, 1, 1);
-		RenderMesh(meshList[GEO_CUBE], false);
-		modelStack.PopMatrix();
-	}
+ //   glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+ //   RenderWorld();
+
+ //   for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+ //   {
+ //       GameObject *go = (GameObject*)*it;
+ //       if (go->objectType == GameObject::SEACREATURE)
+ //       {
+ //           Minnow *fo = (Minnow*)*it;
+ //           if (fo->active)
+ //           {
+ //               RenderFO(fo);
+ //           }
+ //       }
+ //       else if (go->objectType == GameObject::PROJECTILE)
+ //       {
+ //           Projectile *po = (Projectile*)*it;
+ //           if (po->active)
+ //           {
+ //               RenderPO(po);
+ //           }
+ //       }
+ //   }
+
+ //   // Render the crosshair
+ //   RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
+	//RenderMesh(meshList[GEO_AXES], false);
+ //   std::ostringstream ss;
+ //   ss.precision(3);
+ //   ss << "FPS: " << fps;
+ //   RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
+	//
+	//modelStack.PushMatrix();
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	//modelStack.Translate(player_box.m_position.x, player_box.m_position.y, player_box.m_position.z);
+	//modelStack.Scale(player_box.m_width, player_box.m_height, player_box.m_length);
+	//RenderMesh(meshList[GEO_CUBE], false);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	//modelStack.PopMatrix();
 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(fishy.GetPos().x, fishy.GetPos().y, fishy.GetPos().z);
-	modelStack.Scale(10, 10, 10);
-	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
-}
 
 void SceneSP3::Render()
 {
-    // PRE RENDER PASS
-    RenderPassGPass();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // MAIN RENDER PASS
-    RenderPassMain();
+    //// PRE RENDER PASS
+    //RenderPassGPass();
+
+    //// MAIN RENDER PASS
+    //RenderPassMain();
 }
 
 void SceneSP3::Exit()

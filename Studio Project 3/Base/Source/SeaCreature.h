@@ -25,6 +25,7 @@ public:
 
     int getHealth();
 
+	void setPos(Vector3 pos);
     void setHealth(int m_health);
 };
 

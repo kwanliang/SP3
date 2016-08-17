@@ -1,7 +1,7 @@
 #include "SeaCreature.h"
 
 SeaCreature::SeaCreature()
-    : m_health(0)
+    : m_health(100)
     , seaType(MINNOW)
     , GameObject(SEACREATURE, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), false)
 {
@@ -29,4 +29,9 @@ int SeaCreature::getHealth()
 void SeaCreature::setHealth(int m_health)
 {
     this->m_health = m_health;
+}
+
+void SeaCreature::setPos(Vector3 pos)
+{
+	this->pos = pos;
 }
