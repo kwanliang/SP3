@@ -35,6 +35,7 @@ public:
     void RenderPassMain();
     void RenderWorld();
 
+	void UpdateTravel();
     void UpdateMinnow(double dt);
 	void UpdatePuffer(double dt);
 
@@ -178,6 +179,8 @@ private:
 			GEO_SKYPLANE,
 			GEO_TERRAIN,
 			GEO_FISHMODEL,
+			GEO_FISHTAIL,
+			GEO_SQUIDBODY,
 			SPRITE_NAME,
 			PARTICLE_NAME,
 			GEO_LIGHT_DEPTH_QUAD,
@@ -190,17 +193,14 @@ private:
 		};
 
 
-	unsigned m_vertexArrayID;
-	Mesh* meshList[NUM_GEOMETRY];
-	unsigned m_programID;
-	unsigned m_gPassShaderID;
-	unsigned m_parameters[U_TOTAL];
 
 	// Game Object
 	std::vector<GameObject*> m_goList;
 	CameraV2 *currentCam;
 	WalkCamera walkCam;
 
+
+	//ligts and rendering
 	MS modelStack;
 	MS viewStack;
 	MS projectionStack;
@@ -209,12 +209,26 @@ private:
 	Mtx44 m_lightDepthView;
 	RENDER_PASS m_renderPass;
 	Light lights[1];
+	unsigned m_vertexArrayID;
+	Mesh* meshList[NUM_GEOMETRY];
+	unsigned m_programID;
+	unsigned m_gPassShaderID;
+	unsigned m_parameters[U_TOTAL];
+
+
+
+	//level stuff
+	hitbox m_travelzone;
+
+
 
 	//player test stuff
 	Vector3 playerpos;
 	hitbox2 player_box;
 	float val = 0;
 	Vector3 fishRot;
+	float	fish_tailrot;
+	bool	fish_tailmax;
 	Vector3 fishVel;
 };
 

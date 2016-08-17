@@ -1,22 +1,30 @@
-﻿Build started 8/17/2016 5:53:03 PM.
-     1>Project "C:\Users\509n1\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" on node 2 (Build target(s)).
+﻿Build started 8/18/2016 1:16:05 AM.
+     1>Project "C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\509n1\Desktop\SP3\Studio Project 3\/Common/Source" /I"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glew/include" /I"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\SceneTutorial.cpp
-         SceneTutorial.cpp
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(44): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(49): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(62): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(68): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(120): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(121): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(122): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(123): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(125): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(126): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(127): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\509n1\desktop\sp3\studio project 3\base\source\collisionmanager.h(128): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/Common/Source" /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glew/include" /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\SceneSP3.cpp
+         SceneSP3.cpp
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(44): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(49): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(62): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(68): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(120): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(121): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(122): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(123): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(125): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(126): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(127): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(128): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(403): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(405): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(456): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(469): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(561): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(566): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(664): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenesp3.cpp(671): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
        Link:
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug" /LIBPATH:"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glfw/lib-msvc100" /LIBPATH:"C:\Users\509n1\Desktop\SP3\Studio Project 3\/glew/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug" /LIBPATH:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glfw/lib-msvc100" /LIBPATH:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glew/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
          Debug\Camera.obj
          Debug\Camera2.obj
          Debug\Camera3.obj
@@ -45,26 +53,9 @@
          Debug\WalkCamera.obj
      1>Application.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:LBR' specification
      1>LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-     1>Utility.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Utility.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>SpriteAnimation.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'SpriteAnimation.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Skipper.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Skipper.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>shader.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'shader.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Projectile.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Projectile.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Particle.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Particle.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>OBJMesh.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'OBJMesh.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>MeshBuilder.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'MeshBuilder.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Mesh.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Mesh.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>main.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'main.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>LoadTGA.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'LoadTGA.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>LoadOBJ.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'LoadOBJ.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>LoadHmap.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'LoadHmap.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>DepthFBO.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'DepthFBO.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Camera3.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Camera3.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Camera2.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Camera2.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-     1>Camera.obj : warning LNK4099: PDB 'vc120.pdb' was not found with 'Camera.obj' or at 'C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\vc120.pdb'; linking object as if no debug info
-         Base.vcxproj -> C:\Users\509n1\Desktop\SP3\Studio Project 3\Debug\Base.exe
-     1>Done Building Project "C:\Users\509n1\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" (Build target(s)).
+         Base.vcxproj -> C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.exe
+     1>Done Building Project "C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.49
+Time Elapsed 00:00:01.35

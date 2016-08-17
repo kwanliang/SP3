@@ -27,7 +27,7 @@ SceneSP3::~SceneSP3()
 void SceneSP3::Init()
 {
     // Black background
-    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+    glClearColor(0.0f, 0.6f, 0.9f, 0.0f);
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Accept fragment if it closer to the camera than the former one
@@ -207,14 +207,14 @@ void SceneSP3::Init()
     glUniform1f(m_parameters[U_LIGHT2_COSINNER], lights[2].cosInner);
     glUniform1f(m_parameters[U_LIGHT2_EXPONENT], lights[2].exponent);
 
-    Color fogColor(0.2f, 0.2f, 0.2f);
+    Color fogColor(0.0f, 0.8f, 0.7f);
     glUniform3fv(m_parameters[U_FOG_COLOR], 1, &fogColor.r);
     glUniform1f(m_parameters[U_FOG_START], 10);
     glUniform1f(m_parameters[U_FOG_END], 1000);
-    glUniform1f(m_parameters[U_FOG_THICKNESS], 0.1f);
+    glUniform1f(m_parameters[U_FOG_THICKNESS], 1.f);
     glUniform1f(m_parameters[U_FOG_DENSITY], 0.0f);
     glUniform1f(m_parameters[U_FOG_TYPE], 1);
-    glUniform1f(m_parameters[U_FOG_ENABLE], 0);
+    glUniform1f(m_parameters[U_FOG_ENABLE], 1);
 
 
    // camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
@@ -241,20 +241,28 @@ void SceneSP3::Init()
     meshList[GEO_SKYPLANE]->textureArray[0] = LoadTGA("Image//sky.tga");
     meshList[GEO_SKYPLANE]->textureArray[1] = LoadTGA("Image//night.tga");
 
-    meshList[GEO_TERRAIN0] = MeshBuilder::GenerateTerrain("terrain", "Image//heightmap_big.raw", m_heightMap[0]);
-    meshList[GEO_TERRAIN0]->textureArray[0] = LoadTGA("Image//rock.tga");
-	meshList[GEO_TERRAIN1] = MeshBuilder::GenerateTerrain("terrain", "Image//Area01.raw", m_heightMap[1]);
-	meshList[GEO_TERRAIN1]->textureArray[0] = LoadTGA("Image//rock.tga");
-	meshList[GEO_TERRAIN2] = MeshBuilder::GenerateTerrain("terrain", "Image//Area02.raw", m_heightMap[2]);
-	meshList[GEO_TERRAIN2]->textureArray[0] = LoadTGA("Image//rock.tga");
-	meshList[GEO_TERRAIN3] = MeshBuilder::GenerateTerrain("terrain", "Image//Area03.raw", m_heightMap[3]);
-	meshList[GEO_TERRAIN3]->textureArray[0] = LoadTGA("Image//rock.tga");
-	meshList[GEO_TERRAIN4] = MeshBuilder::GenerateTerrain("terrain", "Image//Area04.raw", m_heightMap[4]);
-	meshList[GEO_TERRAIN4]->textureArray[0] = LoadTGA("Image//rock.tga");
+    meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("terrain", "Image//Area0.raw", m_heightMap);
+   // meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
+	//meshList[GEO_TERRAIN1] = MeshBuilder::GenerateTerrain("terrain", "Image//Area01.raw", m_heightMap[1]);
+	//meshList[GEO_TERRAIN1]->textureArray[0] = LoadTGA("Image//rock.tga");
+	//meshList[GEO_TERRAIN2] = MeshBuilder::GenerateTerrain("terrain", "Image//Area02.raw", m_heightMap[2]);
+	//meshList[GEO_TERRAIN2]->textureArray[0] = LoadTGA("Image//rock.tga");
+	//meshList[GEO_TERRAIN3] = MeshBuilder::GenerateTerrain("terrain", "Image//Area03.raw", m_heightMap[3]);
+	//meshList[GEO_TERRAIN3]->textureArray[0] = LoadTGA("Image//rock.tga");
+	//meshList[GEO_TERRAIN4] = MeshBuilder::GenerateTerrain("terrain", "Image//Area04.raw", m_heightMap[4]);
+	//meshList[GEO_TERRAIN4]->textureArray[0] = LoadTGA("Image//rock.tga");
 
     //meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
 
 	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rcfish.obj");
+	meshList[GEO_FISHTAIL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rctail.obj");
+
+	meshList[GEO_SQUIDBODY] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//squid.obj");
+	meshList[GEO_SQUIDBODY]->textureArray[0] = LoadTGA("Image//squidbody.tga");
+	
+	
+	
+	//meshList[GEO_FISHTAIL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rctail.obj");
 
     meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 16, 16, 1.f);
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
@@ -267,8 +275,8 @@ void SceneSP3::Init()
     //meshList[PARTICLE_NAME] = MeshBuilder::GenerateQuad("", Color(1, .5f, 0), 1.f);
 
     // Shadow
-    meshList[GEO_LIGHT_DEPTH_QUAD] = MeshBuilder::GenerateQuad("Shadow Test", 1, 1);
-    meshList[GEO_LIGHT_DEPTH_QUAD]->textureArray[0] = m_lightDepthFBO.GetTexture();
+    //meshList[GEO_LIGHT_DEPTH_QUAD] = MeshBuilder::GenerateQuad("Shadow Test", 1, 1);
+    //meshList[GEO_LIGHT_DEPTH_QUAD]->textureArray[0] = m_lightDepthFBO.GetTexture();
 
     // Sprite
     //meshList[SPRITE_NAME] = MeshBuilder::GenerateSpriteAnimation("", 1, 5);
@@ -278,6 +286,9 @@ void SceneSP3::Init()
 
 	playerpos = Vector3(0, 0, 0);
 	player_box = hitbox2::generatehitbox(playerpos, 10, 10, 10);
+	fish_tailrot = 0;
+	fish_tailmax = false;
+
     //if (SPRITENAME)
     //{
     //    SPRITENAME->m_anim = new Animation();
@@ -322,7 +333,7 @@ void SceneSP3::Init()
         fo->seaType = SeaCreature::MINNOW;
         fo->state = Minnow::FLOCK;
         fo->scale.Set(1, 1, 5);
-        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(-100, 100));
+        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(599, 600), Math::RandFloatMinMax(-100, 100));
         fo->vel.Set(Math::RandFloatMinMax(-10, 10), -5, Math::RandFloatMinMax(-10, 10));
     }
 }
@@ -501,6 +512,18 @@ void SceneSP3::UpdateMinnow(double dt)
     }
 }
 
+void SceneSP3::UpdateTravel()
+{
+
+	if (collision(m_travelzone, player_box.m_point[0]) || collision(m_travelzone, player_box.m_point[0]))
+	{
+		//Level change;
+		cout << "level change" <<endl;
+	}
+
+
+}
+
 void SceneSP3::Update(double dt)
 {
     if (Application::IsKeyPressed('1'))
@@ -544,7 +567,7 @@ void SceneSP3::Update(double dt)
 			cout << val << endl;
 		}
 
-
+		/*
 		if (Application::IsKeyPressed('W'))
 		{
 			walkCam.Move(movespeed * (float)dt * walkCam.GetDir());
@@ -603,7 +626,7 @@ void SceneSP3::Update(double dt)
 				fishVel *= speedLimit;
 			}
 
-			std::cout << fishVel.Length() << std::endl;
+			//std::cout << fishVel.Length() << std::endl;
 			
 			walkCam.Move(fishVel * (float)dt);
 
@@ -632,6 +655,28 @@ void SceneSP3::Update(double dt)
 			}
 		}
 	}
+
+	if (fishVel != 0)//animate tail
+	{
+		if (!fish_tailmax)
+		{
+			if (fish_tailrot < 30)
+				fish_tailrot += fishVel.Length()*dt*10;
+			else
+				fish_tailmax = true;
+		}
+		else
+		{
+			if (fish_tailrot > -30)
+				fish_tailrot -= fishVel.Length()*dt*10;
+			else
+				fish_tailmax = false;
+		}
+	}
+
+
+
+
 
 	if (Application::camera_yaw != 0)
 	{
@@ -687,7 +732,7 @@ void SceneSP3::Update(double dt)
 
     // Particles
     //UpdateParticles(dt);
-
+	UpdateTravel();
     UpdateMinnow(dt);
 	if (Application::IsKeyPressed('M'))
 	{
@@ -955,10 +1000,6 @@ void SceneSP3::UpdateParticles(double dt)
     //    }
     //}
 }
-
-
-
-
 
 
 void SceneSP3::RenderFO(Minnow *fo)

@@ -17,13 +17,14 @@ void SceneTutorial::Init()
 {
 	SceneSP3::Init();
 	currentCam = &walkCam;
+	m_travelzone = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
 }
 
 void SceneTutorial::RenderTerrain()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(3000.f, 350.0f, 3000.f);
-	RenderMesh(meshList[GEO_TERRAIN], false);
+	RenderMesh(meshList[GEO_TERRAIN], true);
 	modelStack.PopMatrix();
 
 }
@@ -57,18 +58,31 @@ void SceneTutorial::RenderParticles()
 	//}
 }
 
-
 void SceneTutorial::RenderWorld()
 {
 	RenderTerrain();
 	RenderSkyPlane();
 	modelStack.PushMatrix();
-	modelStack.Translate(playerpos.x, playerpos.y, playerpos.z);
+	modelStack.Translate(playerpos.x, playerpos.y+5, playerpos.z);
 	modelStack.Rotate(90 + fishRot.y, 0, 1, 0);
 	modelStack.Rotate(0 + fishRot.x, 1, 0, 0);
-	modelStack.Scale(3, 3, 3);
+	modelStack.Scale(15,15,15);
 	RenderMesh(meshList[GEO_FISHMODEL], true);
+	modelStack.PushMatrix();
+	modelStack.Scale(1, 1, 1);
+	modelStack.Translate(0,-0.02,-1.2);
+	modelStack.Rotate(fish_tailrot, 0, 1, 0);
+
+	RenderMesh(meshList[GEO_FISHTAIL], true);
 	modelStack.PopMatrix();
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(m_travelzone.m_position.x, m_travelzone.m_position.y,m_travelzone.m_position.z);
+	modelStack.Scale(60, 60, 60);
+	RenderMesh(meshList[GEO_SQUIDBODY], false);
+	modelStack.PopMatrix();
+
 }
 
 void SceneTutorial::RenderPassGPass()
@@ -110,7 +124,7 @@ void SceneTutorial::RenderPassMain()
 	m_lightDepthFBO.BindForReading(GL_TEXTURE8);
 
 	glUniform1i(m_parameters[U_SHADOW_MAP], 8);
-
+	glUniform1i(m_parameters[U_FOG_ENABLE], 1);
 	//Mtx44 perspective;
 	//perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
 	////perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
@@ -195,13 +209,13 @@ void SceneTutorial::RenderPassMain()
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
 
-	modelStack.PushMatrix();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-	modelStack.Translate(player_box.m_position.x, player_box.m_position.y, player_box.m_position.z);
-	modelStack.Scale(player_box.m_width, player_box.m_height, player_box.m_length);
-	RenderMesh(meshList[GEO_CUBE], false);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	//modelStack.Translate(player_box.m_position.x, player_box.m_position.y, player_box.m_position.z);
+	//modelStack.Scale(player_box.m_width, player_box.m_height, player_box.m_length);
+	//RenderMesh(meshList[GEO_CUBE], false);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	//modelStack.PopMatrix();
 
 }
 
@@ -218,9 +232,11 @@ void SceneTutorial::Render()
 void SceneTutorial::Update(double dt)
 {
 	SceneSP3::Update(dt);
-
+	if (Application::IsKeyPressed('C'))
+	{
+		std::cout << playerpos << std::endl;
+	}
 }
-
 
 void SceneTutorial::Exit()
 {
