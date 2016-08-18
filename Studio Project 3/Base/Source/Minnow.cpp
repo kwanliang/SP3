@@ -2,16 +2,16 @@
 
 Minnow::Minnow()
     : state(FLOCK)
+    , m_isLeader(false)
     , panicTime(0.f)
-    , FOV(Vector3(0, 0, 0))
     , SeaCreature(0, MINNOW, SEACREATURE, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), false)
 {
 
 }
 
-Minnow::Minnow(MINNOW_BEHAVIORSTATE state, Vector3 FOV, float panicTime, int m_health, SEACREATURE_TYPE seaType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active)
+Minnow::Minnow(MINNOW_BEHAVIORSTATE state, bool m_isLeader, float panicTime, int m_health, SEACREATURE_TYPE seaType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active)
     : state(state)
-    , FOV(FOV)
+    , m_isLeader(m_isLeader)
     , panicTime(panicTime)
     , SeaCreature(m_health, seaType, objectType, pos, vel, scale, active)
 {
@@ -23,15 +23,15 @@ Minnow::~Minnow()
 
 }
 
-Vector3 Minnow::cohesion(Vector3 centreOfMassVector, int neighbourCount)
+Vector3 Minnow::cohesion(Minnow* minnowLeader)
 {
-    if (!centreOfMassVector.IsZero())
+    if (!minnowLeader->pos.IsZero() || !minnowLeader->vel.IsZero())
     {
-        centreOfMassVector.x /= neighbourCount;
-        centreOfMassVector.y /= neighbourCount;
-        centreOfMassVector.z /= neighbourCount;
+        Vector3 tv = (minnowLeader->vel * -1).Normalized() * 30;
+        Vector3 behindPos = minnowLeader->pos + tv;
+        behindPos = (behindPos - this->pos).Normalized();
 
-        return (centreOfMassVector - this->pos).Normalized();
+        return behindPos;
     }
     return Vector3(0, 0, 0);
 }
@@ -42,25 +42,19 @@ Vector3 Minnow::seperation(Vector3 repelVector)
 
     if (!repelVector.IsZero())
     {
-        tempIntensity = 1 - (repelVector.LengthSquared() / 100);
+        tempIntensity = (repelVector.LengthSquared() / distFromSeperationIntensity);
         repelVector = repelVector.Normalized();
         repelVector = Vector3(repelVector.x / tempIntensity, repelVector.y / tempIntensity, repelVector.z / tempIntensity);
 
-        return repelVector;
+        return repelVector.Normalized();
     }
     return Vector3(0, 0, 0);
 }
 
-Vector3 Minnow::alignment(Vector3 forceVector, int neighbourCount)
+Vector3 Minnow::alignment(Vector3 forceVector)
 {
-
-    // Alignment
     if (!forceVector.IsZero())
     {
-        forceVector.x /= neighbourCount;
-        forceVector.y /= neighbourCount;
-        forceVector.z /= neighbourCount;
-
         return forceVector.Normalized();
     }
     return Vector3(0, 0, 0);
@@ -74,4 +68,14 @@ float Minnow::getpanicTime()
 void Minnow::setpanicTime(float panicTime)
 {
     this->panicTime = panicTime;
+}
+
+bool Minnow::getisLeader()
+{
+    return this->m_isLeader;
+}
+
+void Minnow::setisLeader(bool m_isLeader)
+{
+    this->m_isLeader = m_isLeader;
 }

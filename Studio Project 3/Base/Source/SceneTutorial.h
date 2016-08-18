@@ -4,6 +4,7 @@
 #include "SceneSP3.h"
 #include <vector>
 #include "Mtx44.h"
+#include "GiantSquid.h"
 
 
 class SceneTutorial : public SceneSP3
@@ -18,6 +19,10 @@ public:
 	virtual void Exit();
 	
 	virtual void Render();
+    void RenderBO(Boss *bo);
+
+    void InitGiantSquid();
+
 	void RenderPassGPass();
 	void RenderPassMain();
 	void RenderMinimap();
@@ -29,28 +34,50 @@ public:
 
 private:
 
-    // Shadow
-
    // Light lights[2];
 
     bool bLightEnabled;
 
-   // float fps;
 
     // Particles 
     std::vector<ParticleObject*> particleList; // Used to store
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
+
 	//Fish test
 	Capture fishy;
 
+    GiantSquid* giantSquid;
+
+    GiantSquid* tentacle1_1;
+    GiantSquid* tentacle1_2;
+    GiantSquid* tentacle1_3;
+    GiantSquid* tentacle1_4;
+
+    GiantSquid* tentacle2_1;
+    GiantSquid* tentacle2_2;
+    GiantSquid* tentacle2_3;
+    GiantSquid* tentacle2_4;
+
+    GiantSquid* tentacle3_1;
+    GiantSquid* tentacle3_2;
+    GiantSquid* tentacle3_3;
+    GiantSquid* tentacle3_4;
+
+    GiantSquid* tentacle4_1;
+    GiantSquid* tentacle4_2;
+    GiantSquid* tentacle4_3;
+    GiantSquid* tentacle4_4;
+
+    GiantSquid* tentacle5_1;
+    GiantSquid* tentacle5_2;
+    GiantSquid* tentacle5_3;
+    GiantSquid* tentacle5_4;
+
+    GiantSquid* tentacle6_1;
+    GiantSquid* tentacle6_2;
+    GiantSquid* tentacle6_3;
+    GiantSquid* tentacle6_4;
 };
-
-
-
-
-
-
-
 
 #endif

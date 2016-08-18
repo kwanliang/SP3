@@ -23,7 +23,9 @@ void SceneTutorial::Init()
 		Vector3(0, 1, 0),
 		60
 		);
-	
+	m_travelzone = hitbox::generatehitbox(Vector3(0,500,0),600,500,600,0);
+
+    InitGiantSquid();
 }
 
 void SceneTutorial::ReInit()
@@ -43,6 +45,86 @@ void SceneTutorial::ReInit()
 	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
 
 	std::cout << "tut" << std::endl;
+}
+
+void SceneTutorial::InitGiantSquid()
+{
+    giantSquid = new GiantSquid();
+    giantSquid->active = true;
+    giantSquid->objectType = GameObject::BOSS;
+    giantSquid->bossType = Boss::GIANTSQUID;
+    giantSquid->state = GiantSquid::IDLE;
+    giantSquid->scale.Set(30, 30, 30);
+    giantSquid->pos.Set(0, 500, 0);
+    giantSquid->vel.Set(0, 0, 0);
+    giantSquid->rotateTentacle = 0.f;
+    giantSquid->isTentacleUp = false;
+    giantSquid->translateSquid = 0.f;
+    giantSquid->isSquidUp = false;
+    giantSquid->collision = hitbox::generatehitbox(giantSquid->pos + Vector3(0, 80, 0), 55, 150, 55, 0);
+
+    giantSquid->tentacle1_1.setTentaclePos(Vector3(-.25f, .1f, -.15f));
+    giantSquid->tentacle1_2.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle1_3.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle1_4.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle1_1.setTentacleInitialRotate(135.f);
+    giantSquid->tentacle1_1.setHealth(400);
+    giantSquid->tentacle1_2.setHealth(200);
+    giantSquid->tentacle1_3.setHealth(100);
+    giantSquid->tentacle1_4.setHealth(50);
+    giantSquid->tentacle1_1.collision = hitbox::generatehitbox(giantSquid->tentacle1_1.getTentaclePos() + Vector3(0, 80, 0), 55, 150, 55, 0);
+
+    giantSquid->tentacle2_1.setTentaclePos(Vector3(-.25f, .1f, .15f));
+    giantSquid->tentacle2_2.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle2_3.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle2_4.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle2_1.setTentacleInitialRotate(225.f);
+    giantSquid->tentacle2_1.setHealth(400);
+    giantSquid->tentacle2_2.setHealth(200);
+    giantSquid->tentacle2_3.setHealth(100);
+    giantSquid->tentacle2_4.setHealth(50);
+
+    giantSquid->tentacle3_1.setTentaclePos(Vector3(.15f, .1f, -.15f));
+    giantSquid->tentacle3_2.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle3_3.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle3_4.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle3_1.setTentacleInitialRotate(45.f);
+    giantSquid->tentacle3_1.setHealth(400);
+    giantSquid->tentacle3_2.setHealth(200);
+    giantSquid->tentacle3_3.setHealth(100);
+    giantSquid->tentacle3_4.setHealth(50);
+
+    giantSquid->tentacle4_1.setTentaclePos(Vector3(.15f, .1f, .15f));
+    giantSquid->tentacle4_2.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle4_3.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle4_4.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle4_1.setTentacleInitialRotate(-45.f);
+    giantSquid->tentacle4_1.setHealth(400);
+    giantSquid->tentacle4_2.setHealth(200);
+    giantSquid->tentacle4_3.setHealth(100);
+    giantSquid->tentacle4_4.setHealth(50);
+
+    giantSquid->tentacle5_1.setTentaclePos(Vector3(-.05f, .1f, -.35f));
+    giantSquid->tentacle5_2.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle5_3.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle5_4.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle5_1.setTentacleInitialRotate(90.f);
+    giantSquid->tentacle5_1.setHealth(400);
+    giantSquid->tentacle5_2.setHealth(200);
+    giantSquid->tentacle5_3.setHealth(100);
+    giantSquid->tentacle5_4.setHealth(50);
+
+    giantSquid->tentacle6_1.setTentaclePos(Vector3(-.05f, .1f, .35f));
+    giantSquid->tentacle6_2.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle6_3.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle6_4.setTentaclePos(Vector3(0, -1.f, 0));
+    giantSquid->tentacle6_1.setTentacleInitialRotate(-90.f);
+    giantSquid->tentacle6_1.setHealth(400);
+    giantSquid->tentacle6_2.setHealth(200);
+    giantSquid->tentacle6_3.setHealth(100);
+    giantSquid->tentacle6_4.setHealth(50);
+
+    m_goList.push_back(giantSquid);
 }
 
 void SceneTutorial::RenderTerrain()
@@ -83,6 +165,253 @@ void SceneTutorial::RenderParticles()
 	//}
 }
 
+void SceneTutorial::RenderBO(Boss* bo)
+{
+    if (giantSquid)
+    {
+        modelStack.PushMatrix();
+        modelStack.Translate(giantSquid->pos.x, giantSquid->pos.y, giantSquid->pos.z);
+        modelStack.Scale(giantSquid->scale.x, giantSquid->scale.y, giantSquid->scale.z);
+        RenderMesh(meshList[GEO_SQUIDBODY], false);
+
+        // Part 1
+        if (giantSquid->tentacle1_1.getHealth() > 0)
+        {
+            modelStack.PushMatrix();
+            modelStack.Translate(giantSquid->tentacle1_1.getTentaclePos().x, giantSquid->tentacle1_1.getTentaclePos().y, giantSquid->tentacle1_1.getTentaclePos().z);
+            modelStack.Rotate(giantSquid->tentacle1_1.getTentacleInitialRotate(), 0, 1, 0);
+            modelStack.Rotate(giantSquid->tentacle1_1.getTentacleAnimateRotate(), 0, 0, 1);
+            RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+            if (giantSquid->tentacle1_2.getHealth() > 0)
+            {
+                modelStack.PushMatrix();
+                modelStack.Translate(giantSquid->tentacle1_2.getTentaclePos().x, giantSquid->tentacle1_2.getTentaclePos().y, giantSquid->tentacle1_2.getTentaclePos().z);
+                modelStack.Rotate(giantSquid->tentacle1_2.getTentacleAnimateRotate(), 0, 0, 1);
+                RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                if (giantSquid->tentacle1_3.getHealth() > 0)
+                {
+                    modelStack.PushMatrix();
+                    modelStack.Translate(giantSquid->tentacle1_3.getTentaclePos().x, giantSquid->tentacle1_3.getTentaclePos().y, giantSquid->tentacle1_3.getTentaclePos().z);
+                    modelStack.Rotate(giantSquid->tentacle1_3.getTentacleAnimateRotate(), 0, 0, 1);
+                    RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                    if (giantSquid->tentacle1_4.getHealth() > 0)
+                    {
+                        modelStack.PushMatrix();
+                        modelStack.Translate(giantSquid->tentacle1_4.getTentaclePos().x, giantSquid->tentacle1_4.getTentaclePos().y, giantSquid->tentacle1_4.getTentaclePos().z);
+                        modelStack.Rotate(giantSquid->tentacle1_4.getTentacleAnimateRotate(), 0, 0, 1);
+                        RenderMesh(meshList[GEO_SQUIDTENTACLEEND], false);
+                        
+                        modelStack.PopMatrix();
+                    }
+                    modelStack.PopMatrix();
+                }
+                modelStack.PopMatrix();
+            }
+            modelStack.PopMatrix();
+        }
+
+        // Part 2
+        if (giantSquid->tentacle2_1.getHealth() > 0)
+        {
+            modelStack.PushMatrix();
+            modelStack.Translate(giantSquid->tentacle2_1.getTentaclePos().x, giantSquid->tentacle2_1.getTentaclePos().y, giantSquid->tentacle2_1.getTentaclePos().z);
+            modelStack.Rotate(giantSquid->tentacle2_1.getTentacleInitialRotate(), 0, 1, 0);
+            modelStack.Rotate(giantSquid->tentacle2_1.getTentacleAnimateRotate(), 0, 0, 1);
+            RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+            if (giantSquid->tentacle2_2.getHealth() > 0)
+            {
+                modelStack.PushMatrix();
+                modelStack.Translate(giantSquid->tentacle2_2.getTentaclePos().x, giantSquid->tentacle2_2.getTentaclePos().y, giantSquid->tentacle2_2.getTentaclePos().z);
+                modelStack.Rotate(giantSquid->tentacle2_2.getTentacleAnimateRotate(), 0, 0, 1);
+                RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                if (giantSquid->tentacle2_3.getHealth() > 0)
+                {
+                    modelStack.PushMatrix();
+                    modelStack.Translate(giantSquid->tentacle2_3.getTentaclePos().x, giantSquid->tentacle2_3.getTentaclePos().y, giantSquid->tentacle2_3.getTentaclePos().z);
+                    modelStack.Rotate(giantSquid->tentacle2_3.getTentacleAnimateRotate(), 0, 0, 1);
+                    RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                    if (giantSquid->tentacle2_4.getHealth() > 0)
+                    {
+                        modelStack.PushMatrix();
+                        modelStack.Translate(giantSquid->tentacle2_4.getTentaclePos().x, giantSquid->tentacle2_4.getTentaclePos().y, giantSquid->tentacle2_4.getTentaclePos().z);
+                        modelStack.Rotate(giantSquid->tentacle2_4.getTentacleAnimateRotate(), 0, 0, 1);
+                        RenderMesh(meshList[GEO_SQUIDTENTACLEEND], false);
+
+                        modelStack.PopMatrix();
+                    }
+                    modelStack.PopMatrix();
+                }
+                modelStack.PopMatrix();
+            }
+            modelStack.PopMatrix();
+        }
+
+        // Part 3
+        if (giantSquid->tentacle3_1.getHealth() > 0)
+        {
+            modelStack.PushMatrix();
+            modelStack.Translate(giantSquid->tentacle3_1.getTentaclePos().x, giantSquid->tentacle3_1.getTentaclePos().y, giantSquid->tentacle3_1.getTentaclePos().z);
+            modelStack.Rotate(giantSquid->tentacle3_1.getTentacleInitialRotate(), 0, 1, 0);
+            modelStack.Rotate(giantSquid->tentacle3_1.getTentacleAnimateRotate(), 0, 0, 1);
+            RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+            if (giantSquid->tentacle3_2.getHealth() > 0)
+            {
+                modelStack.PushMatrix();
+                modelStack.Translate(giantSquid->tentacle3_2.getTentaclePos().x, giantSquid->tentacle3_2.getTentaclePos().y, giantSquid->tentacle3_2.getTentaclePos().z);
+                modelStack.Rotate(giantSquid->tentacle3_2.getTentacleAnimateRotate(), 0, 0, 1);
+                RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                if (giantSquid->tentacle3_3.getHealth() > 0)
+                {
+                    modelStack.PushMatrix();
+                    modelStack.Translate(giantSquid->tentacle3_3.getTentaclePos().x, giantSquid->tentacle3_3.getTentaclePos().y, giantSquid->tentacle3_3.getTentaclePos().z);
+                    modelStack.Rotate(giantSquid->tentacle3_3.getTentacleAnimateRotate(), 0, 0, 1);
+                    RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                    if (giantSquid->tentacle3_4.getHealth() > 0)
+                    {
+                        modelStack.PushMatrix();
+                        modelStack.Translate(giantSquid->tentacle3_4.getTentaclePos().x, giantSquid->tentacle3_4.getTentaclePos().y, giantSquid->tentacle3_4.getTentaclePos().z);
+                        modelStack.Rotate(giantSquid->tentacle3_4.getTentacleAnimateRotate(), 0, 0, 1);
+                        RenderMesh(meshList[GEO_SQUIDTENTACLEEND], false);
+
+                        modelStack.PopMatrix();
+                    }
+                    modelStack.PopMatrix();
+                }
+                modelStack.PopMatrix();
+            }
+            modelStack.PopMatrix();
+        }
+
+        // Part 4
+        if (giantSquid->tentacle4_1.getHealth() > 0)
+        {
+            modelStack.PushMatrix();
+            modelStack.Translate(giantSquid->tentacle4_1.getTentaclePos().x, giantSquid->tentacle4_1.getTentaclePos().y, giantSquid->tentacle4_1.getTentaclePos().z);
+            modelStack.Rotate(giantSquid->tentacle4_1.getTentacleInitialRotate(), 0, 1, 0);
+            modelStack.Rotate(giantSquid->tentacle4_1.getTentacleAnimateRotate(), 0, 0, 1);
+            RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+            if (giantSquid->tentacle4_2.getHealth() > 0)
+            {
+                modelStack.PushMatrix();
+                modelStack.Translate(giantSquid->tentacle4_2.getTentaclePos().x, giantSquid->tentacle4_2.getTentaclePos().y, giantSquid->tentacle4_2.getTentaclePos().z);
+                modelStack.Rotate(giantSquid->tentacle4_2.getTentacleAnimateRotate(), 0, 0, 1);
+                RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                if (giantSquid->tentacle4_3.getHealth() > 0)
+                {
+                    modelStack.PushMatrix();
+                    modelStack.Translate(giantSquid->tentacle4_3.getTentaclePos().x, giantSquid->tentacle4_3.getTentaclePos().y, giantSquid->tentacle4_3.getTentaclePos().z);
+                    modelStack.Rotate(giantSquid->tentacle4_3.getTentacleAnimateRotate(), 0, 0, 1);
+                    RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                    if (giantSquid->tentacle4_4.getHealth() > 0)
+                    {
+                        modelStack.PushMatrix();
+                        modelStack.Translate(giantSquid->tentacle4_4.getTentaclePos().x, giantSquid->tentacle4_4.getTentaclePos().y, giantSquid->tentacle4_4.getTentaclePos().z);
+                        modelStack.Rotate(giantSquid->tentacle4_4.getTentacleAnimateRotate(), 0, 0, 1);
+                        RenderMesh(meshList[GEO_SQUIDTENTACLEEND], false);
+
+                        modelStack.PopMatrix();
+                    }
+                    modelStack.PopMatrix();
+                }
+                modelStack.PopMatrix();
+            }
+            modelStack.PopMatrix();
+        }
+
+        // Part 5
+        if (giantSquid->tentacle5_1.getHealth() > 0)
+        {
+            modelStack.PushMatrix();
+            modelStack.Translate(giantSquid->tentacle5_1.getTentaclePos().x, giantSquid->tentacle5_1.getTentaclePos().y, giantSquid->tentacle5_1.getTentaclePos().z);
+            modelStack.Rotate(giantSquid->tentacle5_1.getTentacleInitialRotate(), 0, 1, 0);
+            modelStack.Rotate(giantSquid->tentacle5_1.getTentacleAnimateRotate(), 0, 0, 1);
+            RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+            if (giantSquid->tentacle5_2.getHealth() > 0)
+            {
+                modelStack.PushMatrix();
+                modelStack.Translate(giantSquid->tentacle5_2.getTentaclePos().x, giantSquid->tentacle5_2.getTentaclePos().y, giantSquid->tentacle5_2.getTentaclePos().z);
+                modelStack.Rotate(giantSquid->tentacle5_2.getTentacleAnimateRotate(), 0, 0, 1);
+                RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                if (giantSquid->tentacle5_3.getHealth() > 0)
+                {
+                    modelStack.PushMatrix();
+                    modelStack.Translate(giantSquid->tentacle5_3.getTentaclePos().x, giantSquid->tentacle5_3.getTentaclePos().y, giantSquid->tentacle5_3.getTentaclePos().z);
+                    modelStack.Rotate(giantSquid->tentacle5_3.getTentacleAnimateRotate(), 0, 0, 1);
+                    RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                    if (giantSquid->tentacle5_4.getHealth() > 0)
+                    {
+                        modelStack.PushMatrix();
+                        modelStack.Translate(giantSquid->tentacle5_4.getTentaclePos().x, giantSquid->tentacle5_4.getTentaclePos().y, giantSquid->tentacle5_4.getTentaclePos().z);
+                        modelStack.Rotate(giantSquid->tentacle5_4.getTentacleAnimateRotate(), 0, 0, 1);
+                        RenderMesh(meshList[GEO_SQUIDTENTACLEEND], false);
+
+                        modelStack.PopMatrix();
+                    }
+                    modelStack.PopMatrix();
+                }
+                modelStack.PopMatrix();
+            }
+            modelStack.PopMatrix();
+        }
+
+        // Part 6
+        if (giantSquid->tentacle6_1.getHealth() > 0)
+        {
+            modelStack.PushMatrix();
+            modelStack.Translate(giantSquid->tentacle6_1.getTentaclePos().x, giantSquid->tentacle6_1.getTentaclePos().y, giantSquid->tentacle6_1.getTentaclePos().z);
+            modelStack.Rotate(giantSquid->tentacle6_1.getTentacleInitialRotate(), 0, 1, 0);
+            modelStack.Rotate(giantSquid->tentacle6_1.getTentacleAnimateRotate(), 0, 0, 1);
+            RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+            if (giantSquid->tentacle6_2.getHealth() > 0)
+            {
+                modelStack.PushMatrix();
+                modelStack.Translate(giantSquid->tentacle6_2.getTentaclePos().x, giantSquid->tentacle6_2.getTentaclePos().y, giantSquid->tentacle6_2.getTentaclePos().z);
+                modelStack.Rotate(giantSquid->tentacle6_2.getTentacleAnimateRotate(), 0, 0, 1);
+                RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                if (giantSquid->tentacle6_3.getHealth() > 0)
+                {
+                    modelStack.PushMatrix();
+                    modelStack.Translate(giantSquid->tentacle6_3.getTentaclePos().x, giantSquid->tentacle6_3.getTentaclePos().y, giantSquid->tentacle6_3.getTentaclePos().z);
+                    modelStack.Rotate(giantSquid->tentacle6_3.getTentacleAnimateRotate(), 0, 0, 1);
+                    RenderMesh(meshList[GEO_SQUIDTENTACLENODE], false);
+
+                    if (giantSquid->tentacle6_4.getHealth() > 0)
+                    {
+                        modelStack.PushMatrix();
+                        modelStack.Translate(giantSquid->tentacle6_4.getTentaclePos().x, giantSquid->tentacle6_4.getTentaclePos().y, giantSquid->tentacle6_4.getTentaclePos().z);
+                        modelStack.Rotate(giantSquid->tentacle6_4.getTentacleAnimateRotate(), 0, 0, 1);
+                        RenderMesh(meshList[GEO_SQUIDTENTACLEEND], false);
+
+                        modelStack.PopMatrix();
+                    }
+                    modelStack.PopMatrix();
+                }
+                modelStack.PopMatrix();
+            }
+            modelStack.PopMatrix();
+        }
+
+        modelStack.PopMatrix();
+    }
+}
+
 void SceneTutorial::RenderWorld()
 {
 	RenderTerrain();
@@ -101,13 +430,6 @@ void SceneTutorial::RenderWorld()
 	RenderMesh(meshList[GEO_FISHTAIL], true);
 	modelStack.PopMatrix();
 	modelStack.PopMatrix();
-	
-	//modelStack.PushMatrix();
-	//modelStack.Translate(m_travelzone.m_position.x, m_travelzone.m_position.y,m_travelzone.m_position.z);
-	//modelStack.Scale(60, 60, 60);
-	//RenderMesh(meshList[GEO_SQUIDBODY], false);
-	//modelStack.PopMatrix();
-
 }
 
 void SceneTutorial::RenderPassGPass()
@@ -213,6 +535,13 @@ void SceneTutorial::RenderPassMain()
 			if (fo->active)
 			{
 				RenderFO(fo);
+                //modelStack.PushMatrix();
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                //modelStack.Translate(fo->pos.x, fo->pos.y, fo->pos.z);
+                //modelStack.Scale(fo->collision.m_width, fo->collision.m_height, fo->collision.m_length);
+                //RenderMesh(meshList[GEO_CUBE], false);
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                //modelStack.PopMatrix();
 			}
 		}
 		else if (go->objectType == GameObject::PROJECTILE)
@@ -223,7 +552,62 @@ void SceneTutorial::RenderPassMain()
 				RenderPO(po);
 			}
 		}
+        else if (go->objectType == GameObject::BOSS)
+        {
+            Boss *bo = (Boss*)*it;
+            if (bo->active)
+            {
+                RenderBO(bo);
+
+                modelStack.PushMatrix();
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                RenderMesh(meshList[GEO_CUBE], false);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                modelStack.PopMatrix();
+
+                //modelStack.PushMatrix();
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                //modelStack.Translate(bo->giantSquid->tentacle1_1.collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                //RenderMesh(meshList[GEO_CUBE], false);
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                //modelStack.PopMatrix();
+
+                //modelStack.PushMatrix();
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                //RenderMesh(meshList[GEO_CUBE], false);
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                //modelStack.PopMatrix();
+
+                //modelStack.PushMatrix();
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                //RenderMesh(meshList[GEO_CUBE], false);
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                //modelStack.PopMatrix();
+
+                //modelStack.PushMatrix();
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                //RenderMesh(meshList[GEO_CUBE], false);
+                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                //modelStack.PopMatrix();
+            }
+        }
 	}
+
+    //modelStack.PushMatrix();
+    //modelStack.Translate(0, 300, 0);
+    //modelStack.Rotate(Math::RadianToDegree(sin(rotater)), 0, 1, 0);
+    //modelStack.Scale(50, 50, 50);
+    //RenderMesh(meshList[GEO_CUBE], false);
+    //modelStack.PopMatrix();
 
 	// Render the crosshair
 	glUniform1i(m_parameters[U_IS_GUI], 1);
@@ -303,8 +687,13 @@ void SceneTutorial::RenderMinimap()
 		mPos.x, mPos.y);
 }
 
-void SceneTutorial::RenderMinimap()
+void SceneTutorial::Render()
 {
+	// PRE RENDER PASS
+	RenderPassGPass();
+
+	// MAIN RENDER PASS
+	RenderPassMain();
 
 }
 
@@ -313,9 +702,10 @@ void SceneTutorial::Update(double dt)
 	//std::cout << SharedData::GetInstance() ->SD_Travel << std::endl;
 	SceneSP3::Update(dt);
 	if (Application::IsKeyPressed('C'))
-	{
 		std::cout << playerpos << std::endl;
-	}
+
+    giantSquid->Animate();
+    hitbox::updatehitbox(giantSquid->collision, giantSquid->collision.m_position);
 }
 
 void SceneTutorial::Exit()

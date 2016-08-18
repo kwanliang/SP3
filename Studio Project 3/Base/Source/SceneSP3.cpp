@@ -261,12 +261,16 @@ void SceneSP3::Init()
 	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rcfish.obj");
 	meshList[GEO_FISHTAIL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rctail.obj");
 
+    // Squid
 	meshList[GEO_SQUIDBODY] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//squid.obj");
 	meshList[GEO_SQUIDBODY]->textureArray[0] = LoadTGA("Image//squidbody.tga");
-	
-	
-	
-	//meshList[GEO_FISHTAIL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rctail.obj");
+
+    meshList[GEO_SQUIDTENTACLENODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_node.obj");
+    meshList[GEO_SQUIDTENTACLENODE]->textureArray[0] = LoadTGA("Image//squidtentacle.tga");
+    meshList[GEO_SQUIDTENTACLEEND] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_end.obj");
+    meshList[GEO_SQUIDTENTACLEEND]->textureArray[0] = LoadTGA("Image//squidtentacle.tga");
+
+    meshList[GEO_MINNOW] = MeshBuilder::GenerateOBJ("minnow", "Models//OBJ//minnow.obj");
 
     meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 16, 16, 1.f);
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
@@ -329,17 +333,29 @@ void SceneSP3::Init()
     m_gravity.Set(0, -9.8f, 0);
 
 	//init Minnow for test
-	Minnow *fo = FetchFO();
-	fo->active = true;
-	fo->objectType = GameObject::SEACREATURE;
-	fo->seaType = SeaCreature::MINNOW;
-	fo->state = Minnow::FLOCK;
-	fo->scale.Set(1, 1, 5);
-	fo->pos.Set(0,600,0);
-	fo->vel.Set(0,0,0);
-	fo->setHealth(50);
+	//Minnow *fo = FetchFO();
+	//fo->active = true;
+	//fo->objectType = GameObject::SEACREATURE;
+	//fo->seaType = SeaCreature::MINNOW;
+	//fo->state = Minnow::FLOCK;
+	//fo->scale.Set(1, 1, 5);
+	//fo->pos.Set(0,600,0);
+	//fo->vel.Set(0,0,0);
+	//fo->setHealth(50);
 	
 	walkCam.yOffset = 100;
+
+    minnowLeader = new Minnow();
+    minnowLeader->active = true;
+    minnowLeader->objectType = GameObject::SEACREATURE;
+    minnowLeader->seaType = SeaCreature::MINNOW;
+    minnowLeader->state = Minnow::FLOCK;
+    minnowLeader->setisLeader(true);
+    minnowLeader->scale.Set(1, 1, 1);
+    minnowLeader->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(400, 600), Math::RandFloatMinMax(-100, 100));
+    minnowLeader->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
+    minnowLeader->collision = hitbox2::generatehitbox(minnowLeader->pos, 10, 10, 10);
+    m_goList.push_back(minnowLeader);
 
     for (int i = 0; i < 30; i++)
     {
@@ -348,7 +364,8 @@ void SceneSP3::Init()
         fo->objectType = GameObject::SEACREATURE;
         fo->seaType = SeaCreature::MINNOW;
         fo->state = Minnow::FLOCK;
-        fo->scale.Set(1, 1, 5);
+        minnowLeader->setisLeader(false);
+        fo->scale.Set(1, 1, 1);
         fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(400,600 ), Math::RandFloatMinMax(-100, 100));
         fo->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
         fo->collision = hitbox2::generatehitbox(fo->pos, 10, 10, 10);
@@ -410,6 +427,7 @@ Projectile* SceneSP3::FetchPO()
 
 void SceneSP3::UpdateMinnow(double dt)
 {
+    minnowLeader->setisLeader(true);
     // Minnow loop
     for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
     {
@@ -437,33 +455,31 @@ void SceneSP3::UpdateMinnow(double dt)
 
                     if (terraincollision(fo->collision, m_heightMap))
                     {
-                        fo->vel *= -1;
+                        fo->vel *= -5;
                     }
 
                     for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
                     {
                         Minnow *other = (Minnow *)*it2;
-
-                        if (other->active && fo != other && fo->seaType == SeaCreature::MINNOW)
+                        if (other->getisLeader())
                         {
-                            neightbourCount++;
-
-                            if ((other->pos - fo->pos).LengthSquared() < distFromSeperation)
+                            continue;
+                        }
+                        else if (other->active && fo != other && fo->seaType == SeaCreature::MINNOW)
+                        {
+                            if ((fo->pos - other->pos).LengthSquared() < distFromSeperation)
                             {
-                                tempRepelVector = fo->pos - other->pos;
-                                fo->vel += fo->seperation(tempRepelVector);
+                                tempRepelVector = other->pos - fo->pos;
+                                other->vel += other->seperation(tempRepelVector);
                             }
-
-                            tempCentreOfMass += other->pos;
-
-                            if ((other->pos - fo->pos).LengthSquared() < distFromAlignment)
-                                tempForceVector += other->vel;
                         }
                     }
 
-                    if (fo->state == Minnow::FLOCK)
-                        fo->vel += fo->alignment(tempCentreOfMass, neightbourCount) + fo->cohesion(tempCentreOfMass, neightbourCount) * 1.5;
-                    else
+                    if (fo->state == Minnow::FLOCK && !fo->getisLeader())
+                        fo->vel += fo->cohesion(minnowLeader);
+                    else if (fo->state == Minnow::FLOCK && !fo->getisLeader() && (minnowLeader->pos - go->pos).LengthSquared() < distFromAlignment)
+                        fo->vel += fo->alignment(tempForceVector);
+                    else if (fo->state == Minnow::FLEE && !fo->getisLeader())
                         fo->vel += fo->seperation(tempCentreOfMass) * 2;
 
                     // Cap velocity
@@ -599,8 +615,26 @@ void SceneSP3::Update(double dt)
 	{
 		std::cout << playerpos << std::endl;
 	}
+
+    static bool bSPACEstate = false;
+    if (!bSPACEstate && Application::IsKeyPressed(VK_SPACE))
+    {
+        bSPACEstate = true;
+    }
+    else if (bSPACEstate && !Application::IsKeyPressed(VK_SPACE))
+    {
+        Projectile *po = FetchPO();
+        po->objectType = GameObject::PROJECTILE;
+        po->active = true;
+        po->scale.Set(1, 1, 1);
+        po->pos.Set(playerpos.x, playerpos.y, playerpos.z);
+        Vector3 view = (walkCam.GetDir()).Normalized();
+        po->vel.Set(view.x, view.y, view.z);
+        bSPACEstate = false;
+    }
+
     //camera.Update(dt);
-    fps = (float)(1. / dt);
+    fps = 1.f / dt;
 
 	{
 		Vector3 temp = walkCam.GetPos();
@@ -797,7 +831,6 @@ void SceneSP3::Update(double dt)
 				if (go->objectType == GameObject::SEACREATURE)
 				{
 					go->setPos(Capture::Vacuum(*go, playerpos, dt));
-					cout << playerpos.y << endl;
 				}
 			}
 		}
@@ -1063,14 +1096,28 @@ void SceneSP3::RenderFO(Minnow *fo)
     {
     case SeaCreature::MINNOW:
     {
-        float rotate = 0;
-        rotate = Math::RadianToDegree(atan2(fo->vel.z, fo->vel.x));
-        modelStack.PushMatrix();
-        modelStack.Translate(fo->pos.x, fo->pos.y, fo->pos.z);
-        modelStack.Rotate(rotate, 0, 1, 0);
-        modelStack.Scale(fo->scale.x, fo->scale.y, fo->scale.z);
-        RenderMesh(meshList[GEO_BALL], false);
-        modelStack.PopMatrix();
+        if (!fo->getisLeader())
+        {
+            float rotate = 0;
+            rotate = Math::RadianToDegree(atan2(fo->vel.x, fo->vel.z));
+            modelStack.PushMatrix();
+            modelStack.Translate(fo->pos.x, fo->pos.y, fo->pos.z);
+            modelStack.Rotate(rotate, 0, 1, 0);
+            modelStack.Scale(fo->scale.x, fo->scale.y, fo->scale.z);
+            RenderMesh(meshList[GEO_MINNOW], false);
+            modelStack.PopMatrix();
+        }
+        else
+        {
+            float rotate = 0;
+            rotate = Math::RadianToDegree(atan2(fo->vel.x, fo->vel.z));
+            modelStack.PushMatrix();
+            modelStack.Translate(fo->pos.x, fo->pos.y, fo->pos.z);
+            modelStack.Rotate(rotate, 0, 1, 0);
+            modelStack.Scale(fo->scale.x, fo->scale.y, fo->scale.z);
+            RenderMesh(meshList[GEO_BALL2], false);
+            modelStack.PopMatrix();
+        }
         break;
     }
     }
@@ -1104,12 +1151,17 @@ void SceneSP3::Exit()
         if (meshList[i])
             delete meshList[i];
     }
-
     while (particleList.size() > 0)
     {
         ParticleObject *particle = particleList.back();
         delete particle;
         particleList.pop_back();
+    }
+    while (m_goList.size() > 0)
+    {
+        GameObject *go = m_goList.back();
+        delete go;
+        m_goList.pop_back();
     }
     glDeleteProgram(m_programID);
     glDeleteProgram(m_gPassShaderID);

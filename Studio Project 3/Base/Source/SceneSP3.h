@@ -60,27 +60,22 @@ public:
     float fogThickness;
     float blendFactor;
 
-protected:
+private:
 
 
     // Shadow
     //DepthFBO m_lightDepthFBO;
     //Mtx44 m_lightDepthProj;
     //Mtx44 m_lightDepthView;
-
-
-    //Camera3 camera;
-  
-
+ 
     bool bLightEnabled;
-    float fps;
+
     //Terrain
     // Particles 
     std::vector<ParticleObject*> particleList; // Used to store
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
-
-  
+ 
 	//Fish test
 	Capture fishy;
 
@@ -185,6 +180,11 @@ protected:
 			GEO_FISHMODEL,
 			GEO_FISHTAIL,
 			GEO_SQUIDBODY,
+        GEO_SQUIDTENTACLENODE,
+        GEO_SQUIDTENTACLEEND,
+
+        GEO_MINNOW,
+
 			SPRITE_NAME,
 			PARTICLE_NAME,
 			GEO_LIGHT_DEPTH_QUAD,

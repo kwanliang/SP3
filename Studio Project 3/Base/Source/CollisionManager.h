@@ -140,8 +140,6 @@ struct hitbox2{
 			box.m_point[i] -= displacement;
 
 		}
-
-
 	}
 
 };

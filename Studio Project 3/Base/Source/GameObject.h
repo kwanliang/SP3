@@ -8,8 +8,9 @@ struct GameObject
     enum OBJECT_TYPE
     {
         PLAYER,
-        SEACREATURE,
         PROJECTILE,
+        SEACREATURE,
+        BOSS,
 
         TYPE_TOTAL
     };
