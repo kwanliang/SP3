@@ -268,8 +268,12 @@ void SceneSP3::Init()
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
 
 	meshList[GEO_MINIMAP] = MeshBuilder::GenerateQuad("minimap", Color(1, 1, 1), 2);
+	meshList[GEO_MINIMAP]->textureID = LoadTGA("Image//minimap.tga");
 
-	meshList[GEO_MINIMAP_AVATAR] = MeshBuilder::GenerateSphere("minimapAvatar", Color(1, 0, 0), 16, 16, 1.f);
+	meshList[GEO_MINIMAP_AVATAR] = MeshBuilder::GenerateQuad("minimap_avatar", Color(1, 1, 1), 2);
+	meshList[GEO_MINIMAP_AVATAR]->textureID = LoadTGA("Image//minimap_avatar.tga");
+
+	meshList[GEO_MINIMAP_MINNOW] = MeshBuilder::GenerateSphere("minimap_minnow", Color(0.5f, 1, 1), 16, 16);
 
     // Object
     //meshList[OBJ_NAME] = MeshBuilder::GenerateOBJ("", "OBJ//.obj");
@@ -823,8 +827,10 @@ void SceneSP3::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, flo
     glEnable(GL_DEPTH_TEST);
 }
 
-void SceneSP3::RenderMeshIn2D(Mesh *mesh, bool enableLight, float size, float x, float y)
+void SceneSP3::RenderMeshIn2D(Mesh *mesh, bool enableLight, float size, float x, float y, float rot)
 {
+	glDisable(GL_DEPTH_TEST);
+
     Mtx44 ortho;
     ortho.SetToOrtho(-80, 80, -60, 60, -10, 10);
     projectionStack.PushMatrix();
@@ -834,6 +840,7 @@ void SceneSP3::RenderMeshIn2D(Mesh *mesh, bool enableLight, float size, float x,
     modelStack.PushMatrix();
     modelStack.LoadIdentity();
     modelStack.Translate(x, y, 0);
+	modelStack.Rotate(rot, 0, 0, 1);
     modelStack.Scale(size, size, size);
 
     Mtx44 MVP, modelView, modelView_inverse_transpose;
@@ -860,6 +867,7 @@ void SceneSP3::RenderMeshIn2D(Mesh *mesh, bool enableLight, float size, float x,
     modelStack.PopMatrix();
     viewStack.PopMatrix();
     projectionStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
 }
 
 void SceneSP3::RenderMesh(Mesh *mesh, bool enableLight)
@@ -1186,11 +1194,11 @@ void SceneSP3::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //// PRE RENDER PASS
-    //RenderPassGPass();
+	// PRE RENDER PASS
+	RenderPassGPass();
 
-    //// MAIN RENDER PASS
-    //RenderPassMain();
+	// MAIN RENDER PASS
+	RenderPassMain();
 }
 
 void SceneSP3::Exit()

@@ -16,6 +16,7 @@
 #include "Minnow.h"
 #include "Projectile.h"
 #include "Capture.h"
+#include "Vector2.h"
 
 
 
@@ -42,12 +43,8 @@ public:
 
     void RenderText(Mesh* mesh, std::string text, Color color);
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-    void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f);
+    void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f, float rot = 0.f);
     void RenderMesh(Mesh *mesh, bool enableLight);
-
-
-
-
 
     void UpdateParticles(double dt);
     ParticleObject* GetParticle_NAME();
@@ -63,7 +60,7 @@ public:
     float fogThickness;
     float blendFactor;
 
-private:
+protected:
 
 
     // Shadow
@@ -181,6 +178,7 @@ private:
 			GEO_TERRAIN,
 			GEO_MINIMAP,
 			GEO_MINIMAP_AVATAR,
+			GEO_MINIMAP_MINNOW,
 			GEO_FISHMODEL,
 			GEO_FISHTAIL,
 			GEO_SQUIDBODY,

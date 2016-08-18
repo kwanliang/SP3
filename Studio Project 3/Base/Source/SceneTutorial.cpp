@@ -178,7 +178,6 @@ void SceneTutorial::RenderPassMain()
 	}
 */
 	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-	//RenderWorld();
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -208,6 +207,9 @@ void SceneTutorial::RenderPassMain()
 	ss.precision(3);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
+	glUniform1i(m_parameters[U_FOG_ENABLE], 0);
+	RenderMinimap();
+	glUniform1i(m_parameters[U_FOG_ENABLE], 1);
 
 	//modelStack.PushMatrix();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
@@ -219,14 +221,49 @@ void SceneTutorial::RenderPassMain()
 
 }
 
-void SceneTutorial::Render()
+void SceneTutorial::RenderMinimap()
 {
-	// PRE RENDER PASS
-	RenderPassGPass();
+	const float scale = 0.1f;
+	const float range = 14.f;
 
-	// MAIN RENDER PASS
-	RenderPassMain();
+	Vector2 mPos;
+	mPos.Set(80 - 16 - 4, -60 + 16 + 4);
 
+	float angle = 90 + Math::RadianToDegree(atan2(walkCam.GetDir().z, walkCam.GetDir().x));
+
+	RenderMeshIn2D(meshList[GEO_MINIMAP], false, 20,
+		mPos.x, mPos.y, angle);
+
+	for (auto it : m_goList)
+	{
+		if (!it->active) continue;
+		
+		if (it->objectType == GameObject::SEACREATURE)
+		{
+			auto o1 = (SeaCreature *)it;
+
+			if (o1->seaType == SeaCreature::MINNOW)
+			{
+
+				Vector3 op1 = o1->pos - playerpos;
+				Mtx44 rot;
+				rot.SetToRotation(angle, 0, 1, 0);
+				op1 = rot * op1;
+
+				Vector2 op2;
+				op2.Set(op1.x * scale, -op1.z * scale);
+
+
+				if (op2.LengthSquared() <= range * range)
+				RenderMeshIn2D(meshList[GEO_MINIMAP_MINNOW], false, 1,
+					mPos.x + op2.x, mPos.y + op2.y);
+			}
+		}
+	}
+
+
+	RenderMeshIn2D(meshList[GEO_MINIMAP_AVATAR], false, 3.f,
+		mPos.x, mPos.y);
 }
 
 void SceneTutorial::Update(double dt)
