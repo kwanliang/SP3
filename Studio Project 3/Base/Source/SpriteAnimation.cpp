@@ -65,11 +65,11 @@ void SpriteAnimation::Update(double dt)
                 m_currentFrame = m_anim->startFrame;
             }
         }
-        Billboard(SharedData::GetInstance()->PlayerPos);
+  /*      Billboard(SharedData::GetInstance()->PlayerPos);
         if (m_anim->moveable == true)
         {
             ChasePlayer(dt, SharedData::GetInstance()->PlayerPos);
-        }
+        }*/
     }
 }
 

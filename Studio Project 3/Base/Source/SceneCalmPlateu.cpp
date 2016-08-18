@@ -1,60 +1,66 @@
-#include "SceneTutorial.h"
+#include "SceneCalmPlateu.h"
 #include "GL\glew.h"
 #include "Application.h"
 #include <sstream>
 
-SceneTutorial::SceneTutorial()
+SceneCalmPlateu::SceneCalmPlateu()
 {
 
 }
 
-SceneTutorial::~SceneTutorial()
+SceneCalmPlateu::~SceneCalmPlateu()
 {
 
 }
 
-void SceneTutorial::Init()
+void SceneCalmPlateu::Init()
 {
 	SceneSP3::Init();
-	currentCam = &walkCam;
-	walkCam.Init(
-		Vector3(325, 604, 700),
-		Vector3(0, 0, -10),
-		Vector3(0, 1, 0),
-		60
-		);
-	
+	//currentCam = &walkCam;
+	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
 }
 
-void SceneTutorial::ReInit()
+void SceneCalmPlateu::ReInit()
 {
-
-	//walkCam.Init(
-	//	Vector3(325, 604, 700),
-	//	Vector3(0, 0, -10),
-	//	Vector3(0, 1, 0),
-	//	60
-	//	);
-	walkCam.SetPos(Vector3(325, 604, 700));
-	std::cout << "shit" << std::endl;
-
-	//SharedData::GetInstance()->SD_Travel = true;
+	if (SharedData::GetInstance()->SD_Down)
+	{
+		walkCam.Init(
+			Vector3(-1141, 359, -748),
+			Vector3(0, 0, -10),
+			Vector3(0, 1, 0),
+			60
+			);
+	}
+	else
+	{
+		walkCam.Init(
+			Vector3(1371, 416, -17),
+			Vector3(0, 0, -10),
+			Vector3(0, 1, 0),
+			60
+			);
+	}
+	
 
 	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
+	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
 
-	std::cout << "tut" << std::endl;
+	SharedData::GetInstance()->SD_Travel = true;
+	SharedData::GetInstance()->SD_Down = false;
+
+	std::cout << "calm" << std::endl;
 }
 
-void SceneTutorial::RenderTerrain()
+void SceneCalmPlateu::RenderTerrain()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(3000.f, 350.0f, 3000.f);
-	RenderMesh(meshList[GEO_TERRAIN0], true);
+	RenderMesh(meshList[GEO_TERRAIN1], true);
 	modelStack.PopMatrix();
 
 }
 
-void SceneTutorial::RenderSkyPlane()
+void SceneCalmPlateu::RenderSkyPlane()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 2000, 0);
@@ -63,7 +69,7 @@ void SceneTutorial::RenderSkyPlane()
 	modelStack.PopMatrix();
 }
 
-void SceneTutorial::RenderParticles()
+void SceneCalmPlateu::RenderParticles()
 {
 	//for (auto it : particleList)
 	//{
@@ -83,7 +89,7 @@ void SceneTutorial::RenderParticles()
 	//}
 }
 
-void SceneTutorial::RenderWorld()
+void SceneCalmPlateu::RenderWorld()
 {
 	RenderTerrain();
 	RenderSkyPlane();
@@ -102,15 +108,10 @@ void SceneTutorial::RenderWorld()
 	modelStack.PopMatrix();
 	modelStack.PopMatrix();
 	
-	//modelStack.PushMatrix();
-	//modelStack.Translate(m_travelzone.m_position.x, m_travelzone.m_position.y,m_travelzone.m_position.z);
-	//modelStack.Scale(60, 60, 60);
-	//RenderMesh(meshList[GEO_SQUIDBODY], false);
-	//modelStack.PopMatrix();
 
 }
 
-void SceneTutorial::RenderPassGPass()
+void SceneCalmPlateu::RenderPassGPass()
 {
 	m_renderPass = RENDER_PASS_PRE;
 	m_lightDepthFBO.BindForWriting();
@@ -129,10 +130,10 @@ void SceneTutorial::RenderPassGPass()
 
 	//m_lightDepthView.SetToLookAt(lights[0].position.x, lights[0].position.y, lights[0].position.z, 0, 0, 0, 0, 1, 0);
 
-
+	//RenderWorld();
 }
 
-void SceneTutorial::RenderPassMain()
+void SceneCalmPlateu::RenderPassMain()
 {
 	m_renderPass = RENDER_PASS_MAIN;
 
@@ -203,6 +204,7 @@ void SceneTutorial::RenderPassMain()
 	}
 */
 	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+	//RenderWorld();
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
@@ -226,22 +228,17 @@ void SceneTutorial::RenderPassMain()
 	}
 
 	// Render the crosshair
-	glUniform1i(m_parameters[U_IS_GUI], 1);
 	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
 	RenderMesh(meshList[GEO_AXES], false);
-	glUniform1i(m_parameters[U_IS_GUI], 0);
-	std::ostringstream ss;
-	ss.precision(3);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
-	glUniform1i(m_parameters[U_FOG_ENABLE], 0);
-	RenderMinimap();
-	glUniform1i(m_parameters[U_FOG_ENABLE], 1);
+	//std::ostringstream ss;
+	//ss.precision(3);
+	//ss << "FPS: " << fps;
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
 
 	modelStack.PushMatrix();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-	modelStack.Translate(m_travelzonedown.m_position.x, m_travelzonedown.m_position.y, m_travelzonedown.m_position.z);
-	modelStack.Scale(m_travelzonedown.m_width, m_travelzonedown.m_height, m_travelzonedown.m_length);
+	modelStack.Translate(m_travelzonedown.m_position.x,m_travelzonedown.m_position.y,m_travelzonedown.m_position.z);
+	modelStack.Scale(m_travelzonedown.m_width,m_travelzonedown.m_height,m_travelzonedown.m_length);
 	RenderMesh(meshList[GEO_CUBE], false);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
 	modelStack.PopMatrix();
@@ -255,70 +252,30 @@ void SceneTutorial::RenderPassMain()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
 	modelStack.PopMatrix();
 
-
 }
 
-void SceneTutorial::RenderMinimap()
+void SceneCalmPlateu::Render()
 {
-	const float scale = 0.1f;
-	const float range = 14.f;
+	// PRE RENDER PASS
+	RenderPassGPass();
 
-	Vector2 mPos;
-	mPos.Set(80 - 16 - 4, -60 + 16 + 4);
+	// MAIN RENDER PASS
+	RenderPassMain();
 
-	float angle = 90 + Math::RadianToDegree(atan2(walkCam.GetDir().z, walkCam.GetDir().x));
-
-	RenderMeshIn2D(meshList[GEO_MINIMAP], false, 20,
-		mPos.x, mPos.y, angle);
-
-	for (auto it : m_goList)
-	{
-		if (!it->active) continue;
-		
-		if (it->objectType == GameObject::SEACREATURE)
-		{
-			auto o1 = (SeaCreature *)it;
-
-			if (o1->seaType == SeaCreature::MINNOW)
-			{
-
-				Vector3 op1 = o1->pos - playerpos;
-				Mtx44 rot;
-				rot.SetToRotation(angle, 0, 1, 0);
-				op1 = rot * op1;
-
-				Vector2 op2;
-				op2.Set(op1.x * scale, -op1.z * scale);
-
-
-				if (op2.LengthSquared() <= range * range)
-				RenderMeshIn2D(meshList[GEO_MINIMAP_MINNOW], false, 1,
-					mPos.x + op2.x, mPos.y + op2.y);
-			}
-		}
-	}
-
-
-	RenderMeshIn2D(meshList[GEO_MINIMAP_AVATAR], false, 3.f,
-		mPos.x, mPos.y);
 }
 
-void SceneTutorial::RenderMinimap()
+void SceneCalmPlateu::RenderMinimap()
 {
 
 }
 
-void SceneTutorial::Update(double dt)
+void SceneCalmPlateu::Update(double dt)
 {
-	//std::cout << SharedData::GetInstance() ->SD_Travel << std::endl;
 	SceneSP3::Update(dt);
-	if (Application::IsKeyPressed('C'))
-	{
-		std::cout << playerpos << std::endl;
-	}
+
 }
 
-void SceneTutorial::Exit()
+void SceneCalmPlateu::Exit()
 {
 	SceneSP3::Exit();
 }

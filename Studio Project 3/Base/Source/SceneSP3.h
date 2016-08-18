@@ -16,8 +16,7 @@
 #include "Minnow.h"
 #include "Projectile.h"
 #include "Capture.h"
-#include "Vector2.h"
-
+#include "SharedData.h"
 
 
 class SceneSP3 : public Scene
@@ -27,6 +26,7 @@ public:
     SceneSP3();
     ~SceneSP3();
 
+	virtual void ReInit();
     virtual void Init();
     virtual void Update(double dt);
     virtual void Render();
@@ -75,7 +75,6 @@ protected:
     bool bLightEnabled;
     float fps;
     //Terrain
-    std::vector<unsigned char> m_heightMap;
     // Particles 
     std::vector<ParticleObject*> particleList; // Used to store
     Vector3 m_gravity;      // Gravity affecting the particles
@@ -175,7 +174,11 @@ protected:
 			GEO_BALL,
 			GEO_BALL2,
 			GEO_SKYPLANE,
-			GEO_TERRAIN,
+			GEO_TERRAIN0,
+			GEO_TERRAIN1,
+			GEO_TERRAIN2,
+			GEO_TERRAIN3,
+			GEO_TERRAIN4,
 			GEO_MINIMAP,
 			GEO_MINIMAP_AVATAR,
 			GEO_MINIMAP_MINNOW,
@@ -219,10 +222,11 @@ protected:
 
 
 	//level stuff
-	hitbox m_travelzone;
+	hitbox m_travelzonedown;
+	hitbox m_travelzoneup;
 
-
-
+	std::vector<unsigned char> m_heightMap[5];
+	float fps;
 	//player test stuff
 	Vector3 playerpos;
 	hitbox2 player_box;

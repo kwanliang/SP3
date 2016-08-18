@@ -219,13 +219,13 @@ void SceneSP3::Init()
 
    // camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
 	walkCam.Init(
-		Vector3(0, 400, 10),
+		Vector3(-852, 544, -699),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
-		90
-	);
+		60
+		);
 	currentCam = &walkCam;
-
+	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
     for (int i = 0; i < NUM_GEOMETRY; ++i)
     {
         meshList[i] = NULL;
@@ -241,7 +241,11 @@ void SceneSP3::Init()
     meshList[GEO_SKYPLANE]->textureArray[0] = LoadTGA("Image//sky.tga");
     meshList[GEO_SKYPLANE]->textureArray[1] = LoadTGA("Image//night.tga");
 
-    meshList[GEO_TERRAIN] = MeshBuilder::GenerateTerrain("terrain", "Image//Area0.raw", m_heightMap);
+    meshList[GEO_TERRAIN0] = MeshBuilder::GenerateTerrain("terrain", "Image//Area0.raw", m_heightMap[0]);
+	meshList[GEO_TERRAIN1] = MeshBuilder::GenerateTerrain("terrain", "Image//Area01.raw", m_heightMap[1]);
+	meshList[GEO_TERRAIN2] = MeshBuilder::GenerateTerrain("terrain", "Image//Area02.raw", m_heightMap[2]);
+	meshList[GEO_TERRAIN3] = MeshBuilder::GenerateTerrain("terrain", "Image//Area03.raw", m_heightMap[3]);
+	meshList[GEO_TERRAIN4] = MeshBuilder::GenerateTerrain("terrain", "Image//Area04.raw", m_heightMap[4]);
    // meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
 	//meshList[GEO_TERRAIN1] = MeshBuilder::GenerateTerrain("terrain", "Image//Area01.raw", m_heightMap[1]);
 	//meshList[GEO_TERRAIN1]->textureArray[0] = LoadTGA("Image//rock.tga");
@@ -291,6 +295,9 @@ void SceneSP3::Init()
     //meshList[SPRITE_NAME]->textureArray[0] = LoadTGA("");
 
     //SPRITENAME = dynamic_cast<SpriteAnimation*>(meshList[SPRITE_NAME]);
+
+
+	//SharedData::GetInstance()->SD_CurrentArea = 0;
 
 	playerpos = Vector3(0, 0, 0);
 	player_box = hitbox2::generatehitbox(playerpos, 10, 10, 10);
@@ -344,6 +351,11 @@ void SceneSP3::Init()
         fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(599, 600), Math::RandFloatMinMax(-100, 100));
         fo->vel.Set(Math::RandFloatMinMax(-10, 10), -5, Math::RandFloatMinMax(-10, 10));
     }
+}
+
+void SceneSP3::ReInit()
+{
+	cout << "base scene" << endl;
 }
 
 Minnow* SceneSP3::FetchFO()
@@ -522,13 +534,32 @@ void SceneSP3::UpdateMinnow(double dt)
 
 void SceneSP3::UpdateTravel()
 {
+	//if (!SharedData::GetInstance()->SD_Travel)
+	//return;
 
-	if (collision(m_travelzone, player_box.m_point[0]) || collision(m_travelzone, player_box.m_point[0]))
+	if ( collision(m_travelzonedown, player_box.m_point[0]) || collision(m_travelzonedown, player_box.m_point[6]))//travel downward
 	{
-		//Level change;
-		cout << "level change" <<endl;
-	}
 
+		if (static_cast<SharedData::AREA>(SharedData::GetInstance()->SD_CurrentArea) != SharedData::A_NIGHTMARETRENCH)
+		{
+			SharedData::GetInstance()->SD_Down = true;
+			SharedData::GetInstance()->SD_CurrentArea += 1;
+			SharedData::GetInstance()->SD_SceneSwitch = true;
+			std::cout << "down" << std::endl;
+			return;
+		}
+	}
+	if (collision(m_travelzoneup, player_box.m_point[0]) || collision(m_travelzoneup, player_box.m_point[6]))//travel upward
+	{
+		if (static_cast<SharedData::AREA>(SharedData::GetInstance()->SD_CurrentArea) != SharedData::A_TUTORIAL)
+		{
+			SharedData::GetInstance()->SD_Down = false;
+			SharedData::GetInstance()->SD_CurrentArea -= 1;
+			std::cout << "up" << std::endl;
+			SharedData::GetInstance()->SD_SceneSwitch = true;
+			return;
+		}
+	}
 
 }
 
@@ -555,7 +586,10 @@ void SceneSP3::Update(double dt)
         lights[0].position.y -= (float)(100.f * dt);
     if (Application::IsKeyPressed('P'))
         lights[0].position.y += (float)(100.f * dt);
-
+	if (Application::IsKeyPressed('C'))
+	{
+		std::cout << playerpos << std::endl;
+	}
     //camera.Update(dt);
     fps = (float)(1. / dt);
 
@@ -639,13 +673,15 @@ void SceneSP3::Update(double dt)
 			playerpos = walkCam.GetPos() + Vector3(0, 80, 0);
 			hitbox2::updatehitbox(player_box, playerpos);
 
-			if (terraincollision(player_box, m_heightMap))
+
+
+			/*if (terraincollision(player_box, m_heightMap[SharedData::GetInstance()->SD_CurrentArea]))
 			{
 				fishVel *= -1.f;
 				walkCam.Move(fishVel * (float)dt);
 				playerpos = walkCam.GetPos() + Vector3(0, 80, 0);
 				hitbox2::updatehitbox(player_box, playerpos);
-			}
+			}*/
 
 			if (!fishVel.IsZero())
 			{
@@ -945,7 +981,6 @@ void SceneSP3::RenderMesh(Mesh *mesh, bool enableLight)
     mesh->Render();
 }
 
-
 ParticleObject* SceneSP3::GetParticle_NAME()
 {
 //    for (auto it : particleList)
@@ -1013,7 +1048,6 @@ void SceneSP3::UpdateParticles(double dt)
     //}
 }
 
-
 void SceneSP3::RenderFO(Minnow *fo)
 {
     switch (fo->seaType)
@@ -1041,154 +1075,6 @@ void SceneSP3::RenderPO(Projectile *po)
     RenderMesh(meshList[GEO_BALL], false);
     modelStack.PopMatrix();
 }
-
-//void SceneSP3::RenderPassGPass()
-
-    //m_renderPass = RENDER_PASS_PRE;
-    //m_lightDepthFBO.BindForWriting();
-
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
-    //glClear(GL_DEPTH_BUFFER_BIT);
-
-    //glUseProgram(m_gPassShaderID);
-
-    ////these matrices define shadows from light position/direction
-    //if (lights[0].type == Light::LIGHT_DIRECTIONAL)
-    //    m_lightDepthProj.SetToOrtho(-1000, 1000, -1000, 1000, -8000, 8000);
-    //else
-    //    m_lightDepthProj.SetToPerspective(90, 1.f, 0.1, 20);
-
-    //m_lightDepthView.SetToLookAt(lights[0].position.x, lights[0].position.y, lights[0].position.z, 0, 0, 0, 0, 1, 0);
-
-    //RenderWorld();
-
-
-//void SceneSP3::RenderPassMain()
-
- //   m_renderPass = RENDER_PASS_MAIN;
-
- //   glBindFramebuffer(GL_FRAMEBUFFER, 0);
- //   glViewport(0, 0, Application::GetWindowWidth(), Application::GetWindowHeight());
-
- //   glEnable(GL_CULL_FACE);
- //   glCullFace(GL_BACK);
- //   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
- //   glUseProgram(m_programID);
-
- //   // Shadow - pass light depth texture
- //   m_lightDepthFBO.BindForReading(GL_TEXTURE8);
-
- //   glUniform1i(m_parameters[U_SHADOW_MAP], 8);
-
- //   //Mtx44 perspective;
- //   //perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
- //   ////perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
- //   //projectionStack.LoadMatrix(perspective);
-
- //   // Camera matrix
- //   /*viewStack.LoadIdentity();
- //   viewStack.LookAt(
- //       camera.position.x, camera.position.y, camera.position.z,
- //       camera.target.x, camera.target.y, camera.target.z,
- //       camera.up.x, camera.up.y, camera.up.z
- //       );*/
-	//projectionStack.LoadMatrix(currentCam->GetProjection());
-	//viewStack.LoadMatrix(currentCam->GetView());
- //   // Model matrix : an identity matrix (model will be at the origin)
- //   modelStack.LoadIdentity();
-
- //   if (lights[0].type == Light::LIGHT_DIRECTIONAL)
- //   {
- //       Vector3 lightDir(lights[0].position.x, lights[0].position.y, lights[0].position.z);
- //       Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
- //       glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
- //   }
- //   else if (lights[0].type == Light::LIGHT_SPOT)
- //   {
- //       Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
- //       glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
- //       Vector3 spotDirection_cameraspace = viewStack.Top() * lights[0].spotDirection;
- //       glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
- //   }
- //   else
- //   {
- //       Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
- //       glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
- //   }
-
- //   if (lights[1].type == Light::LIGHT_DIRECTIONAL)
- //   {
- //       Vector3 lightDir(lights[1].position.x, lights[1].position.y, lights[1].position.z);
- //       Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
- //       glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
- //   }
-
-
- //   if (lights[2].type == Light::LIGHT_SPOT)
- //   {
- //       Position lightPosition_cameraspace = viewStack.Top() * lights[2].position;
- //       glUniform3fv(m_parameters[U_LIGHT2_POSITION], 1, &lightPosition_cameraspace.x);
- //       Vector3 spotDirection_cameraspace = viewStack.Top() * lights[2].spotDirection;
- //       glUniform3fv(m_parameters[U_LIGHT2_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
- //   }
-
- //   glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
- //   RenderWorld();
-
- //   for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
- //   {
- //       GameObject *go = (GameObject*)*it;
- //       if (go->objectType == GameObject::SEACREATURE)
- //       {
- //           Minnow *fo = (Minnow*)*it;
- //           if (fo->active)
- //           {
- //               RenderFO(fo);
- //           }
- //       }
- //       else if (go->objectType == GameObject::PROJECTILE)
- //       {
- //           Projectile *po = (Projectile*)*it;
- //           if (po->active)
- //           {
- //               RenderPO(po);
- //           }
- //       }
- //   }
-
- //   // Render the crosshair
- //   RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
-	//RenderMesh(meshList[GEO_AXES], false);
- //   std::ostringstream ss;
- //   ss.precision(3);
- //   ss << "FPS: " << fps;
- //   RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
-	//
-	//modelStack.PushMatrix();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-	//modelStack.Translate(player_box.m_position.x, player_box.m_position.y, player_box.m_position.z);
-	//modelStack.Scale(player_box.m_width, player_box.m_height, player_box.m_length);
-	//RenderMesh(meshList[GEO_CUBE], false);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-	//modelStack.PopMatrix();
-
-//
-//    glUseProgram(m_gPassShaderID);
-//
-//    //these matrices define shadows from light position/direction
-//    if (lights[0].type == Light::LIGHT_DIRECTIONAL)
-//        m_lightDepthProj.SetToOrtho(-1000, 1000, -1000, 1000, -8000, 8000);
-//    else
-//        m_lightDepthProj.SetToPerspective(90, 1.f, 0.1, 20);
-//
-//    m_lightDepthView.SetToLookAt(lights[0].position.x, lights[0].position.y, lights[0].position.z, 0, 0, 0, 0, 1, 0);
-//
-//    RenderWorld();
-//}
-
-
 
 void SceneSP3::Render()
 {
