@@ -222,8 +222,8 @@ void SceneSP3::Init()
 		Vector3(-852, 544, -699),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
-		60
-		);
+		100
+	);
 	currentCam = &walkCam;
 	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
     for (int i = 0; i < NUM_GEOMETRY; ++i)
