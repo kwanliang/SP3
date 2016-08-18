@@ -75,8 +75,6 @@ void Camera3::Update(double dt)
  //     
 	//}
 
-    SharedData::GetInstance()->PlayerPos = position;
-
 	//if(Application::IsKeyPressed(VK_LEFT))
 	//{
 	//	Vector3 view = (target - position).Normalized();

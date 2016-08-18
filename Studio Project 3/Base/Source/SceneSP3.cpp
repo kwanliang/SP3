@@ -453,7 +453,7 @@ void SceneSP3::UpdateMinnow(double dt)
 
                     int neightbourCount = 0;
 
-                    if (terraincollision(fo->collision, m_heightMap))
+                    if (terraincollision(fo->collision, m_heightMap[SharedData::GetInstance()->SD_CurrentArea]))
                     {
                         fo->vel *= -5;
                     }

@@ -5,6 +5,7 @@
 #include <vector>
 #include "Mtx44.h"
 #include "GiantSquid.h"
+#include "Vector2.h"
 
 
 class SceneTutorial : public SceneSP3

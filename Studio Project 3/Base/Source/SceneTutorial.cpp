@@ -23,7 +23,7 @@ void SceneTutorial::Init()
 		Vector3(0, 1, 0),
 		60
 		);
-	m_travelzone = hitbox::generatehitbox(Vector3(0,500,0),600,500,600,0);
+	//m_travelzone = hitbox::generatehitbox(Vector3(0,500,0),600,500,600,0);
 
     InitGiantSquid();
 }

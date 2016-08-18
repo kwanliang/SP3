@@ -235,6 +235,7 @@ private:
 	float	fish_tailrot;
 	bool	fish_tailmax;
 	Vector3 fishVel;
+    Minnow* minnowLeader;
 };
 
 #endif
