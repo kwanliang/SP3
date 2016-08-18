@@ -96,7 +96,7 @@ uniform Material material;
 uniform int numLights;
 uniform int colorTextureEnabled[MAX_TEXTURES];
 uniform sampler2D colorTexture[MAX_TEXTURES];
-uniform int textEnabled;
+uniform int isGUI;
 uniform vec3 textColor;
 uniform FogParam fogParam;
 uniform sampler2D shadowMap;
@@ -215,7 +215,7 @@ void main(){
 	}
 	else
 	{
-		if(colorTextureEnabled[0]> 0 && textEnabled > 0)
+		if(colorTextureEnabled[0]> 0 && isGUI > 0)
 		{
 			color = texture2D( colorTexture[0], texCoord ) * vec4( textColor, 1 );
 		}
@@ -245,7 +245,7 @@ void main(){
 	if (color.a < 0.1)
 		discard;
 
-	if(fogParam.enabled > 0)
+	if(fogParam.enabled > 0 && isGUI == 0)
 	{
 		float fogDistance = abs(vertexPosition_cameraspace.z);
 		float fogFactor = getFogFactor(fogParam, fogDistance);

@@ -201,8 +201,10 @@ void SceneTutorial::RenderPassMain()
 	}
 
 	// Render the crosshair
+	glUniform1i(m_parameters[U_IS_GUI], 1);
 	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
 	RenderMesh(meshList[GEO_AXES], false);
+	glUniform1i(m_parameters[U_IS_GUI], 0);
 	std::ostringstream ss;
 	ss.precision(3);
 	ss << "FPS: " << fps;

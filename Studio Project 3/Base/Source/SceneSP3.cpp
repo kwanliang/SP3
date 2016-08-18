@@ -114,7 +114,7 @@ void SceneSP3::Init()
     m_parameters[U_COLOR_TEXTURE_ENABLED1] = glGetUniformLocation(m_programID, "colorTextureEnabled[1]");
     m_parameters[U_COLOR_TEXTURE1] = glGetUniformLocation(m_programID, "colorTexture[1]");
     // Get a handle for our "textColor" uniform
-    m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
+    m_parameters[U_IS_GUI] = glGetUniformLocation(m_programID, "isGUI");
     m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
 
     // Get a handle for our "fog" uniform
@@ -175,7 +175,7 @@ void SceneSP3::Init()
     //lights[2].exponent = 3.f;
 
     glUniform1i(m_parameters[U_NUMLIGHTS], 1);
-    glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+    glUniform1i(m_parameters[U_IS_GUI], 0);
 
     glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
     glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &lights[0].color.r);
@@ -222,7 +222,7 @@ void SceneSP3::Init()
 		Vector3(0, 400, 10),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
-		60
+		90
 	);
 	currentCam = &walkCam;
 
@@ -766,7 +766,7 @@ void SceneSP3::RenderText(Mesh* mesh, std::string text, Color color)
         return;
 
     glDisable(GL_DEPTH_TEST);
-    glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+    glUniform1i(m_parameters[U_IS_GUI], 1);
     glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
     glUniform1i(m_parameters[U_LIGHTENABLED], 0);
     glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
@@ -783,7 +783,7 @@ void SceneSP3::RenderText(Mesh* mesh, std::string text, Color color)
         mesh->Render((unsigned)text[i] * 6, 6);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+    glUniform1i(m_parameters[U_IS_GUI], 0);
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -803,7 +803,7 @@ void SceneSP3::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, flo
     modelStack.LoadIdentity();
     modelStack.Translate(x, y, 0);
     modelStack.Scale(size, size, size);
-    glUniform1i(m_parameters[U_TEXT_ENABLED], 1);
+    glUniform1i(m_parameters[U_IS_GUI], 1);
     glUniform3fv(m_parameters[U_TEXT_COLOR], 1, &color.r);
     glUniform1i(m_parameters[U_LIGHTENABLED], 0);
     glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
@@ -820,7 +820,7 @@ void SceneSP3::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, flo
         mesh->Render((unsigned)text[i] * 6, 6);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    glUniform1i(m_parameters[U_TEXT_ENABLED], 0);
+    glUniform1i(m_parameters[U_IS_GUI], 0);
     modelStack.PopMatrix();
     viewStack.PopMatrix();
     projectionStack.PopMatrix();
