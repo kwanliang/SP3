@@ -9,6 +9,7 @@ static float distFromAlignment = 400.f;
 class Minnow : public SeaCreature
 {
 private:
+    Vector3 FOV;
     float panicTime;
 
 public:
@@ -22,7 +23,7 @@ public:
     MINNOW_BEHAVIORSTATE state;
 
     Minnow();
-    Minnow(MINNOW_BEHAVIORSTATE state, float panicTime, int m_health, SEACREATURE_TYPE seaType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
+    Minnow(MINNOW_BEHAVIORSTATE state, Vector3 FOV, float panicTime, int m_health, SEACREATURE_TYPE seaType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
     ~Minnow();
 
     Vector3 cohesion(Vector3 CentreOfMass, int neighbourCount);

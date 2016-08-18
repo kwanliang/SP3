@@ -299,6 +299,7 @@ void SceneSP3::Init()
 
 	//SharedData::GetInstance()->SD_CurrentArea = 0;
 
+    // Hitbox generation
 	playerpos = Vector3(0, 0, 0);
 	player_box = hitbox2::generatehitbox(playerpos, 10, 10, 10);
 	fish_tailrot = 0;
@@ -348,8 +349,9 @@ void SceneSP3::Init()
         fo->seaType = SeaCreature::MINNOW;
         fo->state = Minnow::FLOCK;
         fo->scale.Set(1, 1, 5);
-        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(599, 600), Math::RandFloatMinMax(-100, 100));
-        fo->vel.Set(Math::RandFloatMinMax(-10, 10), -5, Math::RandFloatMinMax(-10, 10));
+        fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(400,600 ), Math::RandFloatMinMax(-100, 100));
+        fo->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
+        fo->collision = hitbox2::generatehitbox(fo->pos, 10, 10, 10);
     }
 }
 
@@ -424,11 +426,19 @@ void SceneSP3::UpdateMinnow(double dt)
                     else
                         fo->pos += fo->vel * dt * 10;
 
+                    // Collision
+                    hitbox2::updatehitbox(fo->collision, fo->pos);
+
                     Vector3 tempCentreOfMass(0, 0, 0);
                     Vector3 tempRepelVector(0, 0, 0);
                     Vector3 tempForceVector(0, 0, 0);
 
                     int neightbourCount = 0;
+
+                    if (terraincollision(fo->collision, m_heightMap))
+                    {
+                        fo->vel *= -1;
+                    }
 
                     for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
                     {
@@ -455,7 +465,6 @@ void SceneSP3::UpdateMinnow(double dt)
                         fo->vel += fo->alignment(tempCentreOfMass, neightbourCount) + fo->cohesion(tempCentreOfMass, neightbourCount) * 1.5;
                     else
                         fo->vel += fo->seperation(tempCentreOfMass) * 2;
-                    //cout << tempCentreOfMass << endl;
 
                     // Cap velocity
                     if (go->vel.x > 20)
@@ -667,7 +676,7 @@ void SceneSP3::Update(double dt)
 				fishVel.Normalize();
 				fishVel *= speedLimit;
 			}
-			
+
 			walkCam.Move(fishVel * (float)dt);
 
 			playerpos = walkCam.GetPos() + Vector3(0, 80, 0);

@@ -3,12 +3,14 @@
 
 #include "GameObject.h"
 #include "Vector3.h"
+#include "CollisionManager.h"
 
 class SeaCreature : public GameObject
 {
 private:
     int m_health;
 	Vector3 m_position;
+
 public:
     enum SEACREATURE_TYPE
     {
@@ -27,6 +29,8 @@ public:
 
 	void setPos(Vector3 pos);
     void setHealth(int m_health);
+
+    hitbox2 collision;
 };
 
 #endif
