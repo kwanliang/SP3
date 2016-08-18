@@ -202,69 +202,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Blending.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\ColorFragmentShader.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\comg.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\comg.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\LightSource.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\MultiLight.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Shading.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Shading.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\SimpleFragmentShader.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\SimpleTransform.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\SimpleVertexShader.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\SingleColor.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Text.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\TextOnly.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\TextOnly.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Texture.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Texture.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\TransformVertexShader.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\MultiTexture.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Fog.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Fog.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="Shader\GPass.fragmentshader">
       <Filter>Shader</Filter>
     </None>

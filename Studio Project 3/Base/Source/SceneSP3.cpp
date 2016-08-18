@@ -267,6 +267,10 @@ void SceneSP3::Init()
     meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 16, 16, 1.f);
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
 
+	meshList[GEO_MINIMAP] = MeshBuilder::GenerateQuad("minimap", Color(1, 1, 1), 2);
+
+	meshList[GEO_MINIMAP_AVATAR] = MeshBuilder::GenerateSphere("minimapAvatar", Color(1, 0, 0), 16, 16, 1.f);
+
     // Object
     //meshList[OBJ_NAME] = MeshBuilder::GenerateOBJ("", "OBJ//.obj");
     //meshList[OBJ_NAME]->textureArray[0] = LoadTGA("Image//.tga");
@@ -625,8 +629,6 @@ void SceneSP3::Update(double dt)
 				fishVel.Normalize();
 				fishVel *= speedLimit;
 			}
-
-			//std::cout << fishVel.Length() << std::endl;
 			
 			walkCam.Move(fishVel * (float)dt);
 
@@ -637,6 +639,8 @@ void SceneSP3::Update(double dt)
 			{
 				fishVel *= -1.f;
 				walkCam.Move(fishVel * (float)dt);
+				playerpos = walkCam.GetPos() + Vector3(0, 80, 0);
+				hitbox2::updatehitbox(player_box, playerpos);
 			}
 
 			if (!fishVel.IsZero())
@@ -829,8 +833,8 @@ void SceneSP3::RenderMeshIn2D(Mesh *mesh, bool enableLight, float size, float x,
     viewStack.LoadIdentity();
     modelStack.PushMatrix();
     modelStack.LoadIdentity();
-    modelStack.Scale(size, size, size);
     modelStack.Translate(x, y, 0);
+    modelStack.Scale(size, size, size);
 
     Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -1161,6 +1165,20 @@ void SceneSP3::RenderPO(Projectile *po)
 	//RenderMesh(meshList[GEO_CUBE], false);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
 	//modelStack.PopMatrix();
+
+//
+//    glUseProgram(m_gPassShaderID);
+//
+//    //these matrices define shadows from light position/direction
+//    if (lights[0].type == Light::LIGHT_DIRECTIONAL)
+//        m_lightDepthProj.SetToOrtho(-1000, 1000, -1000, 1000, -8000, 8000);
+//    else
+//        m_lightDepthProj.SetToPerspective(90, 1.f, 0.1, 20);
+//
+//    m_lightDepthView.SetToLookAt(lights[0].position.x, lights[0].position.y, lights[0].position.z, 0, 0, 0, 0, 1, 0);
+//
+//    RenderWorld();
+//}
 
 
 

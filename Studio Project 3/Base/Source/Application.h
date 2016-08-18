@@ -25,6 +25,7 @@ public:
     static int GetWindowHeight();
     static int m_window_width;
     static int m_window_height;
+	static double GetAspectRatio();
 
 private:
 	Application();

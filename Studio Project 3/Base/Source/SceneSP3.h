@@ -31,9 +31,10 @@ public:
     virtual void Render();
     virtual void Exit();
 
-    void RenderPassGPass();
-    void RenderPassMain();
-    void RenderWorld();
+	virtual void RenderPassGPass() = 0;
+    virtual void RenderPassMain() = 0;
+    virtual void RenderWorld() = 0;
+	virtual void RenderMinimap() = 0;
 
 	void UpdateTravel();
     void UpdateMinnow(double dt);
@@ -178,6 +179,8 @@ private:
 			GEO_BALL2,
 			GEO_SKYPLANE,
 			GEO_TERRAIN,
+			GEO_MINIMAP,
+			GEO_MINIMAP_AVATAR,
 			GEO_FISHMODEL,
 			GEO_FISHTAIL,
 			GEO_SQUIDBODY,

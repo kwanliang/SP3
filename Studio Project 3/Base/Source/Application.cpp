@@ -55,6 +55,11 @@ int Application::GetWindowHeight()
     return m_window_height;
 }
 
+double Application::GetAspectRatio()
+{
+	return (double)m_window_width / (double)m_window_height;
+}
+
 bool Application::IsKeyPressed(unsigned short key)
 {
     return ((GetAsyncKeyState(key) & 0x8001) != 0);
