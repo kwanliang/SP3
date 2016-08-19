@@ -158,37 +158,18 @@ static bool terraincollision(const hitbox2& hitbox, std::vector<unsigned char> h
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+static bool collision(const hitbox2& lhsBox, const hitbox2& rhsBox){		//for AABB to AABB collision
+    //Check if lhsBox's max is greater than rhsBox's min and lhsBox's min is less than rhsBox's max
+    if (lhsBox.m_point[6].x > rhsBox.m_point[0].x &&
+        lhsBox.m_point[0].x < rhsBox.m_point[6].x &&
+        lhsBox.m_point[6].y > rhsBox.m_point[0].y &&
+        lhsBox.m_point[0].y < rhsBox.m_point[6].y &&
+        lhsBox.m_point[6].z > rhsBox.m_point[0].z &&
+        lhsBox.m_point[0].z < rhsBox.m_point[6].z){
+        return true;
+    }
+    else
+        return false;
+}
 
 #endif;
-
-//Updated 22/2/2016 - Randall
-//Updated 8/15/2016 - Yue xian
