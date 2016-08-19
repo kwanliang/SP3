@@ -5,15 +5,24 @@
 
 class Pufferfish : public SeaCreature
 {
+private:
+
+	
 public:
+	enum PUFFER_STATE
+	{
+		IDLE,
+		ENRAGED,
+		FLEEING,
+		STATE_TOTAL,
+	};
     Pufferfish();
 	Pufferfish(Vector3 pos);
-    ~Pufferfish();
-
+	~Pufferfish();
     void expand();
-
-private:
+	PUFFER_STATE pstate;
 	
+
 };
 
 #endif

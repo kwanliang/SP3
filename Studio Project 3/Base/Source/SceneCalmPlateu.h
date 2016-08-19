@@ -4,8 +4,8 @@
 #include "SceneSP3.h"
 #include <vector>
 #include "Mtx44.h"
-
-
+#include "Pufferfish.h"
+#include "CollisionManager.h"
 class SceneCalmPlateu : public SceneSP3
 {
 public:
@@ -26,8 +26,10 @@ public:
 	void RenderTerrain();
 	void RenderSkyPlane();
 	void RenderParticles();
+	void RenderPuffer(Pufferfish *fo);
 
-
+	Pufferfish* FetchPuffer();
+	void UpdatePuffer(double dt);
 
 private:
 

@@ -18,7 +18,6 @@ public:
     {
         FLOCK,
         FLEE,
-
         STATE_TOTAL,
     };
     MINNOW_BEHAVIORSTATE state;

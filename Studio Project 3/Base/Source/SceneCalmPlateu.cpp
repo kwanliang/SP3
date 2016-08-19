@@ -15,23 +15,43 @@ SceneCalmPlateu::~SceneCalmPlateu()
 
 void SceneCalmPlateu::Init()
 {
+	walkCam.Init(
+		Vector3(0,600,0),
+		Vector3(0, 0, -10),
+		Vector3(0, 1, 0),
+		60
+		);
 	SceneSP3::Init();
+	for (int i = 0; i < 10; i++)
+	{
+		Pufferfish *p = FetchPuffer();
+		p->active = true;
+		p->objectType = GameObject::SEACREATURE;
+		p->seaType = SeaCreature::PUFFER;
+		p->pstate = Pufferfish::IDLE;
+		p->scale.Set(5, 5, 5);
+		p->pos.Set(0,500,0);
+		p->vel.Set(Math::RandFloatMinMax(-10, 10), Math::RandFloatMinMax(-10, 10), Math::RandFloatMinMax(-10, 10));
+		p->collision = hitbox2::generatehitbox(p->pos, 8, 8, 8);
+		p->setHealth(200);
+	}
+}
 	//currentCam = &walkCam;
 	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
-}
+
 
 void SceneCalmPlateu::ReInit()
 {
-	if (SharedData::GetInstance()->SD_Down)
-	{
-		walkCam.Init(
-			Vector3(-1141, 359, -748),
-			Vector3(0, 0, -10),
-			Vector3(0, 1, 0),
-			60
-			);
-	}
-	else
+	//if (SharedData::GetInstance()->SD_Down)
+	//{
+	//	walkCam.Init(
+	//		Vector3(-1141, 359, -748),
+	//		Vector3(0, 0, -10),
+	//		Vector3(0, 1, 0),
+	//		60
+	//		);
+	//}
+	//else
 	{
 		walkCam.Init(
 			Vector3(1371, 416, -17),
@@ -108,6 +128,8 @@ void SceneCalmPlateu::RenderWorld()
 	modelStack.PopMatrix();
 	modelStack.PopMatrix();
 	
+
+
 
 }
 
@@ -209,14 +231,35 @@ void SceneCalmPlateu::RenderPassMain()
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject*)*it;
+
+		if (!go->active)
+			continue;
+
+
 		if (go->objectType == GameObject::SEACREATURE)
 		{
-			Minnow *fo = (Minnow*)*it;
-			if (fo->active)
+			SeaCreature * fo = (SeaCreature*)*it;
+
+			switch (fo->seaType)
 			{
-				RenderFO(fo);
+			case SeaCreature::MINNOW:
+			{
+				Minnow * m = (Minnow*)*it;
+				RenderFO(m);
+
+			}break;
+			case SeaCreature::PUFFER:
+			{
+				Pufferfish * p = (Pufferfish*)*it;
+				RenderPuffer(p);
+				
+			}break;
+
 			}
+			
 		}
+
+
 		else if (go->objectType == GameObject::PROJECTILE)
 		{
 			Projectile *po = (Projectile*)*it;
@@ -264,6 +307,19 @@ void SceneCalmPlateu::Render()
 
 }
 
+void SceneCalmPlateu::RenderPuffer(Pufferfish *fo)
+{
+	float rotate = 0;
+	rotate = Math::RadianToDegree(atan2(fo->vel.x, fo->vel.z));
+	modelStack.PushMatrix();
+	modelStack.Translate(fo->pos.x, fo->pos.y, fo->pos.z);
+	modelStack.Rotate(rotate, 0, 1, 0);
+	modelStack.Scale(fo->scale.x, fo->scale.y, fo->scale.z);
+	RenderMesh(meshList[GEO_PUFFER],false);
+	modelStack.PopMatrix();
+		
+}
+
 void SceneCalmPlateu::RenderMinimap()
 {
 
@@ -272,7 +328,132 @@ void SceneCalmPlateu::RenderMinimap()
 void SceneCalmPlateu::Update(double dt)
 {
 	SceneSP3::Update(dt);
+	UpdatePuffer(dt);
+}
 
+void SceneCalmPlateu::UpdatePuffer(double dt)
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (!go->active)
+			continue;
+
+		if (go->objectType != GameObject::SEACREATURE)
+			continue;
+
+		Pufferfish *p = (Pufferfish *)*it;
+
+		if (p->seaType != SeaCreature::PUFFER)
+			continue;
+
+
+		hitbox2::updatehitbox(p->collision, p->pos);
+		switch (p->pstate)
+		{
+		case Pufferfish::IDLE:
+		{
+			p->pos += p->vel.Normalize() * dt * 10;
+			
+			//check bullet collision
+			for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+			{
+				GameObject *b = (GameObject *)*it;
+				if (b->objectType == GameObject::PROJECTILE && b->active)
+				{
+					
+					Vector3 displacement = p->pos - b->pos;
+					if (displacement.LengthSquared() <  p->scale.z + b->scale.z + 50)
+					{
+						p->scale = Vector3(10, 10, 10);
+						//p->collision.m_height
+						p->pstate = Pufferfish::ENRAGED;
+						std::cout << " hit" << std::endl;
+						break;
+					}
+				}
+			}
+			p->pos += p->vel.Normalize() * dt * 10;
+
+		}break;
+		case Pufferfish::ENRAGED:
+		{
+			Vector3 displacement = playerpos - p->pos;
+			if (displacement.LengthSquared() > 400*400)
+			{
+				p->vel *= -1.f;
+				p->scale = Vector3(5, 5, 5);
+				p->pstate = Pufferfish::IDLE;
+			}
+			p->vel = displacement.Normalize();
+			if (collision(p->collision, player_box))
+			{
+				//p->vel *= -1.f;
+				if (fishVel.Length() < 3)
+					fishVel = Vector3(5, 5, 5);
+
+				fishVel *= -5.f;
+				walkCam.Move(fishVel * (float)dt);
+				playerpos = walkCam.GetPos() + Vector3(0, 80, 0);
+			}
+
+			p->pos += p->vel * dt * 20;
+			
+		}break;
+		}
+		
+		if (terraincollision(p->collision, m_heightMap[SharedData::GetInstance()->SD_CurrentArea]))//check collision;
+		{
+			p->vel *= -5.f;
+			p->pos.y += 4;
+		}
+		if (p->pos.y > 650)//heigt limit
+		{
+			p->pos.y -= 1;
+			p->vel.y = -p->vel.y;
+		}
+	
+		// Cap velocity
+		if (p->vel.x > 20)
+			p->vel.x = 20;
+		if (p->vel.y > 20)
+			p->vel.y = 20;
+		if (p->vel.z > 20)
+			p->vel.z = 20;
+		if (p->vel.x < -20)
+			p->vel.x = -20;
+		if (p->vel.y < -20)
+			p->vel.y = -20;
+		if (p->vel.z < -20)
+			p->vel.z = -20;
+
+	}
+}
+
+Pufferfish*  SceneCalmPlateu::FetchPuffer()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		Pufferfish *go = (Pufferfish *)*it;
+		if (!go->active)
+		{
+			go->active = true;
+			//++m_objectCount;
+			return go;
+		}
+
+	}
+	for (unsigned i = 0; i < 10; ++i)
+	{
+		Pufferfish *go = new Pufferfish();
+		go->objectType = GameObject::SEACREATURE;
+		go->seaType = SeaCreature::PUFFER;
+		m_goList.push_back(go);
+	}
+	Pufferfish *go = (Pufferfish *)m_goList.back();
+	go->active = true;
+	//++m_objectCount;
+	return go;
 }
 
 void SceneCalmPlateu::Exit()

@@ -184,6 +184,7 @@ private:
         GEO_SQUIDTENTACLEEND,
 
         GEO_MINNOW,
+		GEO_PUFFER,
 
 			SPRITE_NAME,
 			PARTICLE_NAME,

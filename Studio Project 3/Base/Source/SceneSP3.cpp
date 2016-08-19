@@ -265,6 +265,10 @@ void SceneSP3::Init()
 	meshList[GEO_SQUIDBODY] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//squid.obj");
 	meshList[GEO_SQUIDBODY]->textureArray[0] = LoadTGA("Image//squidbody.tga");
 
+	meshList[GEO_PUFFER] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//puffer.obj");
+	meshList[GEO_PUFFER]->textureArray[0] = LoadTGA("Image//puffer.tga");
+
+
     meshList[GEO_SQUIDTENTACLENODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_node.obj");
     meshList[GEO_SQUIDTENTACLENODE]->textureArray[0] = LoadTGA("Image//squidtentacle.tga");
     meshList[GEO_SQUIDTENTACLEEND] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_end.obj");
