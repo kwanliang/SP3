@@ -11,6 +11,7 @@ struct GameObject
         PROJECTILE,
         SEACREATURE,
         BOSS,
+		CAPTURED,
 
         TYPE_TOTAL
     };

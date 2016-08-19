@@ -5,17 +5,12 @@
 
 Capture::Capture()
 {
-	/*hitpoints = 50;
-	Type = FISHTYPE;
-	position= (Vector3(0,0,0));*/
 }
 
 
 Capture::~Capture()
 {
 }
-
-
 
 Vector3 Capture::Vacuum(SeaCreature creature, Vector3 playerpos, bool check)
 {
@@ -36,16 +31,20 @@ Vector3 Capture::Vacuum(SeaCreature creature, Vector3 playerpos, bool check)
 		{
 			creature.setPos(Vector3(creature.pos.x, (creature.pos.y), (creature.pos.z - view.z / creature.getHealth() * 500/distance)));
 		}
-		AddSquad(playerpos, creature, distance);
 	}
 	return creature.pos;
 }
 
-void Capture::AddSquad(Vector3 playerpos, SeaCreature creature, float distance)
+GameObject::OBJECT_TYPE Capture::AddSquad(SeaCreature creature, Vector3 playerpos, bool check)
 {
-	if (distance <= 10)
+	float dist = fabs(playerpos.x - creature.pos.x) + fabs(playerpos.y - creature.pos.y) + fabs(playerpos.z - creature.pos.z);
+	if (dist <= 10)
 	{
-		std::cout << "captured" << std::endl;
+		return GameObject::CAPTURED;
+	}
+	else
+	{
+		return creature.objectType;
 	}
 
 }

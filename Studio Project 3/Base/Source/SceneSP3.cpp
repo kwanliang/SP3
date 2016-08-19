@@ -370,7 +370,7 @@ void SceneSP3::Init()
         fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(400,600 ), Math::RandFloatMinMax(-100, 100));
         fo->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
         fo->collision = hitbox2::generatehitbox(fo->pos, 10, 10, 10);
-		fo->setHealth(50);
+		fo->setHealth(10);
     }
 }
 
@@ -833,6 +833,7 @@ void SceneSP3::Update(double dt)
 				if (go->objectType == GameObject::SEACREATURE)
 				{
 					go->setPos(Capture::Vacuum(*go, playerpos, Capture::rangeCheckXZ(walkCam,*go, playerpos)));
+					go->objectType = Capture::AddSquad(*go, playerpos, Capture::rangeCheckXZ(walkCam, *go, playerpos));
 				}
 			}
 		}
