@@ -21,7 +21,7 @@ public:
 		A_NIGHTMARETRENCH
 	};
 
-	unsigned SD_CurrentArea = 1;
+	unsigned SD_CurrentArea = 0;
 	bool SD_SceneSwitch = 0;
 	bool SD_Down = false;
 	bool SD_Travel = true;

@@ -7,7 +7,7 @@
 
 class SeaCreature : public GameObject
 {
-private:
+protected:
     int m_health;
 	Vector3 m_position;
 

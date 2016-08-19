@@ -10,7 +10,6 @@
 #include "LoadHmap.h"
 #include "CollisionManager.h"
 
-
 using std::cout;
 using std::endl;
 
@@ -217,7 +216,7 @@ void SceneSP3::Init()
     glUniform1f(m_parameters[U_FOG_ENABLE], 1);
 
 
-   // camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
+    // camera.Init(Vector3(0, 70, 10), Vector3(0, 70, 0), Vector3(0, 1, 0));
 	walkCam.Init(
 		Vector3(-852, 544, -699),
 		Vector3(0, 0, -10),
@@ -246,7 +245,7 @@ void SceneSP3::Init()
 	meshList[GEO_TERRAIN2] = MeshBuilder::GenerateTerrain("terrain", "Image//Area02.raw", m_heightMap[2]);
 	meshList[GEO_TERRAIN3] = MeshBuilder::GenerateTerrain("terrain", "Image//Area03.raw", m_heightMap[3]);
 	meshList[GEO_TERRAIN4] = MeshBuilder::GenerateTerrain("terrain", "Image//Area04.raw", m_heightMap[4]);
-   // meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
+    // meshList[GEO_TERRAIN]->textureArray[0] = LoadTGA("Image//rock.tga");
 	//meshList[GEO_TERRAIN1] = MeshBuilder::GenerateTerrain("terrain", "Image//Area01.raw", m_heightMap[1]);
 	//meshList[GEO_TERRAIN1]->textureArray[0] = LoadTGA("Image//rock.tga");
 	//meshList[GEO_TERRAIN2] = MeshBuilder::GenerateTerrain("terrain", "Image//Area02.raw", m_heightMap[2]);
@@ -325,7 +324,7 @@ void SceneSP3::Init()
     //Mtx44 perspective;
     //perspective.SetToPerspective(45.0f, 4.0f / 3.0f, 0.1f, 10000.0f);
     //perspective.SetToOrtho(-80, 80, -60, 60, -1000, 1000);
-   // projectionStack.LoadMatrix(perspective);
+    // projectionStack.LoadMatrix(perspective);
 
     rotateSky = 0.f;
     fogThickness = 0.f;
@@ -369,7 +368,7 @@ void SceneSP3::Init()
         fo->objectType = GameObject::SEACREATURE;
         fo->seaType = SeaCreature::MINNOW;
         fo->state = Minnow::FLOCK;
-        minnowLeader->setisLeader(false);
+        fo->setisLeader(false);
         fo->scale.Set(1, 1, 1);
         fo->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(400,600 ), Math::RandFloatMinMax(-100, 100));
         fo->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
@@ -433,7 +432,6 @@ Projectile* SceneSP3::FetchPO()
 
 void SceneSP3::UpdateMinnow(double dt)
 {
-    minnowLeader->setisLeader(true);
     // Minnow loop
     for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
     {
@@ -724,13 +722,13 @@ void SceneSP3::Update(double dt)
 
 
 
-			/*if (terraincollision(player_box, m_heightMap[SharedData::GetInstance()->SD_CurrentArea]))
+			if (terraincollision(player_box, m_heightMap[SharedData::GetInstance()->SD_CurrentArea]))
 			{
 				fishVel *= -1.f;
 				walkCam.Move(fishVel * (float)dt);
 				playerpos = walkCam.GetPos() + Vector3(0, 80, 0);
 				hitbox2::updatehitbox(player_box, playerpos);
-			}*/
+			}
 
 			if (!fishVel.IsZero())
 			{

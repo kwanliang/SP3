@@ -168,8 +168,8 @@ void Application::Run()
 	SceneSP3 *sceneTutorial = new SceneTutorial();
 	sceneTutorial->Init();
 
-	SceneSP3 *sceneCalm = new SceneCalmPlateu();
-	sceneCalm->Init();
+	//SceneSP3 *sceneCalm = new SceneCalmPlateu();
+	//sceneCalm->Init();
 
 	//SceneSP3 *sceneCreep = new SceneCreepingRidge();
 	//sceneCreep->Init();
@@ -180,10 +180,7 @@ void Application::Run()
 	//SceneSP3 *sceneNightmare = new SceneNightmareTrench();
 	//sceneNightmare->Init();
 
-
-
-
-	currentScene = sceneCalm;
+	currentScene = sceneTutorial;
 
 	//scene
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
@@ -199,12 +196,12 @@ void Application::Run()
 				currentScene->ReInit();
 			}
 										 break;
-			case(SharedData::A_CALMPLATAEU) :
-			{
-				currentScene = sceneCalm;
-				currentScene->ReInit();
-			}
-											break;
+			//case(SharedData::A_CALMPLATAEU) :
+			//{
+			//	currentScene = sceneCalm;
+			//	currentScene->ReInit();
+			//}
+			//								break;
 
 			//case(SharedData::A_CREEPINGRIDGE) :
 			//{
@@ -228,10 +225,6 @@ void Application::Run()
 			//}
 			//									break;
 			}
-
-
-
-
 			SharedData::GetInstance()->SD_SceneSwitch = false;
 		}
 

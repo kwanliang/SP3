@@ -1,3 +1,13 @@
+/******************************************************************************/
+/*!
+\file	GiantSquid.h
+\author Lee Kwan Liang
+\par	email: 155117G@mymail.nyp.edu.sg
+\brief
+Class to define boss, Giant Squid
+*/
+/******************************************************************************/
+
 #ifndef GIANTSQUID_H
 #define GIANTSQUID_H
 
@@ -5,17 +15,25 @@
 #include "Mtx44.h"
 #include "GiantSquidTentacle.h"
 
+static float distFromPlayer = 100.f;
+
+/******************************************************************************/
+/*!
+Class GiantSquid:
+\brief
+Defines the Boss and its methods
+*/
+/******************************************************************************/
+
 class GiantSquid : public Boss
 {
 private:
-
+    float m_SquidView;
 
 public:
     enum GIANTSQUID_BEHAVIORSTATE
     {
         IDLE,
-        MOVEUP,
-        MOVEDOWN,
         ATTACK,
         INK,
 
@@ -24,18 +42,26 @@ public:
     GIANTSQUID_BEHAVIORSTATE state;
 
     // Animation
-    float rotateTentacle;
-    bool isTentacleUp;
+    float m_rotateTentacle;
+    bool m_isTentacleUp;
 
-    float translateSquid;
-    bool isSquidUp;
+    float m_translateSquid;
+    bool m_isSquidUp;
+
+    float m_rotateSquid;
+    bool m_rotateComplete;
+
+    bool m_animateIDLE;
+    bool m_animateATTACK;
 
     GiantSquid();
     GiantSquid(float m_bounceTime, bool m_isBounceUp, GIANTSQUID_BEHAVIORSTATE state, int m_health, BOSS_TYPE bossType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
     ~GiantSquid();
 
-    void Animate();
-    Mtx44 LookAtPlayer(Vector3 playerPos);
+    void AnimateIdle();
+    void AnimateAttack();
+    float LookAtPlayer(Vector3 playerPos);
+    void ChasePlayer(Vector3 playerPos);
 
     GiantSquidTentacle tentacle1_1;
     GiantSquidTentacle tentacle1_2;
@@ -66,6 +92,9 @@ public:
     GiantSquidTentacle tentacle6_2;
     GiantSquidTentacle tentacle6_3;
     GiantSquidTentacle tentacle6_4;
+
+    float getSquidView();
+    void setSquidView(float m_SquidView);
 };
 
 #endif

@@ -6,7 +6,7 @@
 
 class Boss : public GameObject
 {
-private:
+protected:
     int m_health;
 
 public:
@@ -23,6 +23,9 @@ public:
     Boss();
     Boss(int m_health, BOSS_TYPE bossType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
     ~Boss();
+
+    int getHealth();
+    void setHealth(int m_health);
 
     hitbox collision;
 };

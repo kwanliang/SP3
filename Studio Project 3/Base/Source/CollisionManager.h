@@ -143,10 +143,9 @@ struct hitbox2{
 	}
 
 };
-static bool terraincollision(const hitbox2& hitbox, std::vector<unsigned char> heightmap){
 
-
-
+static bool terraincollision(const hitbox2& hitbox, std::vector<unsigned char> heightmap)
+{
 	for (unsigned i = 0; i < 8; i++)
 	{
 		float height = (350.f * ReadHeightMap(heightmap, hitbox.m_point[i].x / 3000.f, hitbox.m_point[i].z / 3000.f));

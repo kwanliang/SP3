@@ -20,6 +20,7 @@ bool LoadHeightMap(const char *file_path, std::vector<unsigned char> &heightMap)
 	fileStream.read((char *)&heightMap[0], fsize); // reading
 	
 	fileStream.close();
+
 	return true;
 }
 
