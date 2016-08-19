@@ -1,5 +1,6 @@
 #include "Capture.h"
 #include <math.h>
+#include "MyMath.h"
 
 
 Capture::Capture()
@@ -16,83 +17,104 @@ Capture::~Capture()
 
 
 
-Vector3 Capture::Vacuum(SeaCreature creature, Vector3 playerpos, double dt)
+Vector3 Capture::Vacuum(SeaCreature creature, Vector3 playerpos, bool check)
 {
-	if (true)//if (	(camera.GetEye() - camera.GetPos()) == ((camera.GetPos() - objectposition)*-1)//camera.target * range && gameobject == creature
+	
+	if (check == true)
 	{
-		//translate creature pos towards player position
-		
-			Vector3 view = (creature.pos - playerpos).Normalized();
-			if (fabs(creature.pos.x - playerpos.x) >= 1)
-			{
-				creature.setPos(Vector3((creature.pos.x - (view.x / fabs(creature.pos.x - playerpos.x)*500/creature.getHealth())), (creature.pos.y), (creature.pos.z)));
-			}
-			if (fabs(creature.pos.y - playerpos.y) >= 1)
-			{
-				creature.setPos(Vector3(creature.pos.x, (creature.pos.y - (view.y / fabs(creature.pos.y - playerpos.y) * 500 / creature.getHealth())), (creature.pos.z)));
-			}
-			if (fabs(creature.pos.z - playerpos.z) >= 1)
-			{
-				creature.setPos(Vector3(creature.pos.x, (creature.pos.y), (creature.pos.z - (view.z / fabs(creature.pos.z - playerpos.z) * 500 / creature.getHealth()))));
-			}
-		
-		AddSquad(playerpos,creature);
-	}	
+		float distance = fabs(playerpos.x - creature.pos.x) + fabs(playerpos.y - creature.pos.y) + fabs(playerpos.z - creature.pos.z);
+		Vector3 view = (creature.pos - playerpos).Normalized();
+		if (fabs(creature.pos.x - playerpos.x) >= 1 && distance >= 1)
+		{
+			creature.setPos(Vector3((creature.pos.x - view.x / creature.getHealth() * 500 / distance), (creature.pos.y), (creature.pos.z)));
+		}
+		if (fabs(creature.pos.y - playerpos.y) >= 1 && distance >= 1)
+		{
+			creature.setPos(Vector3(creature.pos.x, (creature.pos.y - view.y / creature.getHealth() * 500 / distance), (creature.pos.z)));
+		}
+		if (fabs(creature.pos.z - playerpos.z) >= 1 && distance >= 1)
+		{
+			creature.setPos(Vector3(creature.pos.x, (creature.pos.y), (creature.pos.z - view.z / creature.getHealth() * 500/distance)));
+		}
+		AddSquad(playerpos, creature, distance);
+	}
 	return creature.pos;
 }
 
-void Capture::AddSquad(Vector3 playerpos, SeaCreature creature)//, gameobject)
+void Capture::AddSquad(Vector3 playerpos, SeaCreature creature, float distance)
 {
-	if (playerpos == creature.pos)
+	if (distance <= 10)
 	{
-		if (creature.pos.x - playerpos.x <= 1 && creature.pos.y - playerpos.y <= 1 && creature.pos.z - playerpos.z <= 1)
-		{
-			std::cout << "true" << std::endl;
-		}
-		//SquadSize.push_back(temp);
-		//std::cout << GetSquadSize() << std::endl;
+		std::cout << "captured" << std::endl;
 	}
 
 }
 
+bool Capture::rangeCheckXZ(WalkCamera camera, SeaCreature creature, Vector3 playerpos)
+{
+	float dist = fabs(playerpos.x - creature.pos.x) + fabs(playerpos.y - creature.pos.y) + fabs(playerpos.z - creature.pos.z);
+	float angle = Math::RadianToDegree(atan2(camera.GetDir().x, camera.GetDir().z));
+	float playertocreature = Math::RadianToDegree(atan2((creature.pos.x - playerpos.x), (creature.pos.z - playerpos.z)));
 
-//int Capture::GetSquadSize()
-//{
-//	return SquadSize.size();
-//}
+	float range1 = angle + 30;
+	float range2 = angle - 30;
+	if (range1 > 180)
+	{
+		range1 -= 360;
+	}
+	else if (range2 < -180)
+	{
+		range2 += 360;
+	}
 
-//void Capture::SetType(Capture::fish type)
-//{
-//	this->Type = type;
-//}
-//
-//Capture::fish Capture::Gettype()
-//{
-//	return this->Type;
-//}
-//
-//void Capture::SetPos(Vector3 pos)
-//{
-//	this->position = pos;
-//}
-//
-//Vector3 Capture::GetPos()
-//{
-//	return this->position;
-//}
-//
-//float Capture::GetHP()
-//{
-//	return this->hitpoints;
-//}
-//
-//void Capture::SetPercent(float percentage)
-//{
-//	this->CapturePercent = percentage;
-//}
-//
-//
-//float Capture::GetPercent()
-//{
-//	return this->CapturePercent;
-//}
+	if (fabs(range1 - range2)> 70)
+	{
+		if (dist <= 100 && (range1 < playertocreature && range2 < playertocreature) || (range1 > playertocreature && range2 > playertocreature))
+		{
+			return rangeCheckY(camera, creature, playerpos);
+		}
+	}
+	else
+	{
+		if (dist <= 100 && range1 > playertocreature && range2 < playertocreature)
+		{
+			return rangeCheckY(camera, creature, playerpos);
+		}
+	}
+	return false;
+}
+
+bool Capture::rangeCheckY(WalkCamera camera, SeaCreature creature, Vector3 playerpos)
+{
+	float dist = (fabs(playerpos.x - creature.pos.x) + fabs(playerpos.y - creature.pos.y) + fabs(playerpos.z - creature.pos.z));
+	float angle = Math::RadianToDegree(atan(camera.GetDir().y));
+	Vector3 target = (creature.pos - playerpos).Normalized();
+	float playertocreature = Math::RadianToDegree(atan(target.y));
+	
+
+	float range1 = angle + 30;
+	float range2 = angle - 30;
+	if (range1 > 180)
+	{
+		range1 -= 360;
+	}
+	else if (range2 < -180)
+	{
+		range2 += 360;
+	}
+	
+	if (fabs(range1 - range2)> 70)
+	{
+		if (dist <= 100 && (range1 < playertocreature && range2 < playertocreature) || (range1 > playertocreature && range2 > playertocreature))
+		{
+			return true;
+		}
+	}
+	else
+	{
+		if (dist <= 100 && range1 > playertocreature && range2 < playertocreature)
+		{
+			return true;
+		}
+	}
+}

@@ -682,11 +682,11 @@ void SceneTutorial::RenderMinimap()
 		}
 	}
 
-	{
+	/*{
 		static float s = 1;
 		s += 0.5f;
 		RenderTextOnScreen(meshList[GEO_TEXT], "FUCK YOU", (1, 1, 1), max(5, 10 * cos(s)), 0, 0);
-	}
+	}*/
 
 	RenderMeshIn2D(meshList[GEO_MINIMAP_AVATAR], false, 3.f,
 		mPos.x, mPos.y);

@@ -13,24 +13,17 @@ public:
 	Capture();
 	~Capture();
 
-	static Vector3 Vacuum(SeaCreature creature, Vector3 playerpos, double dt);//gameobject);
-	static void AddSquad(Vector3 playerpos, SeaCreature creature);//gameobject);
-	
-	/*void SetType(SeaCreature creature);
-	void SetPos(Vector3 pos);
-	void SetPercent(float percentage);*/
+	static Vector3 Vacuum(SeaCreature creature, Vector3 playerpos, bool check);
+	static void AddSquad(Vector3 playerpos, SeaCreature creature, float distance);
+	static bool rangeCheckXZ(WalkCamera camera, SeaCreature creature, Vector3 playerpos);
+	static bool rangeCheckY(WalkCamera camera, SeaCreature creature, Vector3 playerpos);
 
-	/*float GetPercent();
-	float GetHP();
-	Vector3 GetPos();
-	fish Gettype();*/
+
+	
 	static int GetSquadSize();
 private:
 	static float range;
-	/*float CapturePercent;
-	fish Type;
-	Vector3 position;
-	float hitpoints;*/
+	
 };
 
 #endif
