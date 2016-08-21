@@ -3,6 +3,7 @@
 #define APPLICATION_H
 
 #include "timer.h"
+#include "SceneManager.h"
 
 class Application
 {
@@ -26,6 +27,11 @@ public:
     static int m_window_width;
     static int m_window_height;
 	static double GetAspectRatio();
+
+	static SceneManager *sceneManager;
+
+
+
 
 private:
 	Application();

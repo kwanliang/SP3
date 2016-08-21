@@ -3,6 +3,7 @@
 #include "Application.h"
 #include <sstream>
 
+
 SceneCreepingRidge::SceneCreepingRidge()
 {
 
@@ -16,8 +17,19 @@ SceneCreepingRidge::~SceneCreepingRidge()
 void SceneCreepingRidge::Init()
 {
 	SceneSP3::Init();
-	currentCam = &walkCam;
+	walkCam.SetPos(Vector3(0, 400, 0));
 	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
+
+	c = FetchFcrab();
+	c->active = true;
+	c->objectType = GameObject::SEACREATURE;
+	c->seaType = SeaCreature::FCRAB;
+	//c->Cstate = Pufferfish::IDLE;
+	c->scale.Set(5, 5, 5);
+	c->pos.Set(0, 500, 0);
+	c->vel.Set(0,0,0);
+	//p->collision = hitbox2::generatehitbox(p->pos, 8, 8, 8);
+	//p->setHealth(200);
 }
 
 void SceneCreepingRidge::ReInit()
@@ -45,10 +57,71 @@ void SceneCreepingRidge::ReInit()
 	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
 	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
 
-	SharedData::GetInstance()->SD_Travel = true;
-	SharedData::GetInstance()->SD_Down = false;
+
 
 	std::cout << "creep" << std::endl;
+}
+
+
+void SceneCreepingRidge::RenderFcrab()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(c->pos.x,c->pos.y,c->pos.z);
+	//modelStack.Rotate(1 , 0, 1, 0);
+	modelStack.Scale(c->scale.x,c->scale.x ,c->scale.x);
+	RenderMesh(meshList[GEO_FCRABBODY], false);
+
+	modelStack.PushMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.15,0,-0.17);
+	modelStack.Rotate(c->Crableg[0].rotate, 1, 0, 0);
+	RenderMesh(meshList[GEO_FCRABLEG], false);//leg1
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-0.15,0,-0.17);
+	modelStack.Rotate(c->Crableg[1].rotate, 1, 0, 0);
+	RenderMesh(meshList[GEO_FCRABLEG], false);//leg2
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-0.45, 0, -0.17);
+	modelStack.Rotate(c->Crableg[2].rotate, 1, 0, 0);
+	RenderMesh(meshList[GEO_FCRABLEG], false);//leg3
+	modelStack.PopMatrix();
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(180, 0, 1,0 );
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-0.15, 0, -0.17);
+	modelStack.Rotate(c->Crableg[3].rotate, 1, 0, 0);
+	RenderMesh(meshList[GEO_FCRABLEG], false);//leg4
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.15, 0,- 0.17);
+	modelStack.Rotate(c->Crableg[4].rotate, 1, 0, 0);
+	RenderMesh(meshList[GEO_FCRABLEG], false);//leg5
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.45, 0, -0.17);
+	modelStack.Rotate(c->Crableg[5].rotate, 1, 0, 0);
+	RenderMesh(meshList[GEO_FCRABLEG], false);//leg6
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.17, 0, -0.35);
+	modelStack.Rotate(-55, 0, 1, 0);
+	RenderMesh(meshList[GEO_FCRABCLAW], false);
+	modelStack.PopMatrix();
+
+	modelStack.PopMatrix();
 }
 
 void SceneCreepingRidge::RenderTerrain()
@@ -94,6 +167,7 @@ void SceneCreepingRidge::RenderWorld()
 	RenderTerrain();
 	RenderSkyPlane();
 
+	RenderFcrab();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(playerpos.x, playerpos.y+5, playerpos.z);
@@ -274,7 +348,34 @@ void SceneCreepingRidge::RenderMinimap()
 void SceneCreepingRidge::Update(double dt)
 {
 	SceneSP3::Update(dt);
+	c->UpdateFcrab(dt);
+}
 
+
+Fcrab*  SceneCreepingRidge::FetchFcrab()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		Fcrab *go = (Fcrab *)*it;
+		if (!go->active)
+		{
+			go->active = true;
+			//++m_objectCount;
+			return go;
+		}
+
+	}
+	for (unsigned i = 0; i < 10; ++i)
+	{
+		Fcrab *go = new Fcrab();
+		go->objectType = GameObject::SEACREATURE;
+		go->seaType = SeaCreature::FCRAB;
+		m_goList.push_back(go);
+	}
+	Fcrab *go = (Fcrab *)m_goList.back();
+	go->active = true;
+	//++m_objectCount;
+	return go;
 }
 
 void SceneCreepingRidge::Exit()

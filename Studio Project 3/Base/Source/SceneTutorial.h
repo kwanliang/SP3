@@ -1,4 +1,4 @@
-#ifndef SCENE_UTORIAL_H
+#ifndef SCENE_TUTORIAL_H
 #define SCENE_TUTORIAL_H
 
 #include "SceneSP3.h"

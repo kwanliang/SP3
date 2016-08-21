@@ -4,7 +4,7 @@
 #include "SceneSP3.h"
 #include <vector>
 #include "Mtx44.h"
-
+#include "Fcrab.h"
 
 class SceneCreepingRidge : public SceneSP3
 {
@@ -26,8 +26,9 @@ public:
 	void RenderTerrain();
 	void RenderSkyPlane();
 	void RenderParticles();
+	void RenderFcrab();
 
-
+	Fcrab* FetchFcrab();
 
 private:
 
@@ -52,7 +53,7 @@ private:
 
 	//Fish test
 	Capture fishy;
-
+	Fcrab* c;
 };
 
 

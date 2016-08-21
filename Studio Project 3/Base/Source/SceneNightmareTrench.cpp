@@ -45,8 +45,6 @@ void SceneNightmareTrench::ReInit()
 	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
 	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
 
-	SharedData::GetInstance()->SD_Travel = true;
-	SharedData::GetInstance()->SD_Down = false;
 
 	std::cout << "creep" << std::endl;
 }

@@ -267,6 +267,13 @@ void SceneSP3::Init()
 	meshList[GEO_PUFFER] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//puffer.obj");
 	meshList[GEO_PUFFER]->textureArray[0] = LoadTGA("Image//puffer.tga");
 
+	meshList[GEO_FCRABBODY] = MeshBuilder::GenerateOBJ("crabbody", "Models//OBJ//fcrab_body.obj");
+	meshList[GEO_FCRABBODY]->textureArray[0] = LoadTGA("Image//fcrab_body.tga");
+	meshList[GEO_FCRABLEG] = MeshBuilder::GenerateOBJ("crableg", "Models//OBJ//fcrab_leg.obj");
+	meshList[GEO_FCRABLEG]->textureArray[0] = LoadTGA("Image//fcrab_leg.tga");
+	meshList[GEO_FCRABCLAW] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//fcrab_Lclaw.obj");
+	meshList[GEO_FCRABCLAW]->textureArray[0] = LoadTGA("Image//fcrab_claw.tga");
+
 
     meshList[GEO_SQUIDTENTACLENODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_node.obj");
     meshList[GEO_SQUIDTENTACLENODE]->textureArray[0] = LoadTGA("Image//squidtentacle.tga");
@@ -573,7 +580,7 @@ void SceneSP3::UpdateTravel()
 		{
 			SharedData::GetInstance()->SD_Down = true;
 			SharedData::GetInstance()->SD_CurrentArea += 1;
-			SharedData::GetInstance()->SD_SceneSwitch = true;
+			Application::sceneManager->LoadScene();
 			std::cout << "down" << std::endl;
 			return;
 		}
@@ -584,8 +591,8 @@ void SceneSP3::UpdateTravel()
 		{
 			SharedData::GetInstance()->SD_Down = false;
 			SharedData::GetInstance()->SD_CurrentArea -= 1;
+			Application::sceneManager->LoadScene();
 			std::cout << "up" << std::endl;
-			SharedData::GetInstance()->SD_SceneSwitch = true;
 			return;
 		}
 	}
@@ -617,7 +624,7 @@ void SceneSP3::Update(double dt)
         lights[0].position.y += (float)(100.f * dt);
 	if (Application::IsKeyPressed('C'))
 	{
-		std::cout << playerpos << std::endl;
+		std::cout << walkCam.GetPos() << std::endl;
 	}
 
     static bool bSPACEstate = false;
@@ -841,6 +848,9 @@ void SceneSP3::Update(double dt)
 		}
 		
 	}
+
+
+	std::cout << SharedData::GetInstance()->SD_CurrentArea << std::endl;
 }
 
 void SceneSP3::RenderText(Mesh* mesh, std::string text, Color color)

@@ -16,7 +16,7 @@ public:
     {
         MINNOW = 0,
 		PUFFER,
-
+		FCRAB,
         TYPE_TOTAL,
     };
     SEACREATURE_TYPE seaType;

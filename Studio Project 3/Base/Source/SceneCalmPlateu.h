@@ -1,4 +1,4 @@
-#ifndef SCENE_CALMPPLATEU_H
+#ifndef SCENE_CALMPLATEU_H
 #define SCENE_CALMPLATEU_H
 
 #include "SceneSP3.h"

@@ -3,6 +3,7 @@
 #include "Application.h"
 #include <sstream>
 
+
 using std::cout;
 using std::endl;
 
@@ -26,8 +27,8 @@ void SceneTutorial::Init()
 		Vector3(0, 1, 0),
 		60
 		);
-	//m_travelzone = hitbox::generatehitbox(Vector3(0,500,0),600,500,600,0);
 
+	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
     InitGiantSquid();
 }
 
@@ -44,7 +45,7 @@ void SceneTutorial::ReInit()
 
 	//SharedData::GetInstance()->SD_Travel = true;
 
-	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
+
 }
 
 void SceneTutorial::InitGiantSquid()
@@ -775,7 +776,15 @@ void SceneTutorial::Update(double dt)
 	//std::cout << SharedData::GetInstance() ->SD_Travel << std::endl;
 	SceneSP3::Update(dt);
 	if (Application::IsKeyPressed('C'))
-		std::cout << playerpos << std::endl;
+	std::cout << playerpos << std::endl;
+
+
+	//{
+	//	SharedData::GetInstance()->SD_CurrentArea = 1;
+	//	Application::sceneManager->LoadScene();
+	//}
+		
+		
 
     //cout << giantSquid->tentacle1_1.getTentaclePos() << endl;
     //Mtx44 rotate;

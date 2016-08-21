@@ -15,13 +15,27 @@ SceneCalmPlateu::~SceneCalmPlateu()
 
 void SceneCalmPlateu::Init()
 {
-	walkCam.Init(
-		Vector3(0,600,0),
-		Vector3(0, 0, -10),
+	SceneSP3::Init();
+	if (SharedData::GetInstance()->SD_Down)
+	{
+		walkCam.Init(
+			Vector3(-1171, 277, -812),
+			Vector3(0, 0, 10),
+			Vector3(0, 1, 0),
+			60
+			);
+	}
+	else
+	{
+		walkCam.Init(
+		Vector3(1274, 322, 42),
+		Vector3(-1, 0, 0),
 		Vector3(0, 1, 0),
 		60
 		);
-	SceneSP3::Init();
+	}
+	
+
 	for (int i = 0; i < 10; i++)
 	{
 		Pufferfish *p = FetchPuffer();
@@ -35,38 +49,22 @@ void SceneCalmPlateu::Init()
 		p->collision = hitbox2::generatehitbox(p->pos, 8, 8, 8);
 		p->setHealth(200);
 	}
+
+	m_travelzonedown = hitbox::generatehitbox(Vector3(1386, 295, 5.8), 200, 600, 300, 0);
+	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
+
 }
 	//currentCam = &walkCam;
-	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
+	//
 
 
 void SceneCalmPlateu::ReInit()
 {
-	//if (SharedData::GetInstance()->SD_Down)
-	//{
-	//	walkCam.Init(
-	//		Vector3(-1141, 359, -748),
-	//		Vector3(0, 0, -10),
-	//		Vector3(0, 1, 0),
-	//		60
-	//		);
-	//}
-	//else
-	{
-		walkCam.Init(
-			Vector3(1371, 416, -17),
-			Vector3(0, 0, -10),
-			Vector3(0, 1, 0),
-			60
-			);
-	}
+	
 	
 
-	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
-	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
+	
 
-	SharedData::GetInstance()->SD_Travel = true;
-	SharedData::GetInstance()->SD_Down = false;
 
 	std::cout << "calm" << std::endl;
 }
