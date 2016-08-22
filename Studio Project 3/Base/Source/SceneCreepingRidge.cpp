@@ -457,10 +457,10 @@ void SceneCreepingRidge::Update(double dt)
 				
 
 
-				if (collision(c->aabb, player_box))
-				{
-					fishVel = - c->vel;
-				}
+				//if (collision(c->aabb, player_box))
+				//{
+				//	fishVel = - c->vel;
+				//}
 
 				if (c->pos.y <= h)
 				{
