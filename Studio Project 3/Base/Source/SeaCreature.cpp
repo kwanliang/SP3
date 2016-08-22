@@ -35,3 +35,41 @@ void SeaCreature::setPos(Vector3 pos)
 {
 	this->pos = pos;
 }
+
+Vector3 SeaCreature::cohesion(Vector3 playerpos, Vector3 playertarget)
+{
+	if (!playerpos.IsZero() || !playertarget.IsZero())
+	{
+
+		Vector3 tv = (playertarget * -1).Normalized() * 30;
+		Vector3 behindPos = playerpos + tv;
+		behindPos = (behindPos - this->pos).Normalized();
+
+		return behindPos;
+	}
+	return Vector3(0, 0, 0);
+}
+
+Vector3 SeaCreature::seperation(Vector3 repelVector)
+{
+	float tempIntensity = 0.f;
+
+	if (!repelVector.IsZero())
+	{
+		tempIntensity = (repelVector.LengthSquared() / distFromSeperationIntensity);
+		repelVector = repelVector.Normalized();
+		repelVector = Vector3(repelVector.x / tempIntensity, repelVector.y / tempIntensity, repelVector.z / tempIntensity);
+
+		return repelVector.Normalized();
+	}
+	return Vector3(0, 0, 0);
+}
+
+Vector3 SeaCreature::alignment(Vector3 forceVector)
+{
+	if (!forceVector.IsZero())
+	{
+		return forceVector.Normalized();
+	}
+	return Vector3(0, 0, 0);
+}

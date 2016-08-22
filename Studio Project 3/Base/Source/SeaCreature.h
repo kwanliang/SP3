@@ -5,6 +5,10 @@
 #include "Vector3.h"
 #include "CollisionManager.h"
 
+static float distFromSeperation = 200.f;
+static float distFromSeperationIntensity = 400.f;
+static float distFromAlignment = 400.f;
+
 class SeaCreature : public GameObject
 {
 protected:
@@ -24,6 +28,10 @@ public:
     SeaCreature();
     SeaCreature(int m_health, SEACREATURE_TYPE seaType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
     ~SeaCreature();
+
+	Vector3 cohesion(Vector3 playerpos, Vector3 playertarget);
+	Vector3 seperation(Vector3 repelVector);
+	Vector3 alignment(Vector3 forceVector);
 
     int getHealth();
 

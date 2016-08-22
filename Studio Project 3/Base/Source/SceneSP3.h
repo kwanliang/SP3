@@ -40,6 +40,7 @@ public:
 	void UpdateTravel();
     void UpdateMinnow(double dt);
 	void UpdatePuffer(double dt);
+	void UpdateCaptured(double dt);
 
     void RenderText(Mesh* mesh, std::string text, Color color);
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);

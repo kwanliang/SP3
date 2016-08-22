@@ -487,9 +487,7 @@ void SceneSP3::UpdateMinnow(double dt)
                     }
 
                     if (fo->state == Minnow::FLOCK && !fo->getisLeader())
-                        fo->vel += fo->cohesion(minnowLeader);
-                    else if (fo->state == Minnow::FLOCK && !fo->getisLeader() && (minnowLeader->pos - go->pos).LengthSquared() < distFromAlignment)
-                        fo->vel += fo->alignment(tempForceVector);
+						fo->vel += fo->cohesion(minnowLeader) + fo->alignment(tempForceVector);
                     else if (fo->state == Minnow::FLEE && !fo->getisLeader())
                         fo->vel += fo->seperation(tempCentreOfMass) * 2;
 
@@ -566,6 +564,66 @@ void SceneSP3::UpdateMinnow(double dt)
             }
         }
     }
+}
+
+void SceneSP3::UpdateCaptured(double dt)
+{
+	// Minnow loop
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if (go->objectType == GameObject::CAPTURED)
+			{
+				SeaCreature *fo = (SeaCreature *)*it;
+				
+						fo->pos += fo->vel * dt;
+					// Collision
+					hitbox2::updatehitbox(fo->collision, fo->pos);
+
+					Vector3 tempCentreOfMass(0, 0, 0);
+					Vector3 tempRepelVector(0, 0, 0);
+					Vector3 tempForceVector(0, 0, 0);
+
+					if (terraincollision(fo->collision, m_heightMap[SharedData::GetInstance()->SD_CurrentArea]))
+					{
+						fo->vel *= -5;
+					}
+
+					for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					{
+						Minnow *other = (Minnow *)*it2;
+						if (other->active)
+						{
+							if ((playerpos - other->pos).LengthSquared() < distFromSeperation)
+							{
+								tempRepelVector = other->pos - playerpos;
+								other->vel += other->seperation(tempRepelVector);
+							}
+						}
+					}
+
+						fo->vel += fo->cohesion(playerpos, walkCam.GetDir()) + fo->alignment(tempForceVector);
+
+					// Cap velocity
+					if (go->vel.x > 20)
+						go->vel.x = 20;
+					if (go->vel.y > 20)
+						go->vel.y = 20;
+					if (go->vel.z > 20)
+						go->vel.z = 20;
+					if (go->vel.x < -20)
+						go->vel.x = -20;
+					if (go->vel.y < -20)
+						go->vel.y = -20;
+					if (go->vel.z < -20)
+						go->vel.z = -20;
+
+				
+			}
+		}
+	}
 }
 
 void SceneSP3::UpdateTravel()
@@ -832,6 +890,7 @@ void SceneSP3::Update(double dt)
     //UpdateParticles(dt);
 	UpdateTravel();
     UpdateMinnow(dt);
+	UpdateCaptured(dt);
 	if (Application::IsKeyPressed('M'))
 	{
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)

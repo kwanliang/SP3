@@ -3,10 +3,6 @@
 
 #include "SeaCreature.h"
 
-static float distFromSeperation = 200.f;
-static float distFromSeperationIntensity = 400.f;
-static float distFromAlignment = 400.f;
-
 class Minnow : public SeaCreature
 {
 private:
@@ -27,8 +23,6 @@ public:
     ~Minnow();
 
     Vector3 cohesion(Minnow* minnowLeader);
-    Vector3 seperation(Vector3 repelVector);
-    Vector3 alignment(Vector3 forceVector);
 
     float getpanicTime();
     void setpanicTime(float panicTime);

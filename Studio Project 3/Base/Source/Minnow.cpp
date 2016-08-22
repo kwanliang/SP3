@@ -36,29 +36,7 @@ Vector3 Minnow::cohesion(Minnow* minnowLeader)
     return Vector3(0, 0, 0);
 }
 
-Vector3 Minnow::seperation(Vector3 repelVector)
-{
-    float tempIntensity = 0.f;
 
-    if (!repelVector.IsZero())
-    {
-        tempIntensity = (repelVector.LengthSquared() / distFromSeperationIntensity);
-        repelVector = repelVector.Normalized();
-        repelVector = Vector3(repelVector.x / tempIntensity, repelVector.y / tempIntensity, repelVector.z / tempIntensity);
-
-        return repelVector.Normalized();
-    }
-    return Vector3(0, 0, 0);
-}
-
-Vector3 Minnow::alignment(Vector3 forceVector)
-{
-    if (!forceVector.IsZero())
-    {
-        return forceVector.Normalized();
-    }
-    return Vector3(0, 0, 0);
-}
 
 float Minnow::getpanicTime()
 {

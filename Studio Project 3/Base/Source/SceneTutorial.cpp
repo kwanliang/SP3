@@ -536,7 +536,7 @@ void SceneTutorial::RenderPassMain()
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
 	{
 		GameObject *go = (GameObject*)*it;
-		if (go->objectType == GameObject::SEACREATURE)
+		if (go->objectType == GameObject::SEACREATURE || go->objectType == GameObject::CAPTURED)
 		{
 			Minnow *fo = (Minnow*)*it;
 			if (fo->active)
