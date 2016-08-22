@@ -19,14 +19,13 @@ public:
 	enum FCRAB_STATE
 	{
 		IDLE,
-		CHARGING,
 		ATTACKING,
-		FLEEING,
 		STATE_TOTAL,
 	};
+
+	float yaw;
 	Fcrab();
 	Fcrab(Vector3 pos);
-
 	void UpdateFcrab(double);
 	~Fcrab();
 	FCRAB_STATE  FCstate;

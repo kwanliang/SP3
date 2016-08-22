@@ -16,34 +16,41 @@ SceneGhastlyDepths::~SceneGhastlyDepths()
 void SceneGhastlyDepths::Init()
 {
 	SceneSP3::Init();
-	currentCam = &walkCam;
+	if (SharedData::GetInstance()->SD_Down)
+	{
+	
+		walkCam.Init(
+		Vector3(940, 250, -830),
+		Vector3(0, 0, 10),
+		Vector3(0, 1, 0),
+		60
+		);
+
+	}
+	else
+	{
+	walkCam.Init(
+		Vector3(200, 239, 1230),
+		Vector3(0, 0, -10),
+		Vector3(0, 1, 0),
+		60
+		);
+	
+	}
+
+
+
+	m_travelzonedown = hitbox::generatehitbox(Vector3(-27, 288, 1290), 250, 500, 1000, 0);
+	m_travelzoneup = hitbox::generatehitbox(Vector3(1084, 557, -1199), 500, 700, 500, 0);
 	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
 }
 
 void SceneGhastlyDepths::ReInit()
 {
-	if (SharedData::GetInstance()->SD_Down)
-	{
-		walkCam.Init(
-			Vector3(0, 800, 0),
-			Vector3(0, 0, -10),
-			Vector3(0, 1, 0),
-			60
-			);
-	}
-	else
-	{
-		walkCam.Init(
-			Vector3(0, 800, -17),
-			Vector3(0, 0, -10),
-			Vector3(0, 1, 0),
-			60
-			);
-	}
 	
 
-	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
-	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
+
+
 
 
 
@@ -54,7 +61,7 @@ void SceneGhastlyDepths::RenderTerrain()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(3000.f, 350.0f, 3000.f);
-	RenderMesh(meshList[GEO_TERRAIN2], true);
+	RenderMesh(meshList[GEO_TERRAIN3], true);
 	modelStack.PopMatrix();
 
 }
@@ -229,12 +236,40 @@ void SceneGhastlyDepths::RenderPassMain()
 	//}
 
 	// Render the crosshair
-	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
+	// Render the crosshair
+	glUniform1i(m_parameters[U_FOG_ENABLE], 0);
 	RenderMesh(meshList[GEO_AXES], false);
+	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
+	SceneSP3::RenderMinimap();
+
+
 	std::ostringstream ss;
 	ss.precision(3);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
+	//std::ostringstream ss;
+	//ss.precision(3);
+	//ss << "FPS: " << fps;
+	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
+
+	modelStack.PushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	modelStack.Translate(m_travelzonedown.m_position.x, m_travelzonedown.m_position.y, m_travelzonedown.m_position.z);
+	modelStack.Scale(m_travelzonedown.m_width, m_travelzonedown.m_height, m_travelzonedown.m_length);
+	RenderMesh(meshList[GEO_CUBE], false);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	modelStack.Translate(m_travelzoneup.m_position.x, m_travelzoneup.m_position.y, m_travelzoneup.m_position.z);
+	modelStack.Scale(m_travelzoneup.m_width, m_travelzoneup.m_height, m_travelzoneup.m_length);
+	RenderMesh(meshList[GEO_CUBE], false);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	modelStack.PopMatrix();
+
+
 
 	//modelStack.PushMatrix();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line

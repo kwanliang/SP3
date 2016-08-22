@@ -29,6 +29,18 @@ void SceneManager::LoadScene()
 		currentScene = new SceneCreepingRidge();
 		currentScene->Init();
 		break;
+
+
+	case SharedData::A_GHASTLYDEPTHS :
+		currentScene = new SceneGhastlyDepths();
+		currentScene->Init();
+		break;
+
+
+	case SharedData::A_NIGHTMARETRENCH:
+		currentScene = new SceneNightmareTrench();
+		currentScene->Init();
+		break;
 	}
 
 }

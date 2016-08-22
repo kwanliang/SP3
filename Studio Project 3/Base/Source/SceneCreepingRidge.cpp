@@ -17,19 +17,48 @@ SceneCreepingRidge::~SceneCreepingRidge()
 void SceneCreepingRidge::Init()
 {
 	SceneSP3::Init();
-	walkCam.SetPos(Vector3(0, 400, 0));
-	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
 
-	c = FetchFcrab();
-	c->active = true;
-	c->objectType = GameObject::SEACREATURE;
-	c->seaType = SeaCreature::FCRAB;
-	//c->Cstate = Pufferfish::IDLE;
-	c->scale.Set(5, 5, 5);
-	c->pos.Set(0, 500, 0);
-	c->vel.Set(0,0,0);
-	//p->collision = hitbox2::generatehitbox(p->pos, 8, 8, 8);
-	//p->setHealth(200);
+	if (SharedData::GetInstance()->SD_Down)
+	{
+
+			walkCam.Init(
+			Vector3(-814, 253, -1075),
+			Vector3(10, 0, 0),
+			Vector3(0, 1, 0),
+			60
+			);
+	}
+	else
+	{
+		walkCam.Init(
+			Vector3(-765, 175, -136),
+			Vector3(1, 0, 0.3),
+			Vector3(0, 1, 0),
+			60);
+
+	}
+	
+		
+	m_travelzoneup = hitbox::generatehitbox(Vector3(-1233,409,-1263),600,500,600,0);
+	m_travelzonedown = hitbox::generatehitbox(Vector3(-1093, 131, 151), 500, 500, 500, 0);
+
+	for (int i = 0; i < 30; i++)
+	{
+		Fcrab *c = FetchFcrab();
+		c->active = true;
+		c->objectType = GameObject::SEACREATURE;
+		c->seaType = SeaCreature::FCRAB;
+		//c->Cstate = Pufferfish::IDLE;
+		c->scale.Set(5, 5, 5);
+		float x = Math::RandFloatMinMax(-300, 0);
+		float z = Math::RandFloatMinMax(-1000, -800);
+		float y = 350.f * ReadHeightMap(m_heightMap[2], x / 3000.f, z / 3000.f) + 4;
+		c->pos.Set(x,y,z);
+		c->vel.Set(Math::RandFloatMinMax(0, 4), 0, Math::RandFloatMinMax(3, 6));
+		c->FCstate = Fcrab::IDLE;
+		c->aabb = hitbox::generatehitbox(c->pos, 8, 8, 8, NULL);
+		//p->setHealth(200);
+	}
 }
 
 void SceneCreepingRidge::ReInit()
@@ -62,12 +91,20 @@ void SceneCreepingRidge::ReInit()
 	std::cout << "creep" << std::endl;
 }
 
-
-void SceneCreepingRidge::RenderFcrab()
+void SceneCreepingRidge::RenderMinimap()
 {
+
+}
+
+void SceneCreepingRidge::RenderFcrab(Fcrab* c)
+{
+	float rotate = 0;
+	rotate = Math::RadianToDegree(atan2(c->vel.x, c->vel.z));
+
+
 	modelStack.PushMatrix();
 	modelStack.Translate(c->pos.x,c->pos.y,c->pos.z);
-	//modelStack.Rotate(1 , 0, 1, 0);
+	modelStack.Rotate(rotate , 0, 1, 0);
 	modelStack.Scale(c->scale.x,c->scale.x ,c->scale.x);
 	RenderMesh(meshList[GEO_FCRABBODY], false);
 
@@ -166,8 +203,6 @@ void SceneCreepingRidge::RenderWorld()
 {
 	RenderTerrain();
 	RenderSkyPlane();
-
-	RenderFcrab();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(playerpos.x, playerpos.y+5, playerpos.z);
@@ -282,51 +317,74 @@ void SceneCreepingRidge::RenderPassMain()
 	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 	//RenderWorld();
 
-	//for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
-	//{
-	//	GameObject *go = (GameObject*)*it;
-	//	if (go->objectType == GameObject::SEACREATURE)
-	//	{
-	//		Minnow *fo = (Minnow*)*it;
-	//		if (fo->active)
-	//		{
-	//			RenderFO(fo);
-	//		}
-	//	}
-	//	else if (go->objectType == GameObject::PROJECTILE)
-	//	{
-	//		Projectile *po = (Projectile*)*it;
-	//		if (po->active)
-	//		{
-	//			RenderPO(po);
-	//		}
-	//	}
-	//}
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject*)*it;
+		if (!go->active)
+			continue;
+
+		if (go->objectType == GameObject::SEACREATURE)
+		{
+			SeaCreature *so = (SeaCreature*)*it;
+
+			if (so->seaType != SeaCreature::FCRAB)
+				continue;
+
+			Fcrab *c = (Fcrab*)*it;
+			RenderFcrab(c);
+			modelStack.PushMatrix();
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+			modelStack.Translate(c->aabb.m_position.x,c->aabb.m_position.y,c->aabb.m_position.z);
+			modelStack.Scale(c->aabb.m_width, c->aabb.m_height, c->aabb.m_length);
+			RenderMesh(meshList[GEO_CUBE], false);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+			modelStack.PopMatrix();
+		
+		}
+
+
+
+
+
+		else if (go->objectType == GameObject::PROJECTILE)
+		{
+			Projectile *po = (Projectile*)*it;
+			if (po->active)
+			{
+				RenderPO(po);
+			}
+		}
+	}
 
 	// Render the crosshair
-	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
+	glUniform1i(m_parameters[U_FOG_ENABLE], 0);
 	RenderMesh(meshList[GEO_AXES], false);
+	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
+	SceneSP3::RenderMinimap();
+	
+
+
 	//std::ostringstream ss;
 	//ss.precision(3);
 	//ss << "FPS: " << fps;
 	//RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
 
-	//modelStack.PushMatrix();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-	//modelStack.Translate(m_travelzonedown.m_position.x,m_travelzonedown.m_position.y,m_travelzonedown.m_position.z);
-	//modelStack.Scale(m_travelzonedown.m_width,m_travelzonedown.m_height,m_travelzonedown.m_length);
-	//RenderMesh(meshList[GEO_CUBE], false);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	modelStack.Translate(m_travelzonedown.m_position.x,m_travelzonedown.m_position.y,m_travelzonedown.m_position.z);
+	modelStack.Scale(m_travelzonedown.m_width,m_travelzonedown.m_height,m_travelzonedown.m_length);
+	RenderMesh(meshList[GEO_CUBE], false);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	modelStack.PopMatrix();
 
 
-	//modelStack.PushMatrix();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-	//modelStack.Translate(m_travelzoneup.m_position.x, m_travelzoneup.m_position.y, m_travelzoneup.m_position.z);
-	//modelStack.Scale(m_travelzoneup.m_width, m_travelzoneup.m_height, m_travelzoneup.m_length);
-	//RenderMesh(meshList[GEO_CUBE], false);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+	modelStack.Translate(m_travelzoneup.m_position.x, m_travelzoneup.m_position.y, m_travelzoneup.m_position.z);
+	modelStack.Scale(m_travelzoneup.m_width, m_travelzoneup.m_height, m_travelzoneup.m_length);
+	RenderMesh(meshList[GEO_CUBE], false);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+	modelStack.PopMatrix();
 
 }
 
@@ -340,16 +398,94 @@ void SceneCreepingRidge::Render()
 
 }
 
-void SceneCreepingRidge::RenderMinimap()
-{
-
-}
 
 void SceneCreepingRidge::Update(double dt)
 {
 	SceneSP3::Update(dt);
-	c->UpdateFcrab(dt);
-}
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject*)*it;
+		if (!go->active)
+			continue;
+
+		if (go->objectType != GameObject::SEACREATURE)
+			continue;
+			SeaCreature *so = (SeaCreature*)*it;
+
+		if (so->seaType != SeaCreature::FCRAB)
+			continue;
+
+			Fcrab *c = (Fcrab*)*it;
+			
+			c->pos += c->vel*dt;
+			float h = 350.f * ReadHeightMap(m_heightMap[2], c->pos.x / 3000.f, c->pos.z / 3000.f) + 4;//get height
+			//theta=0;
+			Vector3 displacement = playerpos - c->pos;
+
+			if (c->pos.y > 300)// reset crabs who move out of range
+			{
+				float x = Math::RandFloatMinMax(-300, 0);
+				float z = Math::RandFloatMinMax(-1000, -800);
+				float y = 350.f * ReadHeightMap(m_heightMap[2], x / 3000.f, z / 3000.f) + 4;
+				c->pos.Set(x, y, z);
+
+			}
+
+
+			switch (c->FCstate)
+			{
+			case Fcrab::IDLE:
+			{
+				if (displacement.LengthSquared() < 50 * 50)
+				{
+					c->pos.y += 1;
+					theta = Math::RadianToDegree(atan2(displacement.y, Vector3(displacement.x, 0, displacement.z).Length()));
+					c->vel = displacement.Normalized() * 30;
+					c->FCstate = Fcrab::ATTACKING;
+				}
+
+				if (c->pos.y < h)
+					c->pos.y += dt * 10;
+				else if (c->pos.y > h)
+					c->pos.y -= dt * 10;
+				break;
+			}
+
+			case Fcrab::ATTACKING:
+
+				c->vel.y -= 9.8*dt;
+				
+
+
+				if (collision(c->aabb, player_box))
+				{
+					fishVel = - c->vel;
+				}
+
+				if (c->pos.y <= h)
+				{
+					c->vel .Set( Math::RandFloatMinMax(0, 4), 0, Math::RandFloatMinMax(3, 6));
+					
+					c->pos.y = h;
+					//std::cout << "idling" << std::endl;
+					c->FCstate = Fcrab::IDLE;
+					break;
+					
+				}
+	
+				//c->vel *= Math::RadianToDegree(sin(theta))/(9.8*dt);
+
+				//if (displacement.LengthSquared() < 20 * 20)
+					//c->FCstate = Fcrab::ATTACKING;
+				break;
+			}
+			
+
+			(c)->UpdateFcrab(dt);//run update for fcrabs
+
+		}
+	}
+
 
 
 Fcrab*  SceneCreepingRidge::FetchFcrab()

@@ -27,8 +27,6 @@ public:
 
 	void RenderPassGPass();
 	void RenderPassMain();
-	void RenderMinimap();
-
 	void RenderWorld();
 	void RenderTerrain();
 	void RenderSkyPlane();

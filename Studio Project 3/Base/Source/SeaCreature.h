@@ -38,6 +38,7 @@ public:
 	void setPos(Vector3 pos);
     void setHealth(int m_health);
 
+	hitbox	aabb;
     hitbox2 collision;
 };
 

@@ -158,6 +158,7 @@ void Application::Init()
 
 void Application::Run()
 {
+	SharedData::GetInstance()->SD_CurrentArea = 0;
 	sceneManager->LoadScene();
 	//scene
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
@@ -171,13 +172,14 @@ void Application::Run()
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
 		glfwPollEvents();
 		m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
-
 	}
 
 	//Check if the ESC key had been pressed or if the window had been closed
 	sceneManager->GetCurrentScene()->Exit();
 	delete sceneManager->GetCurrentScene();
+	delete sceneManager;
 }
+
 
 void Application::Exit()
 {

@@ -7,8 +7,8 @@
 #include "Application.h"
 #include "Utility.h"
 #include "LoadTGA.h"
-#include "LoadHmap.h"
-#include "CollisionManager.h"
+
+
 
 using std::cout;
 using std::endl;
@@ -258,6 +258,7 @@ void SceneSP3::Init()
     //meshList[GEO_TERRAIN]->textureArray[1] = LoadTGA("Image//ForestMurky.tga");
 
 	meshList[GEO_FISHMODEL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rcfish.obj");
+	meshList[GEO_FISHMODEL]->textureArray[0] = LoadTGA("Image//RCfish.tga");
 	meshList[GEO_FISHTAIL] = MeshBuilder::GenerateOBJ("fishModel", "Models//OBJ//rctail.obj");
 
     // Squid
@@ -682,7 +683,7 @@ void SceneSP3::Update(double dt)
         lights[0].position.y += (float)(100.f * dt);
 	if (Application::IsKeyPressed('C'))
 	{
-		std::cout << walkCam.GetPos() << std::endl;
+		std::cout << playerpos << std::endl;
 	}
 
     static bool bSPACEstate = false;
@@ -909,7 +910,7 @@ void SceneSP3::Update(double dt)
 	}
 
 
-	std::cout << SharedData::GetInstance()->SD_CurrentArea << std::endl;
+	//std::cout << SharedData::GetInstance()->SD_CurrentArea << std::endl;
 }
 
 void SceneSP3::RenderText(Mesh* mesh, std::string text, Color color)
@@ -1215,6 +1216,56 @@ void SceneSP3::Render()
 
 	// MAIN RENDER PASS
 	RenderPassMain();
+}
+
+void SceneSP3::RenderMinimap()
+{
+	const float scale = 0.1f;
+	const float range = 14.f;
+
+	Vector2 mPos;
+	mPos.Set(80 - 16 - 4, -60 + 16 + 4);
+
+	float angle = 90 + Math::RadianToDegree(atan2(walkCam.GetDir().z, walkCam.GetDir().x));
+
+	RenderMeshIn2D(meshList[GEO_MINIMAP], false, 20,
+		mPos.x, mPos.y, angle);
+
+	for (auto it : m_goList)
+	{
+		if (!it->active) continue;
+
+		if (it->objectType == GameObject::SEACREATURE)
+		{
+			auto o1 = (SeaCreature *)it;
+
+			if (o1->seaType == SeaCreature::MINNOW)
+			{
+
+				Vector3 op1 = o1->pos - playerpos;
+				Mtx44 rot;
+				rot.SetToRotation(angle, 0, 1, 0);
+				op1 = rot * op1;
+
+				Vector2 op2;
+				op2.Set(op1.x * scale, -op1.z * scale);
+
+
+				if (op2.LengthSquared() <= range * range)
+					RenderMeshIn2D(meshList[GEO_MINIMAP_MINNOW], false, 1,
+					mPos.x + op2.x, mPos.y + op2.y);
+			}
+		}
+	}
+
+	/*{
+	static float s = 1;
+	s += 0.5f;
+	RenderTextOnScreen(meshList[GEO_TEXT], "FUCK YOU", (1, 1, 1), max(5, 10 * cos(s)), 0, 0);
+	}*/
+
+	RenderMeshIn2D(meshList[GEO_MINIMAP_AVATAR], false, 3.f,
+		mPos.x, mPos.y);
 }
 
 void SceneSP3::Exit()

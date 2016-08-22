@@ -50,7 +50,7 @@ void SceneCalmPlateu::Init()
 		p->setHealth(200);
 	}
 
-	m_travelzonedown = hitbox::generatehitbox(Vector3(1386, 295, 5.8), 200, 600, 300, 0);
+	m_travelzonedown = hitbox::generatehitbox(Vector3(1386, 295, 5.8), 200, 600, 600, 0);
 	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
 
 }
@@ -224,6 +224,8 @@ void SceneCalmPlateu::RenderPassMain()
 	}
 */
 	glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+
+
 	//RenderWorld();
 
 	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -268,9 +270,11 @@ void SceneCalmPlateu::RenderPassMain()
 		}
 	}
 
+	glUniform1i(m_parameters[U_FOG_ENABLE], 0);
 	// Render the crosshair
 	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
 	RenderMesh(meshList[GEO_AXES], false);
+	SceneSP3::RenderMinimap();
 	//std::ostringstream ss;
 	//ss.precision(3);
 	//ss << "FPS: " << fps;
@@ -292,6 +296,9 @@ void SceneCalmPlateu::RenderPassMain()
 	RenderMesh(meshList[GEO_CUBE], false);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
 	modelStack.PopMatrix();
+
+
+
 
 }
 

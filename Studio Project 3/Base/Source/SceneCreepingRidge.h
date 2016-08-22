@@ -26,7 +26,7 @@ public:
 	void RenderTerrain();
 	void RenderSkyPlane();
 	void RenderParticles();
-	void RenderFcrab();
+	void RenderFcrab(Fcrab* c);
 
 	Fcrab* FetchFcrab();
 
@@ -47,13 +47,13 @@ private:
     std::vector<ParticleObject*> particleList; // Used to store
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
-
+	float theta = 0; //crab jump
 
 
 
 	//Fish test
 	Capture fishy;
-	Fcrab* c;
+	//Fcrab* c;
 };
 
 

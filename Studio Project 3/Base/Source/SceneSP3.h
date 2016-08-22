@@ -17,14 +17,14 @@
 #include "Projectile.h"
 #include "Capture.h"
 #include "SharedData.h"
-
+#include "LoadHmap.h"
 
 class SceneSP3 : public Scene
 {
  
 public:
     SceneSP3();
-    ~SceneSP3();
+    virtual ~SceneSP3();
 
 	virtual void ReInit();
     virtual void Init();
@@ -35,7 +35,7 @@ public:
 	virtual void RenderPassGPass() = 0;
     virtual void RenderPassMain() = 0;
     virtual void RenderWorld() = 0;
-	virtual void RenderMinimap() = 0;
+	virtual void RenderMinimap();
 
 	void UpdateTravel();
     void UpdateMinnow(double dt);
@@ -46,6 +46,7 @@ public:
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f, float rot = 0.f);
     void RenderMesh(Mesh *mesh, bool enableLight);
+
 
     void UpdateParticles(double dt);
     ParticleObject* GetParticle_NAME();

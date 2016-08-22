@@ -619,6 +619,7 @@ void SceneTutorial::RenderPassMain()
 	// Render the crosshair
 	glUniform1i(m_parameters[U_IS_GUI], 1);
 	RenderMeshIn2D(meshList[GEO_CROSSHAIR], false, 10.0f);
+	SceneSP3::RenderMinimap();
 	RenderMesh(meshList[GEO_AXES], false);
 	glUniform1i(m_parameters[U_IS_GUI], 0);
 	std::ostringstream ss;
@@ -647,55 +648,6 @@ void SceneTutorial::RenderPassMain()
 	modelStack.PopMatrix();
 }
 
-void SceneTutorial::RenderMinimap()
-{
-	const float scale = 0.1f;
-	const float range = 14.f;
-
-	Vector2 mPos;
-	mPos.Set(80 - 16 - 4, -60 + 16 + 4);
-
-	float angle = 90 + Math::RadianToDegree(atan2(walkCam.GetDir().z, walkCam.GetDir().x));
-
-	RenderMeshIn2D(meshList[GEO_MINIMAP], false, 20,
-		mPos.x, mPos.y, angle);
-
-	for (auto it : m_goList)
-	{
-		if (!it->active) continue;
-		
-		if (it->objectType == GameObject::SEACREATURE)
-		{
-			auto o1 = (SeaCreature *)it;
-
-			if (o1->seaType == SeaCreature::MINNOW)
-			{
-
-				Vector3 op1 = o1->pos - playerpos;
-				Mtx44 rot;
-				rot.SetToRotation(angle, 0, 1, 0);
-				op1 = rot * op1;
-
-				Vector2 op2;
-				op2.Set(op1.x * scale, -op1.z * scale);
-
-
-				if (op2.LengthSquared() <= range * range)
-				RenderMeshIn2D(meshList[GEO_MINIMAP_MINNOW], false, 1,
-					mPos.x + op2.x, mPos.y + op2.y);
-			}
-		}
-	}
-
-	/*{
-		static float s = 1;
-		s += 0.5f;
-		RenderTextOnScreen(meshList[GEO_TEXT], "FUCK YOU", (1, 1, 1), max(5, 10 * cos(s)), 0, 0);
-	}*/
-
-	RenderMeshIn2D(meshList[GEO_MINIMAP_AVATAR], false, 3.f,
-		mPos.x, mPos.y);
-}
 
 void SceneTutorial::Render()
 {
