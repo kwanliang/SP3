@@ -283,7 +283,7 @@ void SceneSP3::Init()
 
     meshList[GEO_MINNOW] = MeshBuilder::GenerateOBJ("minnow", "Models//OBJ//minnow.obj");
 
-    meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(1, 1, 1), 16, 16, 1.f);
+    meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(0, 0, 0), 16, 16, 1.f);
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
 
 	meshList[GEO_MINIMAP] = MeshBuilder::GenerateQuad("minimap", Color(1, 1, 1), 2);
@@ -356,18 +356,30 @@ void SceneSP3::Init()
 	
 	walkCam.yOffset = 100;
 
+    skipper = new Skipper();
+    skipper->active = true;
+    skipper->objectType = GameObject::PLAYER;
+    skipper->setHealth(50);
+    skipper->scale.Set(1, 1, 1);
+    skipper->pos.Set(playerpos.x, playerpos.y, playerpos.z);
+    skipper->vel.Set(fishVel.x, fishVel.y, fishVel.z);
+    skipper->setDamage(10);
+    skipper->setBaseDamage(10);
+    m_goList.push_back(skipper);
+    //skipper->collision = hitbox2::generatehitbox(minnowLeader->pos, 10, 10, 10);
+
     minnowLeader = new Minnow();
     minnowLeader->active = true;
     minnowLeader->objectType = GameObject::SEACREATURE;
     minnowLeader->seaType = SeaCreature::MINNOW;
     minnowLeader->state = Minnow::FLOCK;
+    minnowLeader->setHealth(50);
     minnowLeader->setisLeader(true);
     minnowLeader->scale.Set(1, 1, 1);
     minnowLeader->pos.Set(Math::RandFloatMinMax(-100, 100), Math::RandFloatMinMax(400, 600), Math::RandFloatMinMax(-100, 100));
     minnowLeader->vel.Set(Math::RandFloatMinMax(-10, 10), 0, Math::RandFloatMinMax(-10, 10));
     minnowLeader->collision = hitbox2::generatehitbox(minnowLeader->pos, 10, 10, 10);
     m_goList.push_back(minnowLeader);
-	minnowLeader->setHealth(50);
 
     for (int i = 0; i < 30; i++)
     {
@@ -436,6 +448,47 @@ Projectile* SceneSP3::FetchPO()
     go->active = true;
     //++m_objectCount;
     return go;
+}
+
+DamageText* SceneSP3::FetchTO()
+{
+    for (std::vector<DamageText *>::iterator it = m_textList.begin(); it != m_textList.end(); ++it)
+    {
+        DamageText *go = (DamageText *)*it;
+        if (!go->getActive())
+        {
+            go->setActive(true);
+            //++m_objectCount;
+            return go;
+        }
+    }
+    for (unsigned i = 0; i < 10; ++i)
+    {
+        DamageText *go = new DamageText();
+        m_textList.push_back(go);
+    }
+    DamageText *go = (DamageText *)m_textList.back();
+    go->setActive(true);
+    //++m_objectCount;
+    return go;
+}
+
+void SceneSP3::RenderTO(DamageText *to)
+{  
+    to->setScaleText(to->getScaleText() + Vector3(1, 1, 1));
+    modelStack.PushMatrix();
+    modelStack.Translate(to->getLastHitPos().x, to->getLastHitPos().y, to->getLastHitPos().z);
+    modelStack.Rotate(LookAtPlayer(playerpos, to->getLastHitPos()), 0, 1, 0);
+    modelStack.Scale(to->getScaleText().x, to->getScaleText().y, to->getScaleText().z);
+    std::ostringstream ss;
+    ss << to->getLastDamage();
+    RenderText(meshList[GEO_TEXT], ss.str(), Color(1, 0, 0));
+    modelStack.PopMatrix();
+    if (to->getScaleText().x > TextScaleValue)
+    {
+        to->setScaleText(Vector3(0, 0, 0));
+        to->setActive(false);
+    }
 }
 
 void SceneSP3::UpdateMinnow(double dt)
@@ -695,6 +748,7 @@ void SceneSP3::Update(double dt)
     {
         Projectile *po = FetchPO();
         po->objectType = GameObject::PROJECTILE;
+        po->projectileType = Projectile::BULLET;
         po->active = true;
         po->scale.Set(1, 1, 1);
         po->pos.Set(playerpos.x, playerpos.y, playerpos.z);
@@ -913,6 +967,24 @@ void SceneSP3::Update(double dt)
 	//std::cout << SharedData::GetInstance()->SD_CurrentArea << std::endl;
 }
 
+float SceneSP3::LookAtPlayer(Vector3 playerpos, Vector3 otherpos)
+{
+    Vector3 initView(0, 0, 1);
+    Vector3 wantView(playerpos - otherpos);
+    Vector3 normal(0, 1, 0);
+
+    if (otherpos != (0, 0, 0))
+        wantView.Normalize();
+
+    float lookat = Math::RadianToDegree(acos(initView.Dot(wantView)));
+    Vector3 Crossed = initView.Cross(wantView);
+    if (Crossed.Dot(normal) < 0)
+    {
+        lookat *= -1;
+    }
+    return lookat;
+}
+
 void SceneSP3::RenderText(Mesh* mesh, std::string text, Color color)
 {
     if (!mesh || mesh->textureID <= 0)
@@ -966,10 +1038,11 @@ void SceneSP3::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, flo
     for (unsigned i = 0; i < text.length(); ++i)
     {
         Mtx44 characterSpacing;
-        characterSpacing.SetToTranslation(i * 1.0f + 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
+        characterSpacing.SetToTranslation(i * 0.5f, 0.5f, 0); //1.0f is the spacing of each character, you may change this value
         Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
         glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
+        //cout << text[i] << endl;
         mesh->Render((unsigned)text[i] * 6, 6);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -1287,6 +1360,12 @@ void SceneSP3::Exit()
         GameObject *go = m_goList.back();
         delete go;
         m_goList.pop_back();
+    }
+    while (m_textList.size() > 0)
+    {
+        DamageText *to = m_textList.back();
+        delete to;
+        m_textList.pop_back();
     }
     glDeleteProgram(m_programID);
     glDeleteProgram(m_gPassShaderID);

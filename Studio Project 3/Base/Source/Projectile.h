@@ -6,8 +6,17 @@
 class Projectile : public GameObject
 {
 public:
+    enum PROJECTILE_TYPE
+    {
+        BULLET,
+        INK,
+
+        TYPE_TOTAL
+    };
+    PROJECTILE_TYPE projectileType;
+
     Projectile();
-    Projectile(OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
+    Projectile(PROJECTILE_TYPE projectileType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
     ~Projectile();
 };
 

@@ -10,6 +10,7 @@ struct hitbox{
 	Vector3 m_position;
 	Vector3 m_vecMax;
 	Vector3 m_vecMin;
+    //Vector3 m_target;
 
 	Vector3 m_velocity;
 
@@ -171,5 +172,6 @@ static bool collision(const hitbox2& lhsBox, const hitbox2& rhsBox){		//for AABB
     else
         return false;
 }
+
 
 #endif;

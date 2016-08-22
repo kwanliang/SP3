@@ -16,6 +16,8 @@ Class to define boss, Giant Squid
 #include "GiantSquidTentacle.h"
 
 static float distFromPlayer = 100.f;
+static float squidSpinValue = 1440.f;
+static float inkSpread = 3.f;
 
 /******************************************************************************/
 /*!
@@ -28,40 +30,66 @@ Defines the Boss and its methods
 class GiantSquid : public Boss
 {
 private:
-    float m_SquidView;
+    float m_SquidLookAt;
+    Vector3 m_SquidView;
+    bool m_isDead;
 
 public:
     enum GIANTSQUID_BEHAVIORSTATE
     {
+        TRANSITION,
         IDLE,
-        ATTACK,
-        INK,
+        SPINATTACK,
+        INKATTACK,
+        GRABATTACK,
+        DEAD,
 
         STATE_TOTAL,
     };
     GIANTSQUID_BEHAVIORSTATE state;
 
-    // Animation
-    float m_rotateTentacle;
-    bool m_isTentacleUp;
+    // Animation //
+    bool m_ChangeState;
 
+    // Chase Player
+    float m_moveSpeed;
+
+    // Idle
     float m_translateSquid;
     bool m_isSquidUp;
 
+    // Spin Attack
+    bool m_isTentacleUp;
+    float m_rotateSpinTentacle;
     float m_rotateSquid;
     bool m_rotateComplete;
+    bool m_isSpinning;
+    float m_spinSpeed;
 
-    bool m_animateIDLE;
-    bool m_animateATTACK;
+    // Ink Attack
+    bool m_isInkSquidRotated;
+    bool m_isInkTentacleRotated;
+    float m_rotateInkTentacle;
+    float m_rotateInkSquid;
+    bool m_isShootInk;
+    int m_InkFiredCount;
+    
+    // Grab Attack
+    float m_rotateGrabTentacle1;
+    float m_rotateGrabTentacle2;
 
     GiantSquid();
-    GiantSquid(float m_bounceTime, bool m_isBounceUp, GIANTSQUID_BEHAVIORSTATE state, int m_health, BOSS_TYPE bossType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
+    GiantSquid(float m_bounceTime, bool m_isBounceUp, GIANTSQUID_BEHAVIORSTATE state, int m_health, Vector3 m_LastHitPos, int m_LastDamage, BOSS_TYPE bossType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);
     ~GiantSquid();
 
     void AnimateIdle();
-    void AnimateAttack();
+    void AnimateSpinAttack();
+    void AnimateInkAttack();
+    void AnimateGrabAttack();
+    void AnimateDead();
     float LookAtPlayer(Vector3 playerPos);
     void ChasePlayer(Vector3 playerPos);
+    void ShootInk(Vector3 playerPos);
 
     GiantSquidTentacle tentacle1_1;
     GiantSquidTentacle tentacle1_2;
@@ -93,8 +121,14 @@ public:
     GiantSquidTentacle tentacle6_3;
     GiantSquidTentacle tentacle6_4;
 
-    float getSquidView();
-    void setSquidView(float m_SquidView);
+    float getSquidLookAt();
+    void setSquidLookAt(float m_SquidLookAt);
+
+    bool getIsDead();
+    void setIsDead(bool IsDead);
+
+    Vector3 getSquidView();
+    void setSquidView(Vector3 m_SquidView);
 };
 
 #endif

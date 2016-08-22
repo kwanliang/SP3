@@ -59,18 +59,28 @@ void SceneTutorial::InitGiantSquid()
     giantSquid->scale.Set(30, 30, 30);
     giantSquid->pos.Set(0, 500, 0);
     giantSquid->vel.Set(0, 0, 0);
+    giantSquid->setSquidView(Vector3(0, 0, 0));
+    giantSquid->setIsDead(false);
+    giantSquid->m_ChangeState = false;
     giantSquid->m_rotateSquid = 0.f;
-    giantSquid->m_rotateTentacle = 0.f;
+    giantSquid->m_rotateSpinTentacle = 0.f;
+    giantSquid->m_rotateInkTentacle = 0.f;
     giantSquid->m_isTentacleUp = false;
     giantSquid->m_translateSquid = 0.f;
     giantSquid->m_isSquidUp = false;
-    giantSquid->m_animateIDLE = false;
-    giantSquid->m_animateATTACK = false;
     giantSquid->m_rotateComplete = false;
+    giantSquid->m_isSpinning = false;
+    giantSquid->m_isInkSquidRotated = false;
+    giantSquid->m_isInkTentacleRotated = false;
+    giantSquid->m_isShootInk = false;
+    giantSquid->m_InkFiredCount = 0;
+    giantSquid->m_rotateInkSquid = 0.f;
+    giantSquid->m_spinSpeed = 1.f;
+    giantSquid->m_moveSpeed = 1.f;
     giantSquid->collision = hitbox::generatehitbox(giantSquid->pos + Vector3(0, 80, 0), 55, 150, 55, 0);
 
     giantSquid->tentacle1_1.setTentaclePos(Vector3(-.25f, .1f, -.15f));
-    giantSquid->tentacle1_1.collision = hitbox::generatehitbox(giantSquid->tentacle1_1.getTentaclePos() + Vector3(-6.25f, 485, -3.35f), 10, 40, 10, 0);
+    //giantSquid->tentacle1_1.collision = hitbox::generatehitbox(giantSquid->tentacle1_1.getTentaclePos() + Vector3(-6.25f, 485, -3.35f), 10, 40, 10, 0);
     giantSquid->tentacle1_2.setTentaclePos(Vector3(0, -1.f, 0));
     giantSquid->tentacle1_3.setTentaclePos(Vector3(0, -1.f, 0));
     giantSquid->tentacle1_4.setTentaclePos(Vector3(0, -1.f, 0));
@@ -177,7 +187,8 @@ void SceneTutorial::RenderBO(Boss* bo)
     {
         modelStack.PushMatrix();
         modelStack.Translate(giantSquid->pos.x, giantSquid->pos.y, giantSquid->pos.z);
-        modelStack.Rotate(giantSquid->m_rotateSquid + giantSquid->getSquidView(), 0, 1, 0);
+        modelStack.Rotate(giantSquid->m_rotateSquid + giantSquid->getSquidLookAt(), 0, 1, 0);
+        modelStack.Rotate(giantSquid->m_rotateInkSquid, 0, 0, -1);
         modelStack.Scale(giantSquid->scale.x, giantSquid->scale.y, giantSquid->scale.z);
         RenderMesh(meshList[GEO_SQUIDBODY], false);
 
@@ -564,50 +575,64 @@ void SceneTutorial::RenderPassMain()
             Boss *bo = (Boss*)*it;
             if (bo->active)
             {
-                RenderBO(bo);
+                if (bo->bossType == Boss::GIANTSQUID)
+                {
+                    GiantSquid *squid = (GiantSquid*)*it;
 
-                modelStack.PushMatrix();
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-                modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
-                modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
-                RenderMesh(meshList[GEO_CUBE], false);
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-                modelStack.PopMatrix();
+                    RenderBO(bo);
 
-                modelStack.PushMatrix();
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-                modelStack.Translate(giantSquid->tentacle1_1.collision.m_position.x, giantSquid->tentacle1_1.collision.m_position.y, giantSquid->tentacle1_1.collision.m_position.z);
-                modelStack.Scale(giantSquid->tentacle1_1.collision.m_width, giantSquid->tentacle1_1.collision.m_height, giantSquid->tentacle1_1.collision.m_length);
-                RenderMesh(meshList[GEO_CUBE], false);
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-                modelStack.PopMatrix();
+                    modelStack.PushMatrix();
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                    modelStack.Translate(squid->collision.m_position.x, squid->collision.m_position.y, squid->collision.m_position.z);
+                    //modelStack.Rotate(squid->getSquidLookAt(), 0, 1, 0);
+                    //modelStack.Rotate(squid->m_rotateInkSquid, 0, 0, -1);
+                    modelStack.Scale(squid->collision.m_width, squid->collision.m_height, squid->collision.m_length);
+                    RenderMesh(meshList[GEO_CUBE], false);
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                    modelStack.PopMatrix();
 
-                //modelStack.PushMatrix();
-                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-                //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
-                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
-                //RenderMesh(meshList[GEO_CUBE], false);
-                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-                //modelStack.PopMatrix();
+                    //modelStack.PushMatrix();
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                    //modelStack.Translate(giantSquid->tentacle1_1.collision.m_position.x, giantSquid->tentacle1_1.collision.m_position.y, giantSquid->tentacle1_1.collision.m_position.z);
+                    //modelStack.Scale(giantSquid->tentacle1_1.collision.m_width, giantSquid->tentacle1_1.collision.m_height, giantSquid->tentacle1_1.collision.m_length);
+                    //RenderMesh(meshList[GEO_CUBE], false);
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                    //modelStack.PopMatrix();
 
-                //modelStack.PushMatrix();
-                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-                //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
-                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
-                //RenderMesh(meshList[GEO_CUBE], false);
-                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-                //modelStack.PopMatrix();
+                    //modelStack.PushMatrix();
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                    //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                    //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                    //RenderMesh(meshList[GEO_CUBE], false);
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                    //modelStack.PopMatrix();
 
-                //modelStack.PushMatrix();
-                //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-                //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
-                //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
-                //RenderMesh(meshList[GEO_CUBE], false);
-                //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-                //modelStack.PopMatrix();
+                    //modelStack.PushMatrix();
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                    //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                    //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                    //RenderMesh(meshList[GEO_CUBE], false);
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                    //modelStack.PopMatrix();
+
+                    //modelStack.PushMatrix();
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+                    //modelStack.Translate(bo->collision.m_position.x, bo->collision.m_position.y, bo->collision.m_position.z);
+                    //modelStack.Scale(bo->collision.m_width, bo->collision.m_height, bo->collision.m_length);
+                    //RenderMesh(meshList[GEO_CUBE], false);
+                    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+                    //modelStack.PopMatrix();
+                }
             }
         }
 	}
+
+    for (std::vector<DamageText *>::iterator it = m_textList.begin(); it != m_textList.end(); ++it)
+    {
+        DamageText *to = (DamageText*)*it;
+        if (to->getActive())
+            RenderTO(to);
+    }
 
     //modelStack.PushMatrix();
     //modelStack.Translate(0, 300, 0);
@@ -656,30 +681,84 @@ void SceneTutorial::Render()
 
 	// MAIN RENDER PASS
 	RenderPassMain();
-
 }
 
 void SceneTutorial::UpdateGiantSquid(double dt)
 {
-    if ((giantSquid->pos - playerpos).LengthSquared() < distFromGiantSquid * distFromGiantSquid)
-        giantSquid->state = GiantSquid::ATTACK;
-    else
-        giantSquid->state = GiantSquid::IDLE;
-
-    if (giantSquid->state == GiantSquid::IDLE && !giantSquid->m_animateATTACK)
-        giantSquid->m_animateIDLE = true;
-    else if (giantSquid->state == GiantSquid::ATTACK && !giantSquid->m_animateIDLE)
+    if (giantSquid->m_ChangeState)
     {
-        giantSquid->m_animateATTACK = true;
-        giantSquid->setSquidView(giantSquid->LookAtPlayer(playerpos));
-        giantSquid->ChasePlayer(playerpos);
+        int random = 0;
+        random = rand() % 10 + 1;
+
+        if (giantSquid->getHealth() < 0)
+        {
+            giantSquid->state = GiantSquid::DEAD;
+        }
+        else if ((giantSquid->pos - playerpos).LengthSquared() < distFromGiantSquid * distFromGiantSquid && random > 6)
+        {
+            giantSquid->state = GiantSquid::INKATTACK;
+        }
+        else if ((giantSquid->pos - playerpos).LengthSquared() < distFromGiantSquid * distFromGiantSquid && random < 7)
+        {
+            giantSquid->state = GiantSquid::INKATTACK;
+        }
+        else
+        {
+            giantSquid->state = GiantSquid::IDLE;
+        }
+
+        giantSquid->m_ChangeState = false;
     }
 
-    if (giantSquid->m_animateIDLE)
+    switch (giantSquid->state)
+    {
+    case GiantSquid::IDLE:
         giantSquid->AnimateIdle();
-
-    if (giantSquid->m_animateATTACK)
-        giantSquid->AnimateAttack();
+        break;
+    case GiantSquid::SPINATTACK:
+        giantSquid->AnimateSpinAttack();
+        giantSquid->setSquidView(giantSquid->LookAtPlayer(playerpos));
+        giantSquid->ChasePlayer(playerpos);
+        break;
+    case GiantSquid::INKATTACK:
+        giantSquid->AnimateInkAttack();
+        giantSquid->setSquidView(giantSquid->LookAtPlayer(playerpos));
+        if (giantSquid->m_isShootInk)
+        {
+            for (int x = -5; x <= 5; x ++)
+            {
+                Projectile *po = FetchPO();
+                po->objectType = GameObject::PROJECTILE;
+                po->projectileType = Projectile::INK;
+                po->active = true;
+                po->scale.Set(1, 1, 1);
+                po->pos.Set(Math::RandFloatMinMax(giantSquid->pos.x - inkSpread, giantSquid->pos.x + inkSpread), 
+                    Math::RandFloatMinMax(giantSquid->pos.y + x - inkSpread, giantSquid->pos.y + x + inkSpread), 
+                    Math::RandFloatMinMax(giantSquid->pos.z - inkSpread, giantSquid->pos.z + inkSpread));
+                Vector3 view = (playerpos - giantSquid->pos).Normalized();
+                po->vel.Set(view.x, view.y, view.z);
+            }
+            for (int x = -5; x <= 5; x++)
+            {
+                Projectile *po = FetchPO();
+                po->objectType = GameObject::PROJECTILE;
+                po->projectileType = Projectile::INK;
+                po->active = true;
+                po->scale.Set(1, 1, 1);
+                po->pos.Set(Math::RandFloatMinMax(giantSquid->pos.x + x - inkSpread, giantSquid->pos.x + x + inkSpread), 
+                    Math::RandFloatMinMax(giantSquid->pos.y - inkSpread, giantSquid->pos.y + inkSpread),
+                    Math::RandFloatMinMax(giantSquid->pos.z - inkSpread, giantSquid->pos.z + inkSpread));
+                Vector3 view = (playerpos - giantSquid->pos).Normalized();
+                po->vel.Set(view.x, view.y, view.z);
+            }
+        }
+        break;
+    case GiantSquid::DEAD:
+        giantSquid->AnimateDead();
+        if (giantSquid->getIsDead())
+            giantSquid->active = false;
+        break;
+    }
 
     for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
     {
@@ -689,32 +768,43 @@ void SceneTutorial::UpdateGiantSquid(double dt)
             if (go->objectType == GameObject::PROJECTILE)
             {
                 Projectile *po = (Projectile *)*it;
-                po->pos += po->vel * dt * 500;
-
-                if (go->pos.y < -1000)
-                    po->active = false;
-                else if (go->pos.y > 1000)
-                    po->active = false;
-
-                if (go->pos.x < -1000)
-                    po->active = false;
-                else if (go->pos.x > 1000)
-                    po->active = false;
-
-                if (go->pos.z < -1000)
-                    po->active = false;
-                else if (go->pos.z > 1000)
-                    po->active = false;
-
-                for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+                if (po->projectileType == Projectile::BULLET)
                 {
-                    Boss *other = (Boss *)*it2;
-                    if (other->active && go != other && other->bossType == Boss::GIANTSQUID)
+                    po->pos += po->vel * dt * 500;
+
+                    if (go->pos.y < -1000)
+                        po->active = false;
+                    else if (go->pos.y > 1000)
+                        po->active = false;
+
+                    if (go->pos.x < -1000)
+                        po->active = false;
+                    else if (go->pos.x > 1000)
+                        po->active = false;
+
+                    if (go->pos.z < -1000)
+                        po->active = false;
+                    else if (go->pos.z > 1000)
+                        po->active = false;
+
+                    for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
                     {
-                        if (collision(other->collision, go->pos))
+                        Boss *other = (Boss *)*it2;
+                        if (other->active && go != other && other->bossType == Boss::GIANTSQUID)
                         {
-                            po->active = false;
-                            other->setHealth(other->getHealth() - 1);
+                            GiantSquid *squid = (GiantSquid *)*it2;
+                            if (collision(other->collision, go->pos))
+                            {
+                                po->active = false;
+                                other->setHealth(other->getHealth() - skipper->randomDamage(skipper->getDamage(), skipper->getBaseDamage()));
+
+                                DamageText* text = FetchTO();
+                                text->setActive(true);
+                                text->setLastHitPos(go->pos);
+                                text->setLastDamage(skipper->randomDamage(skipper->getDamage(), skipper->getBaseDamage()));
+                                text->setScaleText(Vector3(0, 0, 0));
+                                cout << skipper->randomDamage(skipper->getDamage(), skipper->getBaseDamage()) << endl;
+                            }
                         }
                     }
                 }
@@ -725,7 +815,6 @@ void SceneTutorial::UpdateGiantSquid(double dt)
 
 void SceneTutorial::Update(double dt)
 {
-	//std::cout << SharedData::GetInstance() ->SD_Travel << std::endl;
 	SceneSP3::Update(dt);
 	if (Application::IsKeyPressed('C'))
 	std::cout << playerpos << std::endl;
@@ -738,17 +827,10 @@ void SceneTutorial::Update(double dt)
 		
 		
 
-    //cout << giantSquid->tentacle1_1.getTentaclePos() << endl;
-    //Mtx44 rotate;
-    //rotate.SetToRotation(giantSquid->tentacle1_1.getTentacleAnimateRotate(), 1, 0, 0);
-
-
-    //Vector3 tv(giantSquid->tentacle1_1.getTentaclePos().x - 6.25f, giantSquid->tentacle1_1.getTentaclePos().y + 485, giantSquid->tentacle1_1.getTentaclePos().z - 3.35f);
-    //Vector3 update = giantSquid->tentacle1_1.collision.m_position - tv;
-    //update = rotate * update;
-    //update = update + tv;
     UpdateGiantSquid(dt);
 
+    //giantSquid->collision.m_target = giantSquid->getSquidView();
+    //cout << giantSquid->collision.m_target << endl;
     hitbox::updatehitbox(giantSquid->collision, giantSquid->collision.m_position);
     hitbox::updatehitbox(giantSquid->tentacle1_1.collision, giantSquid->tentacle1_1.collision.m_position);
 }

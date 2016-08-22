@@ -26,7 +26,7 @@ public:
 
     int getHealth();
     void setHealth(int m_health);
-
+    
     hitbox collision;
 };
 
