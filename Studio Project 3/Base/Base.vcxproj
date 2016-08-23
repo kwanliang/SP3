@@ -17,8 +17,12 @@
     <ClCompile Include="Source\Camera2.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Capture.cpp" />
+    <ClCompile Include="Source\Chimera.cpp" />
+    <ClCompile Include="Source\CollisionManager.cpp" />
+    <ClCompile Include="Source\DamageText.cpp" />
     <ClCompile Include="Source\DepthFBO.cpp" />
     <ClCompile Include="Source\Fcrab.cpp" />
+    <ClCompile Include="Source\FrilledShark.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\GiantSquid.cpp" />
     <ClCompile Include="Source\GiantSquidTentacle.cpp" />
@@ -42,6 +46,7 @@
     <ClCompile Include="Source\SeaCreature.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Skipper.cpp" />
+    <ClCompile Include="Source\Spawner.cpp" />
     <ClCompile Include="Source\SpriteAnimation.cpp" />
     <ClCompile Include="Source\SceneSP3.cpp" />
     <ClCompile Include="Source\ThirdPersonCamera.cpp" />
@@ -56,9 +61,12 @@
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\CameraV2.h" />
     <ClInclude Include="Source\Capture.h" />
+    <ClInclude Include="Source\Chimera.h" />
     <ClInclude Include="Source\CollisionManager.h" />
+    <ClInclude Include="Source\DamageText.h" />
     <ClInclude Include="Source\DepthFBO.h" />
     <ClInclude Include="Source\Fcrab.h" />
+    <ClInclude Include="Source\FrilledShark.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\GiantSquid.h" />
     <ClInclude Include="Source\GiantSquidTentacle.h" />
@@ -85,6 +93,7 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\SharedData.h" />
     <ClInclude Include="Source\Skipper.h" />
+    <ClInclude Include="Source\Spawner.h" />
     <ClInclude Include="Source\SpriteAnimation.h" />
     <ClInclude Include="Source\SceneSP3.h" />
     <ClInclude Include="Source\ThirdPersonCamera.h" />

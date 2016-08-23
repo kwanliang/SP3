@@ -644,7 +644,7 @@ void SceneTutorial::RenderPassMain()
 	glUniform1i(m_parameters[U_IS_GUI], 0);
 	std::ostringstream ss;
 	ss.precision(3);
-	ss << "FPS: " << fps;
+	ss << "calm plateu   " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 2, 3);
 	glUniform1i(m_parameters[U_FOG_ENABLE], 0);
 	RenderMinimap();

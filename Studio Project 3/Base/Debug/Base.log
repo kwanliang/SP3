@@ -1,23 +1,13 @@
-﻿Build started 8/21/2016 11:06:58 PM.
+﻿Build started 8/24/2016 12:25:47 AM.
      1>Project "C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Base\Base.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/Common/Source" /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glew/include" /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\Fcrab.cpp
-         Fcrab.cpp
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(44): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(49): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(62): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(68): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(120): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(121): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(122): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(123): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(125): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(126): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(127): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\collisionmanager.h(128): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\fcrab.cpp(32): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\fcrab.cpp(39): warning C4244: '-=' : conversion from 'double' to 'float', possible loss of data
-     1>cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/Common/Source" /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glew/include" /I"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glfw/include" /ZI /nologo /W3 /WX- /Od /Oy- /D _VARIADIC_MAX=10 /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source\SceneNightmareTrench.cpp
+         SceneNightmareTrench.cpp
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenenightmaretrench.cpp(101): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenenightmaretrench.cpp(322): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenenightmaretrench.cpp(329): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenenightmaretrench.cpp(338): warning C4305: 'argument' : truncation from 'double' to 'float'
+     1>c:\users\yue xian\desktop\sp3\studio project 3\base\source\scenenightmaretrench.cpp(344): warning C4305: 'argument' : truncation from 'double' to 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug" /LIBPATH:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glfw/lib-msvc100" /LIBPATH:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\/glew/lib" Common.lib winmm.lib opengl32.lib glu32.lib glew32.lib glfw3.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Yue Xian\Desktop\SP3\Studio Project 3\Debug\Base.lib" /MACHINE:X86 Debug\Application.obj
          Debug\Boss.obj
@@ -25,8 +15,12 @@
          Debug\Camera2.obj
          Debug\Camera3.obj
          Debug\Capture.obj
+         Debug\Chimera.obj
+         Debug\CollisionManager.obj
+         Debug\DamageText.obj
          Debug\DepthFBO.obj
          Debug\Fcrab.obj
+         Debug\FrilledShark.obj
          Debug\GameObject.obj
          Debug\GiantSquid.obj
          Debug\GiantSquidTentacle.obj
@@ -50,6 +44,7 @@
          Debug\SeaCreature.obj
          Debug\shader.obj
          Debug\Skipper.obj
+         Debug\Spawner.obj
          Debug\SpriteAnimation.obj
          Debug\SceneSP3.obj
          Debug\ThirdPersonCamera.obj
@@ -62,4 +57,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.66
+Time Elapsed 00:00:01.01

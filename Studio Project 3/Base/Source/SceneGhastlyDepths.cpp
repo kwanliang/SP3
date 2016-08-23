@@ -63,8 +63,9 @@ void SceneGhastlyDepths::RenderBoss()
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0,-0.2,1);
-	modelStack.Rotate(-20,1, 0, 0);
+	modelStack.Rotate(val,1, 0, 0);
 	RenderMesh(meshList[GEO_FSHARK_LJAW], false);
+	
 	modelStack.PopMatrix();
 	modelStack.PopMatrix();
 
@@ -341,7 +342,7 @@ void SceneGhastlyDepths::Update(double dt)
 {
 	SceneSP3::Update(dt);
 	frilledshark->UpdateFrilledShark(dt);
-	frilledshark->m_node[0].yaw = val;
+	//frilledshark->m_node[0].yaw = val;
 
 }
 

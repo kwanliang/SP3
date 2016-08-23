@@ -39,7 +39,7 @@ void SceneNightmareTrench::Init()
 		c->seaType = SeaCreature::CHIMERA;
 		//p->pstate = Pufferfish::IDLE;
 		c->scale.Set(20, 20, 20);
-		c->pos.Set(Math::RandFloatMinMax(-1000, 1000), Math::RandFloatMinMax(200, 500), Math::RandFloatMinMax(-1000, 1000));
+		c->pos.Set(Math::RandFloatMinMax(-1000, 1000), Math::RandFloatMinMax(100, 500), Math::RandFloatMinMax(-1000, 1000));
 		c->vel.Set(0, Math::RandFloatMinMax(-20, 20), 0);
 		//p->collision = hitbox2::generatehitbox(p->pos, 8, 8, 8);
 		c->setHealth(200);

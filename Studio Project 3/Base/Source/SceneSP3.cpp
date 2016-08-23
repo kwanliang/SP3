@@ -231,10 +231,19 @@ void SceneSP3::Init()
     }
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1,0,0),1.f );
     meshList[GEO_AXES] = MeshBuilder::GenerateAxes("reference");//, 1000, 1000, 1000);
-    meshList[GEO_CROSSHAIR] = MeshBuilder::GenerateCrossHair("crosshair");
+	meshList[GEO_CROSSHAIR] = MeshBuilder::GenerateQuad("minimap", Color(0, 0, 0), 2);
+	meshList[GEO_CROSSHAIR]->textureID = LoadTGA("Image//crosshair.tga");
     meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
     meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
     meshList[GEO_TEXT]->material.kAmbient.Set(1, 0, 0);
+
+	meshList[GEO_MINIMAP] = MeshBuilder::GenerateQuad("minimap", Color(1, 1, 1), 2);
+	meshList[GEO_MINIMAP]->textureID = LoadTGA("Image//minimap.tga");
+
+	meshList[GEO_MINIMAP_AVATAR] = MeshBuilder::GenerateQuad("minimap_avatar", Color(1, 1, 1), 2);
+	meshList[GEO_MINIMAP_AVATAR]->textureID = LoadTGA("Image//minimap_avatar.tga");
+
+	meshList[GEO_MINIMAP_MINNOW] = MeshBuilder::GenerateSphere("minimap_minnow", Color(0.5f, 1, 1), 16, 16);
 
     meshList[GEO_SKYPLANE] = MeshBuilder::GenerateSkyPlane("skyplane", Color(1, 1, 1), 128, 200.0f, 2000.0f, 1.0f, 1.0f);
     meshList[GEO_SKYPLANE]->textureArray[0] = LoadTGA("Image//sky.tga");
@@ -276,13 +285,20 @@ void SceneSP3::Init()
 	meshList[GEO_FCRABCLAW]->textureArray[0] = LoadTGA("Image//fcrab_claw.tga");
 
 	meshList[GEO_CHIMERA_BODY] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//ghostshark_body.obj");
+	meshList[GEO_CHIMERA_BODY]->textureArray[0] = LoadTGA("Image//ghostshark.tga");
 	meshList[GEO_CHIMERA_FFLIP] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//ghostshark_Fflipper.obj");
+	meshList[GEO_CHIMERA_FFLIP]->textureArray[0] = LoadTGA("Image//ghostshark.tga");
 	meshList[GEO_CHIMERA_BFLIP] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//ghostshark_Bflipper.obj");
+	meshList[GEO_CHIMERA_BFLIP]->textureArray[0] = LoadTGA("Image//ghostshark.tga");
 
 	meshList[GEO_FSHARK_LJAW] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_Ljaw.obj");
+	meshList[GEO_FSHARK_LJAW]->textureArray[0] = LoadTGA("Image//frilledshark.tga");
 	meshList[GEO_FSHARK_UJAW] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_Ujaw.obj");
+	meshList[GEO_FSHARK_UJAW]->textureArray[0] = LoadTGA("Image//frilledshark.tga");
 	meshList[GEO_FSHARK_NODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_node.obj");
+	meshList[GEO_FSHARK_NODE]->textureArray[0] = LoadTGA("Image//frilledshark.tga");
 	meshList[GEO_FSHARK_TAIL] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_tail.obj");
+	meshList[GEO_FSHARK_TAIL]->textureArray[0] = LoadTGA("Image//frilledshark.tga");
 
 
     meshList[GEO_SQUIDTENTACLENODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_node.obj");
@@ -295,13 +311,7 @@ void SceneSP3::Init()
     meshList[GEO_BALL] = MeshBuilder::GenerateSphere("ball", Color(0, 0, 0), 16, 16, 1.f);
     meshList[GEO_BALL2] = MeshBuilder::GenerateSphere("ball", Color(1, 0, 0), 16, 16, 1.f);
 
-	meshList[GEO_MINIMAP] = MeshBuilder::GenerateQuad("minimap", Color(1, 1, 1), 2);
-	meshList[GEO_MINIMAP]->textureID = LoadTGA("Image//minimap.tga");
 
-	meshList[GEO_MINIMAP_AVATAR] = MeshBuilder::GenerateQuad("minimap_avatar", Color(1, 1, 1), 2);
-	meshList[GEO_MINIMAP_AVATAR]->textureID = LoadTGA("Image//minimap_avatar.tga");
-
-	meshList[GEO_MINIMAP_MINNOW] = MeshBuilder::GenerateSphere("minimap_minnow", Color(0.5f, 1, 1), 16, 16);
 
     // Object
     //meshList[OBJ_NAME] = MeshBuilder::GenerateOBJ("", "OBJ//.obj");
@@ -814,12 +824,12 @@ void SceneSP3::Update(double dt)
 		float movespeed = 1000;
 		if (Application::IsKeyPressed('Z'))
 		{
-			val += 1*dt;
+			val += 20*dt;
 			cout << val << endl;
 		}
 		if (Application::IsKeyPressed('X'))
 		{
-			val -=1* dt;
+			val -=20* dt;
 			cout << val << endl;
 		}
 
