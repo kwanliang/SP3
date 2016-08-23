@@ -15,9 +15,9 @@ Class to define boss, Giant Squid
 #include "Mtx44.h"
 #include "GiantSquidTentacle.h"
 
-static float distFromPlayer = 100.f;
-static float squidSpinValue = 1440.f;
-static float inkSpread = 3.f;
+static float g_distFromPlayer = 100.f;
+static float g_squidSpinValue = 1440.f;
+static float g_inkSpread = 3.f;
 
 /******************************************************************************/
 /*!
@@ -67,16 +67,18 @@ public:
     float m_spinSpeed;
 
     // Ink Attack
-    bool m_isInkSquidRotated;
     bool m_isInkTentacleRotated;
     float m_rotateInkTentacle;
-    float m_rotateInkSquid;
     bool m_isShootInk;
     int m_InkFiredCount;
     
     // Grab Attack
-    float m_rotateGrabTentacle1;
-    float m_rotateGrabTentacle2;
+    float m_rotateGrabTentacle;
+    float m_rotateGrabInnerTentacle;
+    bool m_changeGrab;
+    bool m_changeInnerGrab;
+    bool m_isGrab;
+    bool m_Grabbed;
 
     GiantSquid();
     GiantSquid(float m_bounceTime, bool m_isBounceUp, GIANTSQUID_BEHAVIORSTATE state, int m_health, Vector3 m_LastHitPos, int m_LastDamage, BOSS_TYPE bossType, OBJECT_TYPE objectType, Vector3 pos, Vector3 vel, Vector3 scale, bool active);

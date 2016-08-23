@@ -20,6 +20,9 @@
 #include "LoadHmap.h"
 #include "Skipper.h"
 
+static int g_MinnowLeaderCount = 0;
+static int g_MinnowCount = 0;
+
 class SceneSP3 : public Scene
 {
  
@@ -27,7 +30,6 @@ public:
     SceneSP3();
     virtual ~SceneSP3();
 
-	virtual void ReInit();
     virtual void Init();
     virtual void Update(double dt);
     virtual void Render();
@@ -39,7 +41,7 @@ public:
 	virtual void RenderMinimap();
 
 	void UpdateTravel();
-    void UpdateMinnow(double dt);
+    void UpdateLoop(double dt);
 	void UpdatePuffer(double dt);
 	void UpdateCaptured(double dt);
 	void UpdateProjectile(double dt);
@@ -49,7 +51,6 @@ public:
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
     void RenderMeshIn2D(Mesh *mesh, bool enableLight, float size = 1.0f, float x = 0.0f, float y = 0.0f, float rot = 0.f);
     void RenderMesh(Mesh *mesh, bool enableLight);
-
 
     void UpdateParticles(double dt);
     ParticleObject* GetParticle_NAME();
@@ -255,9 +256,13 @@ protected:
 	float	fish_tailrot;
 	bool	fish_tailmax;
 	Vector3 fishVel;
-    Minnow* minnowLeader;
+    //Minnow* minnowLeader;
 
     Skipper* skipper;
+
+    // Spawner
+    Spawner MinnowLeaderSpawner;
+    Spawner MinnowSpawner;
 
     //DamageText text;
     std::vector<DamageText*> m_textList;

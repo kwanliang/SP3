@@ -3,6 +3,8 @@
 
 #include "SeaCreature.h"
 
+static float g_MinnowAttractRange = 15000.f;
+
 class Minnow : public SeaCreature
 {
 private:
@@ -13,6 +15,7 @@ public:
     enum MINNOW_BEHAVIORSTATE
     {
         FLOCK,
+        COLLIDING,
         FLEE,
         STATE_TOTAL,
     };

@@ -54,20 +54,6 @@ void SceneCalmPlateu::Init()
 	m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
 
 }
-	//currentCam = &walkCam;
-	//
-
-
-void SceneCalmPlateu::ReInit()
-{
-	
-	
-
-	
-
-
-	std::cout << "calm" << std::endl;
-}
 
 void SceneCalmPlateu::RenderTerrain()
 {

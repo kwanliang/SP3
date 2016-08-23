@@ -46,35 +46,6 @@ void SceneNightmareTrench::Init()
 	}
 }
 
-void SceneNightmareTrench::ReInit()
-{
-	if (SharedData::GetInstance()->SD_Down)
-	{
-		walkCam.Init(
-			Vector3(0, 800, 0),
-			Vector3(0, 0, -10),
-			Vector3(0, 1, 0),
-			60
-			);
-	}
-	else
-	{
-		walkCam.Init(
-			Vector3(0, 800, -17),
-			Vector3(0, 0, -10),
-			Vector3(0, 1, 0),
-			60
-			);
-	}
-	
-	
-	//m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
-	//m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
-
-
-	std::cout << "creep" << std::endl;
-}
-
 void SceneNightmareTrench::RenderTerrain()
 {
 	modelStack.PushMatrix();

@@ -7,7 +7,7 @@
 #include "GiantSquid.h"
 #include "Vector2.h"
 
-static float distFromGiantSquid = 400;
+static float g_distFromGiantSquid = 400;
 
 class SceneTutorial : public SceneSP3
 {
@@ -16,13 +16,13 @@ public:
 	~SceneTutorial();
 
 	virtual void Init();
-	virtual void ReInit();
 	virtual void Update(double dt);
 	virtual void Exit();
 	
 	virtual void Render();
     void RenderBO(Boss *bo);
 
+    void InitSpawner();
     void InitGiantSquid();
 
 	void RenderPassGPass();

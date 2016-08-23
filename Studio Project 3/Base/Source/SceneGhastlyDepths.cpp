@@ -52,17 +52,6 @@ void SceneGhastlyDepths::Init()
 	frilledshark = new FrilledShark;
 }
 
-void SceneGhastlyDepths::ReInit()
-{
-	
-
-
-
-
-
-
-	std::cout << "creep" << std::endl;
-}
 
 void SceneGhastlyDepths::RenderBoss()
 {

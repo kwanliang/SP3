@@ -10,6 +10,7 @@ private:
     Vector3 m_TentaclePos;
     float m_TentacleInitialRotate;
     float m_TentacleAnimateRotate;
+    float m_TentacleAnimateRotate2;
 
     int m_health;
 
@@ -25,6 +26,9 @@ public:
 
     float getTentacleAnimateRotate();
     void setTentacleAnimateRotate(float m_TentacleAnimateRotate);
+
+    float getTentacleAnimateRotate2();
+    void setTentacleAnimateRotate2(float m_TentacleAnimateRotate2);
 
     int getHealth();
     void setHealth(int m_health);

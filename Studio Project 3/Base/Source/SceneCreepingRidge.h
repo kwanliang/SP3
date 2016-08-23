@@ -13,7 +13,6 @@ public:
 	~SceneCreepingRidge();
 
 	virtual void Init();
-	virtual void ReInit();
 	virtual void Update(double dt);
 	virtual void Exit();
 	

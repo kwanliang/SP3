@@ -154,7 +154,7 @@ void GiantSquid::AnimateSpinAttack()
     else
     {
         m_isTentacleUp = true;
-        if (m_rotateSquid < squidSpinValue && m_isTentacleUp && !m_rotateComplete)
+        if (m_rotateSquid < g_squidSpinValue && m_isTentacleUp && !m_rotateComplete)
         {
             m_rotateSquid += m_spinSpeed;
             m_isSpinning = true;
@@ -220,49 +220,32 @@ Animate GiantSquid when state is INKATTACK
 
 void GiantSquid::AnimateInkAttack()
 {
-    if (m_rotateInkSquid < 90.f && !m_isInkSquidRotated)
+    if (m_rotateInkTentacle < 30.f && !m_isInkTentacleRotated)
     {
-        m_rotateInkSquid += 0.5f;
+        m_rotateInkTentacle += 0.5f;
     }
     else
     {
-        if (m_rotateInkTentacle < 30.f && !m_isInkTentacleRotated)
+        if (m_InkFiredCount < 5 && !m_isShootInk)
         {
-            m_rotateInkTentacle += 0.5f;
+            m_InkFiredCount++;
+            m_isShootInk = true;
         }
         else
         {
-            if (m_InkFiredCount < 5 && !m_isShootInk)
+            m_isShootInk = false;
+            m_isInkTentacleRotated = true;
+            if (m_rotateInkTentacle > 0.f && m_isInkTentacleRotated && !m_isShootInk)
             {
-                m_InkFiredCount++;
-                m_isShootInk = true;
+                m_rotateInkTentacle -= 0.5f;
             }
             else
             {
+                m_rotateInkTentacle = 0.f;
+                m_isInkTentacleRotated = false;
                 m_isShootInk = false;
-                m_isInkTentacleRotated = true;
-                if (m_rotateInkTentacle > 0.f && m_isInkTentacleRotated && !m_isShootInk)
-                {
-                    m_rotateInkTentacle -= 0.5f;
-                }
-                else
-                {
-                    m_isInkSquidRotated = true;
-                    if (m_rotateInkSquid > 0.f && m_isInkSquidRotated && !m_isShootInk)
-                    {
-                        m_rotateInkSquid -= 0.5f;
-                    }
-                    else
-                    {
-                        m_rotateInkTentacle = 0.f;
-                        m_isInkTentacleRotated = false;
-                        m_rotateInkSquid = 0.f;
-                        m_isInkSquidRotated = false;
-                        m_isShootInk = false;
-                        m_InkFiredCount = 0;
-                        this->m_ChangeState = true;
-                    }
-                }
+                m_InkFiredCount = 0;
+                this->m_ChangeState = true;
             }
         }
     }
@@ -284,6 +267,94 @@ Animate GiantSquid when state is GRABATTACK
 
 void GiantSquid::AnimateGrabAttack()
 {
+    if (m_rotateGrabTentacle < 45.f && !m_isTentacleUp)
+    {
+        this->m_rotateGrabTentacle += 0.5f;
+    }
+    else
+    {
+        if (m_rotateSpinTentacle < 45.f && !m_changeGrab)
+        {
+            this->m_rotateSpinTentacle += 1.5f;
+        }
+        else
+        {
+            this->m_changeGrab = true;
+            if (m_rotateSpinTentacle > 0.f && m_changeGrab)
+            {
+                m_rotateSpinTentacle -= 1.5f;
+            }
+            else
+            {
+                m_isTentacleUp = true;
+                if (m_rotateGrabTentacle > 0.f && m_isTentacleUp)
+                {
+                    this->m_rotateGrabTentacle -= 0.5f;
+                }
+                else
+                {
+                    m_rotateGrabTentacle = 0.f;
+                    m_rotateSpinTentacle = 0.f;
+                    m_isTentacleUp = false;
+                    m_changeGrab = false;
+                    m_ChangeState = true;
+                }    
+            }
+        }
+    }
+
+    //if (m_isGrab)
+    //{
+    //    if (m_rotateGrabInnerTentacle < 45.f)
+    //    {
+    //        m_rotateGrabInnerTentacle += 1.f;
+    //    }
+    //    else
+    //    {
+    //        m_isGrab = false;
+    //    }
+    //}
+    //else if (!m_isGrab && m_rotateGrabInnerTentacle > 0.f)
+    //{
+    //    m_rotateGrabInnerTentacle -= 1.f;
+    //    m_changeGrab = false;
+    //    m_Grabbed = true;
+    //}
+
+    tentacle1_1.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle1_2.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle1_3.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle1_4.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle2_1.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle2_2.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle2_3.setTentacleAnimateRotate(m_rotateGrabTentacle);
+    tentacle2_4.setTentacleAnimateRotate(m_rotateGrabTentacle);
+
+    tentacle1_1.setTentacleAnimateRotate2(m_rotateGrabInnerTentacle);
+    tentacle1_2.setTentacleAnimateRotate2(m_rotateGrabInnerTentacle);
+    tentacle1_3.setTentacleAnimateRotate2(m_rotateGrabInnerTentacle);
+    tentacle1_4.setTentacleAnimateRotate2(m_rotateGrabInnerTentacle);
+    tentacle2_1.setTentacleAnimateRotate2(-m_rotateGrabInnerTentacle);
+    tentacle2_2.setTentacleAnimateRotate2(-m_rotateGrabInnerTentacle);
+    tentacle2_3.setTentacleAnimateRotate2(-m_rotateGrabInnerTentacle);
+    tentacle2_4.setTentacleAnimateRotate2(-m_rotateGrabInnerTentacle);
+
+    tentacle3_1.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle3_2.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle3_3.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle3_4.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle4_1.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle4_2.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle4_3.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle4_4.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle5_1.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle5_2.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle5_3.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle5_4.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle6_1.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle6_2.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle6_3.setTentacleAnimateRotate(m_rotateSpinTentacle);
+    tentacle6_4.setTentacleAnimateRotate(m_rotateSpinTentacle);
 
 }
 
@@ -325,10 +396,6 @@ float GiantSquid::LookAtPlayer(Vector3 playerPos)
         this->m_SquidLookAt *= -1;
     }
 
-    Mtx44 rotate;
-    rotate.SetToRotation(0.5f, 0, 1, 0);
-    collision.m_position = rotate * collision.m_position;
-
     return m_SquidLookAt;
 }
 
@@ -348,16 +415,16 @@ void GiantSquid::ChasePlayer(Vector3 playerPos)
     if (playerPos != this->pos && !DirVec.IsZero())
     {
         DirVec.Normalize();
-        if ((playerPos - this->pos).LengthSquared() > distFromPlayer * distFromPlayer)
+        if ((playerPos - this->pos).LengthSquared() > g_distFromPlayer * g_distFromPlayer)
         {
-            if (m_isSpinning)
+            if (m_isSpinning || m_changeGrab)
             {
                 this->pos += DirVec * m_moveSpeed;
                 this->collision.m_position += DirVec * m_moveSpeed;
                 if (m_moveSpeed < 1.5f)
                     m_moveSpeed += .05f;
             }
-            else if (!m_isSpinning)
+            else if (!m_isSpinning || !m_changeGrab)
             {
                 this->pos += DirVec * .5f;
                 this->collision.m_position += DirVec * .5f;

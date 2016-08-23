@@ -65,7 +65,7 @@ Vector3 SeaCreature::seperation(Vector3 repelVector)
 
 	if (!repelVector.IsZero())
 	{
-		tempIntensity = (repelVector.LengthSquared() / distFromSeperationIntensity);
+        tempIntensity = (repelVector.LengthSquared() / g_distFromSeperationIntensity);
 		repelVector = repelVector.Normalized();
 		repelVector = Vector3(repelVector.x / tempIntensity, repelVector.y / tempIntensity, repelVector.z / tempIntensity);
 

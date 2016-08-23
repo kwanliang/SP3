@@ -4,10 +4,11 @@
 #include "GameObject.h"
 #include "Vector3.h"
 #include "CollisionManager.h"
+#include "Spawner.h"
 
-static float distFromSeperation = 200.f;
-static float distFromSeperationIntensity = 400.f;
-static float distFromAlignment = 400.f;
+static float g_distFromSeperation = 200.f;
+static float g_distFromSeperationIntensity = 400.f;
+static float g_distFromAlignment = 400.f;
 
 class SeaCreature : public GameObject
 {
@@ -37,6 +38,7 @@ public:
     int getHealth();
 	float getDebounceTimer();
 
+    //void setPos(Vector3 pos);
 	void setHealth(int m_health);
 	void setDebounceTimer(float timer);
 
