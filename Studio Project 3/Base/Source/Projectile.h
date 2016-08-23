@@ -10,6 +10,7 @@ public:
     {
         BULLET,
         INK,
+		PBULLET,
 
         TYPE_TOTAL
     };

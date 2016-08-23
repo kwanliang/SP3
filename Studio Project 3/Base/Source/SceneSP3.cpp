@@ -365,6 +365,7 @@ void SceneSP3::Init()
     skipper->vel.Set(fishVel.x, fishVel.y, fishVel.z);
     skipper->setDamage(10);
     skipper->setBaseDamage(10);
+	skipper->setTarget(skipper);
     m_goList.push_back(skipper);
     //skipper->collision = hitbox2::generatehitbox(minnowLeader->pos, 10, 10, 10);
 
@@ -748,7 +749,7 @@ void SceneSP3::Update(double dt)
     {
         Projectile *po = FetchPO();
         po->objectType = GameObject::PROJECTILE;
-        po->projectileType = Projectile::BULLET;
+        po->projectileType = Projectile::PBULLET;
         po->active = true;
         po->scale.Set(1, 1, 1);
         po->pos.Set(playerpos.x, playerpos.y, playerpos.z);
@@ -946,6 +947,8 @@ void SceneSP3::Update(double dt)
 	UpdateTravel();
     UpdateMinnow(dt);
 	UpdateCaptured(dt);
+	UpdateProjectile(dt);
+	UpdateSquadFire(dt);
 	if (Application::IsKeyPressed('M'))
 	{
 		for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
@@ -955,16 +958,145 @@ void SceneSP3::Update(double dt)
 			{
 				if (go->objectType == GameObject::SEACREATURE)
 				{
-					go->setPos(Capture::Vacuum(*go, playerpos, Capture::rangeCheckXZ(walkCam,*go, playerpos)));
+					go->pos.Set(Capture::Vacuum(*go, playerpos, Capture::rangeCheckXZ(walkCam, *go, playerpos)).x,
+								Capture::Vacuum(*go, playerpos, Capture::rangeCheckXZ(walkCam, *go, playerpos)).y,
+								Capture::Vacuum(*go, playerpos, Capture::rangeCheckXZ(walkCam, *go, playerpos)).z);
 					go->objectType = Capture::AddSquad(*go, playerpos, Capture::rangeCheckXZ(walkCam, *go, playerpos));
 				}
 			}
 		}
 		
 	}
-
+	if (Application::IsKeyPressed('N'))
+	{
+		skipper->setTarget(skipper);
+	}
+	
 
 	//std::cout << SharedData::GetInstance()->SD_CurrentArea << std::endl;
+}
+
+void SceneSP3::UpdateProjectile(double dt)
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if (go->objectType == GameObject::PROJECTILE)
+			{
+				Projectile *po = (Projectile *)*it;
+				if (po->projectileType == Projectile::BULLET || po->projectileType == Projectile::PBULLET)
+				{
+					po->pos += po->vel * dt * 500;
+
+					if (go->pos.y < -1000)
+						po->active = false;
+					else if (go->pos.y > 1000)
+						po->active = false;
+
+					if (go->pos.x < -1000)
+						po->active = false;
+					else if (go->pos.x > 1000)
+						po->active = false;
+
+					if (go->pos.z < -1000)
+						po->active = false;
+					else if (go->pos.z > 1000)
+						po->active = false;
+
+					for (std::vector<GameObject *>::iterator it2 = m_goList.begin(); it2 != m_goList.end(); ++it2)
+					{
+						GameObject *other = (GameObject *)*it2;
+						if (other->active && go != other && (other->objectType == GameObject::BOSS || other->objectType == GameObject::SEACREATURE))
+						{
+							
+							if (other->objectType == GameObject::BOSS)
+							{
+								Boss *another = (Boss *)*it2;
+
+								if (collision(another->collision, go->pos))
+								{
+									if (po->projectileType == Projectile::PBULLET)
+									{
+										skipper->setTarget(other);
+									}
+									po->active = false;
+									another->setHealth(another->getHealth() - skipper->randomDamage(skipper->getDamage(), skipper->getBaseDamage()));
+
+									DamageText* text = FetchTO();
+									text->setActive(true);
+									text->setLastHitPos(go->pos);
+									text->setLastDamage(skipper->randomDamage(skipper->getDamage(), skipper->getBaseDamage()));
+									text->setScaleText(Vector3(0, 0, 0));
+									cout << skipper->randomDamage(skipper->getDamage(), skipper->getBaseDamage()) << endl;
+								}
+							}
+							if (other->objectType == GameObject::SEACREATURE)
+							{
+								Minnow *other = (Minnow *)*it2;
+								if (other->active && go != other && other->state == Minnow::FLOCK && other->seaType == SeaCreature::MINNOW)
+								{
+									if ((other->pos - po->pos).LengthSquared() < po->scale.z + other->scale.z + 50)
+									{
+										for (std::vector<GameObject *>::iterator it3 = m_goList.begin(); it3 != m_goList.end(); ++it3)
+										{
+											Minnow *other2 = (Minnow *)*it3;
+											if (other2->active && go != other2 && other2->state == Minnow::FLOCK && other2->seaType == SeaCreature::MINNOW)
+											{
+												other2->state = Minnow::FLEE;
+											}
+										}
+									}
+									if ((other->pos - po->pos).LengthSquared() < po->scale.z + other->scale.z)
+									{
+										po->active = false;
+										other->active = false;
+										cout << "dead" << endl;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void SceneSP3::UpdateSquadFire(double dt)
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject *)*it;
+		if (go->active)
+		{
+			if (go->objectType == GameObject::CAPTURED)
+			{
+				SeaCreature *other = (SeaCreature *)*it;
+				if (other->getDebounceTimer() > 3 && skipper->getTarget().objectType != GameObject::PLAYER)
+				{
+					Projectile *po = FetchPO();
+					po->objectType = GameObject::PROJECTILE;
+					po->projectileType = Projectile::BULLET;
+					po->active = true;
+					po->scale.Set(1, 1, 1);
+					po->pos.Set(other->pos.x, other->pos.y, other->pos.z);
+					Vector3 view = (skipper->getTarget().pos - other->pos).Normalized();
+					if (skipper->getTarget().objectType == GameObject::BOSS)
+					{
+						Vector3 view = Vector3(skipper->getTarget().pos.x - other->pos.x, skipper->getTarget().pos.y + 300 - other->pos.y, skipper->getTarget().pos.z - other->pos.z).Normalized();
+					}
+					po->vel.Set(view.x/10, view.y/10, view.z/10);
+					other->setDebounceTimer(0);
+				}
+				else
+				{
+					other->setDebounceTimer(other->getDebounceTimer() + dt);
+				}				
+			}
+		}
+	}
 }
 
 float SceneSP3::LookAtPlayer(Vector3 playerpos, Vector3 otherpos)

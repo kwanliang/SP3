@@ -53,6 +53,16 @@ void Skipper::setBaseDamage(int m_baseDamage)
     this->m_baseDamage = m_baseDamage;
 }
 
+GameObject Skipper::getTarget()
+{
+	return this->target;
+}
+
+void Skipper::setTarget(GameObject *go)
+{
+	this->target = *go;
+}
+
 int Skipper::randomDamage(int m_damage, int m_baseDamage)
 {
     return Math::RandIntMinMax(m_baseDamage, m_damage + m_baseDamage);

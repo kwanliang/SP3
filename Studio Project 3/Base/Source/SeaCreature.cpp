@@ -4,6 +4,7 @@ SeaCreature::SeaCreature()
     : m_health(100)
     , seaType(MINNOW)
     , GameObject(SEACREATURE, Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1), false)
+	, m_DebounceTimer(0)
 {
 
 }
@@ -12,6 +13,7 @@ SeaCreature::SeaCreature(int m_health, SEACREATURE_TYPE seaType, OBJECT_TYPE obj
     : m_health(m_health)
     , seaType(seaType)
     , GameObject(objectType, pos, vel, scale, active)
+	, m_DebounceTimer(0)
 {
 
 }
@@ -26,15 +28,22 @@ int SeaCreature::getHealth()
     return this->m_health;
 }
 
+
+float SeaCreature::getDebounceTimer()
+{
+	return this->m_DebounceTimer;
+}
+
+void SeaCreature::setDebounceTimer(float timer)
+{
+    this->m_DebounceTimer = timer;
+}
+
 void SeaCreature::setHealth(int m_health)
 {
     this->m_health = m_health;
 }
 
-void SeaCreature::setPos(Vector3 pos)
-{
-	this->pos = pos;
-}
 
 Vector3 SeaCreature::cohesion(Vector3 playerpos, Vector3 playertarget)
 {

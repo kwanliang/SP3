@@ -42,6 +42,8 @@ public:
     void UpdateMinnow(double dt);
 	void UpdatePuffer(double dt);
 	void UpdateCaptured(double dt);
+	void UpdateProjectile(double dt);
+	void UpdateSquadFire(double dt);
 
     void RenderText(Mesh* mesh, std::string text, Color color);
     void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);

@@ -13,7 +13,7 @@ class SeaCreature : public GameObject
 {
 protected:
     int m_health;
-	Vector3 m_position;
+	float m_DebounceTimer;
 
 public:
     enum SEACREATURE_TYPE
@@ -34,9 +34,10 @@ public:
 	Vector3 alignment(Vector3 forceVector);
 
     int getHealth();
+	float getDebounceTimer();
 
-	void setPos(Vector3 pos);
-    void setHealth(int m_health);
+	void setHealth(int m_health);
+	void setDebounceTimer(float timer);
 
 	hitbox	aabb;
     hitbox2 collision;

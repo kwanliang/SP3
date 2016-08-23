@@ -760,7 +760,7 @@ void SceneTutorial::UpdateGiantSquid(double dt)
         break;
     }
 
-    for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+   /* for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
     {
         GameObject *go = (GameObject *)*it;
         if (go->active)
@@ -810,7 +810,7 @@ void SceneTutorial::UpdateGiantSquid(double dt)
                 }
             }
         }
-    }
+    }*/
 }
 
 void SceneTutorial::Update(double dt)

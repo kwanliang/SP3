@@ -21,15 +21,15 @@ Vector3 Capture::Vacuum(SeaCreature creature, Vector3 playerpos, bool check)
 		Vector3 view = (creature.pos - playerpos).Normalized();
 		if (fabs(creature.pos.x - playerpos.x) >= 1 && distance >= 1)
 		{
-			creature.setPos(Vector3((creature.pos.x - view.x / creature.getHealth() * 500 / distance), (creature.pos.y), (creature.pos.z)));
+			creature.pos.Set((creature.pos.x - view.x / creature.getHealth() * 500 / distance), (creature.pos.y), (creature.pos.z));
 		}
 		if (fabs(creature.pos.y - playerpos.y) >= 1 && distance >= 1)
 		{
-			creature.setPos(Vector3(creature.pos.x, (creature.pos.y - view.y / creature.getHealth() * 500 / distance), (creature.pos.z)));
+			creature.pos.Set(creature.pos.x, (creature.pos.y - view.y / creature.getHealth() * 500 / distance), (creature.pos.z));
 		}
 		if (fabs(creature.pos.z - playerpos.z) >= 1 && distance >= 1)
 		{
-			creature.setPos(Vector3(creature.pos.x, (creature.pos.y), (creature.pos.z - view.z / creature.getHealth() * 500/distance)));
+			creature.pos.Set(creature.pos.x, (creature.pos.y), (creature.pos.z - view.z / creature.getHealth() * 500 / distance));
 		}
 	}
 	return creature.pos;
