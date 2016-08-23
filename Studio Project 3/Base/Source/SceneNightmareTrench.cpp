@@ -16,14 +16,34 @@ SceneNightmareTrench::~SceneNightmareTrench()
 void SceneNightmareTrench::Init()
 {
 	SceneSP3::Init();
-	currentCam = &walkCam;
-	walkCam.Init(
+	//currentCam = &walkCam;
+	/*walkCam.Init(
 		Vector3(980, 279, -1040),
 		Vector3(-1, 0, 1),
 		Vector3(0, 1, 0),
 		60
-		);
+		);*/
+
+	walkCam.Init(
+		Vector3(0, 500, 0),
+		Vector3(-1, 0, 1),
+		Vector3(0, 1, 0),
+		60);
+
 	m_travelzoneup = hitbox::generatehitbox(Vector3(1173,372,-1230),300,500,300,0);
+	for (unsigned i = 0; i < 20; i++)
+	{
+		Chimera*c = FetchChimera();
+		c->active = true;
+		c->objectType = GameObject::SEACREATURE;
+		c->seaType = SeaCreature::CHIMERA;
+		//p->pstate = Pufferfish::IDLE;
+		c->scale.Set(20, 20, 20);
+		c->pos.Set(Math::RandFloatMinMax(-1000, 1000), Math::RandFloatMinMax(200, 500), Math::RandFloatMinMax(-1000, 1000));
+		c->vel.Set(0, Math::RandFloatMinMax(-20, 20), 0);
+		//p->collision = hitbox2::generatehitbox(p->pos, 8, 8, 8);
+		c->setHealth(200);
+	}
 }
 
 void SceneNightmareTrench::ReInit()
@@ -47,7 +67,7 @@ void SceneNightmareTrench::ReInit()
 			);
 	}
 	
-
+	
 	//m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
 	//m_travelzoneup = hitbox::generatehitbox(Vector3(-1258, 389, -1221), 500, 700, 500, 0);
 
@@ -115,6 +135,51 @@ void SceneNightmareTrench::RenderWorld()
 	modelStack.PopMatrix();
 	
 
+
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject*)*it;
+
+		if (!go->active)
+			continue;
+
+
+		if (go->objectType == GameObject::SEACREATURE)
+		{
+			SeaCreature * fo = (SeaCreature*)*it;
+
+			switch (fo->seaType)
+			{
+			case SeaCreature::MINNOW:
+			{
+				Minnow * m = (Minnow*)*it;
+				RenderFO(m);
+
+			}break;
+			case SeaCreature::CHIMERA:
+			{
+				Chimera * c = (Chimera*)*it;
+				RenderChimera(c);
+
+			}break;
+
+			}
+
+		}
+
+
+		else if (go->objectType == GameObject::PROJECTILE)
+		{
+			Projectile *po = (Projectile*)*it;
+			if (po->active)
+			{
+				RenderPO(po);
+			}
+		}
+	}
+
+
+	
 }
 
 void SceneNightmareTrench::RenderPassGPass()
@@ -272,6 +337,77 @@ void SceneNightmareTrench::Render()
 
 }
 
+void SceneNightmareTrench::RenderChimera(Chimera* c)
+{
+	//float rotate = 0;
+	//rotate = Math::RadianToDegree(atan2(c->vel.x, c->vel.z));
+	modelStack.PushMatrix();
+	modelStack.Translate(c->pos.x, c->pos.y, c->pos.z);
+	modelStack.Rotate(-c->rotate, 0, 1, 0);
+	modelStack.Scale(c->scale.x, c->scale.y, c->scale.z);
+	RenderMesh(meshList[GEO_CHIMERA_BODY], false);
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0,-0.05,0.18);
+	modelStack.Rotate(c->flip[0].rotation, 0, 0, 1);
+	modelStack.Rotate(20, 1, 0, 0);
+	RenderMesh(meshList[GEO_CHIMERA_FFLIP], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -0.05, 0.18);
+	modelStack.Rotate(-c->flip[1].rotation, 0, 0, 1);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Rotate(-20, 1, 0, 0);
+	RenderMesh(meshList[GEO_CHIMERA_FFLIP], false);
+	modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0.08, -0.1, -0.3);
+	modelStack.Rotate(c->flip[2].rotation, 0, 0, 1);
+	RenderMesh(meshList[GEO_CHIMERA_BFLIP], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-0.08, -0.1, -0.3);
+	modelStack.Rotate(-c->flip[3].rotation, 0, 0, 1);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderMesh(meshList[GEO_CHIMERA_BFLIP], false);
+	modelStack.PopMatrix();
+
+
+
+
+	modelStack.PopMatrix();
+}
+
+Chimera* SceneNightmareTrench::FetchChimera()
+{
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		Chimera *go = (Chimera *)*it;
+		if (!go->active)
+		{
+			go->active = true;
+			//++m_objectCount;
+			return go;
+		}
+
+	}
+	for (unsigned i = 0; i < 10; ++i)
+	{
+		Chimera *go = new Chimera();
+		go->objectType = GameObject::SEACREATURE;
+		go->seaType = SeaCreature::CHIMERA;
+		m_goList.push_back(go);
+	}
+	Chimera *go = (Chimera *)m_goList.back();
+	go->active = true;
+	//++m_objectCount;
+	return go;
+}
+
 void SceneNightmareTrench::RenderMinimap()
 {
 
@@ -281,7 +417,38 @@ void SceneNightmareTrench::Update(double dt)
 {
 	SceneSP3::Update(dt);
 
-}
+
+	//if ()
+	for (std::vector<GameObject *>::iterator it = m_goList.begin(); it != m_goList.end(); ++it)
+	{
+		GameObject *go = (GameObject*)*it;
+
+		if (!go->active)
+			continue;
+
+
+		if (go->objectType != GameObject::SEACREATURE)
+			continue;
+		
+			SeaCreature * fo = (SeaCreature*)*it;
+
+			
+			if (fo->seaType != SeaCreature::CHIMERA)
+				continue;
+
+				Chimera * c = (Chimera*)*it;
+				c->UpdateChimera(dt);
+
+			
+
+	}
+
+
+	
+	}
+
+
+
 
 void SceneNightmareTrench::Exit()
 {

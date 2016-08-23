@@ -16,7 +16,7 @@ SceneGhastlyDepths::~SceneGhastlyDepths()
 void SceneGhastlyDepths::Init()
 {
 	SceneSP3::Init();
-	if (SharedData::GetInstance()->SD_Down)
+	/*if (SharedData::GetInstance()->SD_Down)
 	{
 	
 		walkCam.Init(
@@ -36,13 +36,20 @@ void SceneGhastlyDepths::Init()
 		60
 		);
 	
-	}
+	}*/
 
-
+	walkCam.Init(
+		Vector3(0, 400, 0),
+		Vector3(0, 0, 10),
+		Vector3(0, 1, 0),
+		60
+		);
 
 	m_travelzonedown = hitbox::generatehitbox(Vector3(-27, 288, 1290), 250, 500, 1000, 0);
 	m_travelzoneup = hitbox::generatehitbox(Vector3(1084, 557, -1199), 500, 700, 500, 0);
 	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
+
+	frilledshark = new FrilledShark;
 }
 
 void SceneGhastlyDepths::ReInit()
@@ -55,6 +62,39 @@ void SceneGhastlyDepths::ReInit()
 
 
 	std::cout << "creep" << std::endl;
+}
+
+void SceneGhastlyDepths::RenderBoss()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(frilledshark->m_node[0].pos.x, frilledshark->m_node[0].pos.y, frilledshark->m_node[0].pos.z);
+	modelStack.Rotate(frilledshark->m_node[0].yaw,0, 1, 0);
+	modelStack.Scale(frilledshark->scale.z, frilledshark->scale.z, frilledshark->scale.z);
+	RenderMesh(meshList[GEO_FSHARK_UJAW], false);
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(0,-0.2,1);
+	modelStack.Rotate(-20,1, 0, 0);
+	RenderMesh(meshList[GEO_FSHARK_LJAW], false);
+	modelStack.PopMatrix();
+	modelStack.PopMatrix();
+
+
+	for (unsigned i = 1; i < 5; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(frilledshark->m_node[i].pos.x, frilledshark->m_node[i].pos.y, frilledshark->m_node[i].pos.z);
+		modelStack.Rotate(frilledshark->m_node[i].yaw, 0, 1, 0);
+		modelStack.Scale(frilledshark->scale.z, frilledshark->scale.z, frilledshark->scale.z);
+		if (i ==4)
+			RenderMesh(meshList[GEO_FSHARK_TAIL], false);
+		else
+			RenderMesh(meshList[GEO_FSHARK_NODE], false);
+		modelStack.PopMatrix();
+
+	}
+
+
 }
 
 void SceneGhastlyDepths::RenderTerrain()
@@ -99,7 +139,7 @@ void SceneGhastlyDepths::RenderWorld()
 {
 	RenderTerrain();
 	RenderSkyPlane();
-
+	RenderBoss();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(playerpos.x, playerpos.y+5, playerpos.z);
@@ -115,6 +155,9 @@ void SceneGhastlyDepths::RenderWorld()
 	RenderMesh(meshList[GEO_FISHTAIL], true);
 	modelStack.PopMatrix();
 	modelStack.PopMatrix();
+
+
+	
 	
 
 }
@@ -308,6 +351,8 @@ void SceneGhastlyDepths::RenderMinimap()
 void SceneGhastlyDepths::Update(double dt)
 {
 	SceneSP3::Update(dt);
+	frilledshark->UpdateFrilledShark(dt);
+	frilledshark->m_node[0].yaw = val;
 
 }
 

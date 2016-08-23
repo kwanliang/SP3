@@ -4,7 +4,7 @@
 #include "SceneSP3.h"
 #include <vector>
 #include "Mtx44.h"
-
+#include "FrilledShark.h"
 
 class SceneGhastlyDepths : public SceneSP3
 {
@@ -22,6 +22,7 @@ public:
 	void RenderPassMain();
 	void RenderMinimap();
 
+	void RenderBoss();
 	void RenderWorld();
 	void RenderTerrain();
 	void RenderSkyPlane();
@@ -47,7 +48,7 @@ private:
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
 
-
+	FrilledShark* frilledshark;
 
 
 	//Fish test

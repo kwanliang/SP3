@@ -174,4 +174,20 @@ static bool collision(const hitbox2& lhsBox, const hitbox2& rhsBox){		//for AABB
 }
 
 
+
+static bool collision(const hitbox& lhsBox, const hitbox2& rhsBox){
+
+	if (lhsBox.m_vecMax.x > rhsBox.m_point[0].x &&
+		lhsBox.m_vecMin.x < rhsBox.m_point[6].x &&
+		lhsBox.m_vecMax.y > rhsBox.m_point[0].y &&
+		lhsBox.m_vecMin.y < rhsBox.m_point[6].y &&
+		lhsBox.m_vecMax.z > rhsBox.m_point[0].z &&
+		lhsBox.m_vecMin.z <rhsBox.m_point[6].z){
+		return true;
+	}
+	else
+		return false;
+
+}
+
 #endif;

@@ -275,6 +275,15 @@ void SceneSP3::Init()
 	meshList[GEO_FCRABCLAW] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//fcrab_Lclaw.obj");
 	meshList[GEO_FCRABCLAW]->textureArray[0] = LoadTGA("Image//fcrab_claw.tga");
 
+	meshList[GEO_CHIMERA_BODY] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//ghostshark_body.obj");
+	meshList[GEO_CHIMERA_FFLIP] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//ghostshark_Fflipper.obj");
+	meshList[GEO_CHIMERA_BFLIP] = MeshBuilder::GenerateOBJ("crabclaw", "Models//OBJ//ghostshark_Bflipper.obj");
+
+	meshList[GEO_FSHARK_LJAW] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_Ljaw.obj");
+	meshList[GEO_FSHARK_UJAW] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_Ujaw.obj");
+	meshList[GEO_FSHARK_NODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_node.obj");
+	meshList[GEO_FSHARK_TAIL] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//frilledshark_tail.obj");
+
 
     meshList[GEO_SQUIDTENTACLENODE] = MeshBuilder::GenerateOBJ("squidModel", "Models//OBJ//tentacle_node.obj");
     meshList[GEO_SQUIDTENTACLENODE]->textureArray[0] = LoadTGA("Image//squidtentacle.tga");
@@ -768,12 +777,12 @@ void SceneSP3::Update(double dt)
 		float movespeed = 1000;
 		if (Application::IsKeyPressed('Z'))
 		{
-			val += 10*dt;
+			val += 1*dt;
 			cout << val << endl;
 		}
 		if (Application::IsKeyPressed('X'))
 		{
-			val -=10* dt;
+			val -=1* dt;
 			cout << val << endl;
 		}
 

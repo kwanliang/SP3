@@ -4,6 +4,7 @@
 #include "SceneSP3.h"
 #include <vector>
 #include "Mtx44.h"
+#include "Chimera.h"
 
 
 class SceneNightmareTrench : public SceneSP3
@@ -22,11 +23,13 @@ public:
 	void RenderPassMain();
 	void RenderMinimap();
 
+	Chimera* FetchChimera();
+
 	void RenderWorld();
 	void RenderTerrain();
 	void RenderSkyPlane();
 	void RenderParticles();
-
+	void RenderChimera(Chimera*);
 
 
 private:
@@ -46,7 +49,7 @@ private:
     std::vector<ParticleObject*> particleList; // Used to store
     Vector3 m_gravity;      // Gravity affecting the particles
     int m_particleCount;    // Number of particles
-
+	//Chimera* c;
 
 
 

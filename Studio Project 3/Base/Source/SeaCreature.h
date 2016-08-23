@@ -21,6 +21,7 @@ public:
         MINNOW = 0,
 		PUFFER,
 		FCRAB,
+		CHIMERA,
         TYPE_TOTAL,
     };
     SEACREATURE_TYPE seaType;

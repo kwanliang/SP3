@@ -12,8 +12,9 @@ protected:
 public:
     enum BOSS_TYPE
     {
-        GIANTSQUID = 0,
+		GIANTSQUID = 0,
         GIANTSQUIDTENTACLE,
+		FRILLEDSHARK,
 
         TYPE_TOTAL,
     };
@@ -26,7 +27,7 @@ public:
 
     int getHealth();
     void setHealth(int m_health);
-    
+	bool isdead;
     hitbox collision;
 };
 

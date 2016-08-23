@@ -332,13 +332,13 @@ void SceneCreepingRidge::RenderPassMain()
 
 			Fcrab *c = (Fcrab*)*it;
 			RenderFcrab(c);
-			modelStack.PushMatrix();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
-			modelStack.Translate(c->aabb.m_position.x,c->aabb.m_position.y,c->aabb.m_position.z);
-			modelStack.Scale(c->aabb.m_width, c->aabb.m_height, c->aabb.m_length);
-			RenderMesh(meshList[GEO_CUBE], false);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
-			modelStack.PopMatrix();
+			//modelStack.PushMatrix();
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	//set to line
+			//modelStack.Translate(c->aabb.m_position.x,c->aabb.m_position.y,c->aabb.m_position.z);
+			//modelStack.Scale(c->aabb.m_width, c->aabb.m_height, c->aabb.m_length);
+			//RenderMesh(meshList[GEO_CUBE], false);
+			//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//set back to fill
+			//modelStack.PopMatrix();
 		
 		}
 
@@ -457,10 +457,10 @@ void SceneCreepingRidge::Update(double dt)
 				
 
 
-				//if (collision(c->aabb, player_box))
-				//{
-				//	fishVel = - c->vel;
-				//}
+				if (collision(c->aabb, player_box))
+				{
+					fishVel = - c->vel;
+				}
 
 				if (c->pos.y <= h)
 				{
