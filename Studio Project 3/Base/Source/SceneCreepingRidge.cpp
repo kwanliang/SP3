@@ -17,6 +17,10 @@ SceneCreepingRidge::~SceneCreepingRidge()
 void SceneCreepingRidge::Init()
 {
 	SceneSP3::Init();
+	currentCam = &walkCam;
+	//m_travelzonedown = hitbox::generatehitbox(Vector3(52,579,1310),600,500,600,0);
+	
+	giantCrab.pos.Set(-700, 700, -700);
 
 	if (SharedData::GetInstance()->SD_Down)
 	{
@@ -37,11 +41,11 @@ void SceneCreepingRidge::Init()
 			60);
 
 	}
-	
 		
 	m_travelzoneup = hitbox::generatehitbox(Vector3(-1233,409,-1263),600,500,600,0);
 	m_travelzonedown = hitbox::generatehitbox(Vector3(-1093, 131, 151), 500, 500, 500, 0);
 
+	
 	for (int i = 0; i < 30; i++)
 	{
 		Fcrab *c = FetchFcrab();
@@ -187,6 +191,76 @@ void SceneCreepingRidge::RenderWorld()
 
 	RenderMesh(meshList[GEO_FISHTAIL], true);
 	modelStack.PopMatrix();
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	{
+		modelStack.Translate(giantCrab.pos.x, giantCrab.pos.y, giantCrab.pos.x);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(45, 45, 45);
+		RenderMesh(meshList[GEO_CRAB_BODY], true);
+
+		static float elapsed = 0;
+		elapsed += 0.2f;
+
+		for (unsigned i = 0; i < 8; ++i)
+		{
+			static const float rotations[8] =
+			{
+				-20, 0, 20, 40,
+				180 - rotations[3],
+				180 - rotations[2],
+				180 - rotations[1],
+				180 - rotations[0],
+			};
+
+			modelStack.PushMatrix();
+			{
+				modelStack.Translate(0, -0.1f, 0);
+				modelStack.Rotate(rotations[i], 0, 1, 0);
+				RenderMesh(meshList[GEO_CRAB_LEG_UPPER], true);
+				modelStack.Translate(0.17f, -0.23f, -2.0f);
+				modelStack.Translate(0, 0.05f, -0.02f);
+				modelStack.Rotate(30 * sin(elapsed), -1, 0, 0);
+				modelStack.Translate(0, -0.05f, 0.02f);
+				modelStack.Rotate(-6, 0, 1, 0);
+				RenderMesh(meshList[GEO_CRAB_LEG_LOWER], true);
+			}
+			modelStack.PopMatrix();
+		}
+
+		for (unsigned i = 0; i < 1; ++i)
+		{
+			modelStack.PushMatrix();
+			{
+				modelStack.Translate(0.5f, -0.06f, -0.31f);
+				modelStack.Rotate(30, 0, 1, 0);
+				modelStack.Translate(-0.01f, -0.01f, 0);
+				modelStack.Rotate(10 * sin(elapsed) + 50, 0, 0, 1);
+				modelStack.Rotate(-20, 1, 0, 0);
+				modelStack.Translate(0.01f, 0.01f, 0);
+				modelStack.PushMatrix();
+				{
+					modelStack.Translate(3.1f, 0, 0.4f);
+					modelStack.Rotate(70, 0, 0, -1);
+					RenderMesh(meshList[GEO_CRAB_ARM_MID], true);
+
+					modelStack.PushMatrix();
+					{
+						modelStack.Translate(0.83f, 0, 0);
+						modelStack.Translate(-0.05f, 0, 0);
+						modelStack.Rotate(50, 0, 0, -1);
+						modelStack.Translate(0.05f, 0, 0);
+						RenderMesh(meshList[GEO_CRAB_ARM_LOWER], true);
+					}
+					modelStack.PopMatrix();
+				}
+				modelStack.PopMatrix();
+				RenderMesh(meshList[GEO_CRAB_ARM_UPPER], true);
+			}
+			modelStack.PopMatrix();
+		}
+	}
 	modelStack.PopMatrix();
 	
 

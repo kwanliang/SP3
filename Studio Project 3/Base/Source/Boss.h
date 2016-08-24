@@ -16,6 +16,8 @@ public:
         GIANTSQUIDTENTACLE,
 		FRILLEDSHARK,
 
+		GIANTCRAB,
+
         TYPE_TOTAL,
     };
 

@@ -22,7 +22,7 @@ void SceneTutorial::Init()
 	SceneSP3::Init();
 	currentCam = &walkCam;
 	walkCam.Init(
-		Vector3(0, 400, 0),
+		Vector3(325, 604, 700),
 		Vector3(0, 0, -10),
 		Vector3(0, 1, 0),
 		60
@@ -31,11 +31,14 @@ void SceneTutorial::Init()
 	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
     InitGiantSquid();
     InitSpawner();
-}
+	walkCam.SetPos(Vector3(325, 604, 700));
+	std::cout << "shit" << std::endl;
 
-void SceneTutorial::InitSpawner()
-{
-    MinnowLeaderSpawner.setPos(Vector3(0, 500, 0));
+	//SharedData::GetInstance()->SD_Travel = true;
+
+	m_travelzonedown = hitbox::generatehitbox(Vector3(52, 579, 1310), 600, 500, 600, 0);
+
+	std::cout << "tut" << std::endl;
 }
 
 void SceneTutorial::InitGiantSquid()

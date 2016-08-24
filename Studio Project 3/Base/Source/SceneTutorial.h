@@ -51,7 +51,7 @@ private:
 
     GiantSquid* giantSquid;
 
-    GiantSquid* tentacle1_1;
+    /*GiantSquid* tentacle1_1;
     GiantSquid* tentacle1_2;
     GiantSquid* tentacle1_3;
     GiantSquid* tentacle1_4;
@@ -79,7 +79,7 @@ private:
     GiantSquid* tentacle6_1;
     GiantSquid* tentacle6_2;
     GiantSquid* tentacle6_3;
-    GiantSquid* tentacle6_4;
+    GiantSquid* tentacle6_4;*/
 };
 
 #endif

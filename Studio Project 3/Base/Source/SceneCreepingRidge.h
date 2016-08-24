@@ -5,6 +5,8 @@
 #include <vector>
 #include "Mtx44.h"
 #include "Fcrab.h"
+#include "GiantCrab.h"
+
 
 class SceneCreepingRidge : public SceneSP3
 {
@@ -53,6 +55,7 @@ private:
 	//Fish test
 	Capture fishy;
 	//Fcrab* c;
+	GiantCrab giantCrab;
 };
 
 
